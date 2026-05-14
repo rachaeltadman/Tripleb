@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Triple B 📚</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Pacifico&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 500;
+      min-height: 100vh;
+      background: #ede0ff;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 44px 24px 16px;
+    }
+    .hero .sticker {
+      font-size: 2.6rem;
+      display: block;
+      margin-bottom: 4px;
+      animation: wiggle 2.4s ease-in-out infinite;
+    }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(-4deg) scale(1); }
+      50%      { transform: rotate(4deg) scale(1.08); }
+    }
+    .hero h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      color: #c026d3;
+      text-shadow: 3px 3px 0 #f5d0fe, 5px 5px 0 #faf5ff;
+      line-height: 1.2;
+    }
+    .hero .sub {
+      margin-top: 8px;
+      font-size: .78rem;
+      color: #a855f7;
+      font-style: italic;
+      background: white;
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 99px;
+      border: 1.5px dashed #d8b4fe;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      max-width: 540px;
+      margin: 14px auto 0;
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      border-radius: 99px;
+      border: 2px solid #d8b4fe;
+      background: white;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: .82rem;
+      color: #a855f7;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .tab.active {
+      background: #c026d3;
+      border-color: #c026d3;
+      color: white;
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 12px 20px 60px;
+    }
+    .tab-content { display: none; flex-direction: column; gap: 14px; }
+    .tab-content.active { display: flex; }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px 22px;
+      box-shadow: 0 4px 18px rgba(168,85,247,.1);
+      border: 2px solid #f5d0fe;
+    }
+    .card.purple { border-color: #e9d5ff; }
+    .card.pink   { border-color: #fce7f3; }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+    .card-head h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.1rem;
+      color: #c026d3;
+    }
+
+    /* ROWS */
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 13px;
+      background: #faf5ff;
+      margin-bottom: 7px;
+      transition: transform .15s;
+    }
+    .row:last-child { margin-bottom: 0; }
+    .row:hover { transform: scale(1.01); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #d8b4fe; flex-shrink: 0; }
+    .row-text .name { font-weight: 700; font-size: .9rem; color: #2d1b3d; }
+    .row-text .sub  { font-size: .74rem; color: #a855f7; margin-top: 1px; }
+    .pill {
+      margin-left: auto;
+      font-size: .67rem;
+      font-weight: 700;
+      border-radius: 99px;
+      padding: 3px 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+    .pill.pink { background: #fce7f3; color: #be185d; border: 1.5px solid #f9a8d4; }
+
+    /* RULES */
+    .rule {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1.5px dashed #e8d5ff;
+      font-size: .87rem;
+      color: #2d1b3d;
+      line-height: 1.45;
+    }
+    .rule:last-child { border-bottom: none; }
+
+    /* VOTING */
+    .input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1.5px solid #e9d5ff;
+      font-family: 'Quicksand', sans-serif;
+      font-size: .88rem;
+      color: #2d1b3d;
+      background: #faf5ff;
+      margin-bottom: 8px;
+      outline: none;
+    }
+    .input:focus { border-color: #c026d3; }
+
+    .section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      color: #a855f7;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+
+    .book-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      border-radius: 13px;
+      background: #faf5ff;
+      border: 2px solid transparent;
+      margin-bottom: 7px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .book-option:hover { border-color: #d8b4fe; }
+    .book-option.selected { border-color: #c026d3; background: #fdf4ff; }
+    .book-option .book-name { font-weight: 700; font-size: .88rem; color: #2d1b3d; }
+    .vote-bar {
+      height: 4px; border-radius: 99px;
+      background: #e9d5ff; margin-top: 5px;
+      overflow: hidden; width: 130px;
+    }
+    .vote-bar-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, #c026d3, #a855f7);
+      transition: width .4s ease;
+    }
+    .vote-count {
+      font-size: .7rem; background: #f3e8ff;
+      color: #7c3aed; border-radius: 99px;
+      padding: 2px 9px; font-weight: 700;
+      flex-shrink: 0; margin-left: 8px;
+    }
+    .book-option.selected .vote-count { background: #c026d3; color: white; }
+
+    .no-books {
+      text-align: center;
+      color: #c084a0;
+      font-style: italic;
+      font-size: .85rem;
+      padding: 16px 0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 13px;
+      border: none;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      transition: opacity .15s;
+      margin-top: 2px;
+    }
+    .btn-purple { background: linear-gradient(135deg, #c026d3, #a855f7); color: white; }
+    .btn-outline { background: #f3e8ff; color: #7c3aed; border: 2px solid #e9d5ff; }
+    .btn:hover { opacity: .88; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .success-msg {
+      text-align: center;
+      background: #dcfce7;
+      color: #16a34a;
+      border-radius: 13px;
+      padding: 10px;
+      font-weight: 700;
+      font-size: .85rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .sep {
+      text-align: center;
+      font-size: .7rem;
+      color: #c084a0;
+      font-style: italic;
+      margin: 4px 0 8px;
+    }
+
+    .no-books {
+      text-align: center;
+      color: #c084a0;
+      font-style: italic;
+      font-size: .85rem;
+      padding: 16px 0;
+    }
+
+    .shelf-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 13px;
+      background: #faf5ff;
+      margin-bottom: 7px;
+    }
+    .shelf-item:last-child { margin-bottom: 0; }
+    .shelf-item .book-info .title { font-weight: 700; font-size: .9rem; color: #2d1b3d; }
+    .shelf-item .book-info .author { font-size: .74rem; color: #a855f7; margin-top: 1px; }
+    .shelf-item .nominator {
+      margin-left: auto;
+      font-size: .68rem;
+      background: #f3e8ff;
+      color: #7c3aed;
+      border-radius: 99px;
+      padding: 2px 9px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 0 24px 36px;
+      font-size: .72rem;
+      color: #a855f7;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="sticker">📚🍑</span>
+  <h1>Triple B</h1>
+  <p class="sub">Books, Boobs & Butts (Bush debatable) · 3rd Thursday every month</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('home', this)">🏠 Home</button>
+  <button class="tab" onclick="switchTab('meetings', this)">🗓️ Meetings</button>
+  <button class="tab" onclick="switchTab('vote', this)">🗳️ Vote</button>
+  <button class="tab" onclick="switchTab('shelf', this)">📚 Shelf</button>
+  <button class="tab" onclick="switchTab('rules', this)">💖 Vibes</button>
+</div>
+
+<div class="page">
+
+  <!-- ══ HOME ══ -->
+  <div class="tab-content active" id="tab-home">
+
+    <div class="card">
+      <div class="card-head"><span>📖</span><h2>Currently Reading</h2></div>
+      <div class="row">
+        <div class="dot" style="background:#f9a8d4"></div>
+        <div class="row-text">
+          <div class="name">The Book Club for Troublesome Women</div>
+          <div class="sub">June · Rachael 🏖️ · picked with Sasha ✨</div>
+        </div>
+        <span class="pill pink">reading now!</span>
+      </div>
+    </div>
+
+    <div class="card purple">
+      <div class="card-head"><span>📍</span><h2>Next Meeting</h2></div>
+      <div class="row">
+        <div class="dot" style="background:#f9a8d4"></div>
+        <div class="row-text">
+          <div class="name">June 19 · Rachael's House 🏠</div>
+          <div class="sub">Redmond, WA · time TBD</div>
+        </div>
+        <span class="pill pink">next month!</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ MEETINGS ══ -->
+  <div class="tab-content" id="tab-meetings">
+    <div class="card">
+      <div class="card-head"><span>🗓️</span><h2>2025–2026 Schedule</h2></div>
+      <div class="row">
+        <div class="dot" style="background:#f9a8d4"></div>
+        <div class="row-text">
+          <div class="name">June 19 — Rachael 🏖️</div>
+          <div class="sub">The Book Club for Troublesome Women · Redmond, WA</div>
+        </div>
+        <span class="pill pink">next month!</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">July 17 — Sasha</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">August 21 — Val</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">September 18 — Simone</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">October 16 — Emily</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">November 20 — Christa</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">December 18 — Katie & Betsy 🎄</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+      <div class="row">
+        <div class="dot"></div>
+        <div class="row-text">
+          <div class="name">January 15 — Carly</div>
+          <div class="sub">book & location TBD</div>
+        </div>
+        <span class="pill">TBD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ VOTE ══ -->
+  <div class="tab-content" id="tab-vote">
+
+    <!-- HOST SECTION -->
+    <div class="card purple">
+      <div class="card-head"><span>👑</span><h2>Host: Post Your Books</h2></div>
+      <p style="font-size:.8rem;color:#a855f7;margin-bottom:10px;">Only the upcoming host fills this out!</p>
+      <input class="input" id="hostName" placeholder="Your name..."/>
+      <input class="input" id="hostMonth" placeholder="Month (e.g. July)..."/>
+      <input class="input" id="book1" placeholder="Book option 1..."/>
+      <input class="input" id="book2" placeholder="Book option 2..."/>
+      <input class="input" id="book3" placeholder="Book option 3..."/>
+      <input class="input" id="meetingLocation" placeholder="Meeting location & address..."/>
+      <button class="btn btn-outline" onclick="submitBooks()">Post Books for Voting 📚</button>
+      <div class="success-msg" id="hostSuccess">✅ Books posted! Everyone can now vote.</div>
+    </div>
+
+    <div class="sep">— members vote below —</div>
+
+    <!-- MEMBER VOTE SECTION -->
+    <div class="card">
+      <div class="card-head"><span>🗳️</span><h2>Cast Your Vote</h2></div>
+      <p class="section-label" id="voteMonthLabel">Voting for: July</p>
+      <input class="input" id="voterName" placeholder="Your name..."/>
+      <div id="bookOptions"><div class="no-books">Waiting for the host to post their 3 picks! 📚</div></div>
+      <button class="btn btn-purple" id="voteBtn" onclick="castVote()" style="display:none;">Cast My Vote 💜</button>
+      <div class="success-msg" id="voteSuccess">💜 Vote cast! Thanks!</div>
+    </div>
+
+  </div>
+
+  <!-- ══ SHELF ══ -->
+  <div class="tab-content" id="tab-shelf">
+
+    <div class="card purple">
+      <div class="card-head"><span>➕</span><h2>Nominate a Book</h2></div>
+      <p style="font-size:.8rem;color:#a855f7;margin-bottom:10px;">Anyone can add a book they'd love the club to read!</p>
+      <input class="input" id="shelfNominee" placeholder="Your name..."/>
+      <input class="input" id="shelfTitle" placeholder="Book title..."/>
+      <input class="input" id="shelfAuthor" placeholder="Author..."/>
+      <button class="btn btn-outline" onclick="addToShelf()">Add to Shelf 📚</button>
+      <div class="success-msg" id="shelfSuccess">✅ Added to the shelf!</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span>📚</span><h2>Our Nominations</h2></div>
+      <div id="shelfList"><div class="no-books">No nominations yet — add the first one! 📖</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ VIBES ══ -->
+  <div class="tab-content" id="tab-rules">
+    <div class="card">
+      <div class="card-head"><span>💖</span><h2>The Vibes</h2></div>
+      <div class="rule"><span>📚</span> Host picks 3 books · everyone votes · most votes wins</div>
+      <div class="rule"><span>📄</span> 400 page max — we have lives 😂</div>
+      <div class="rule"><span>🎬</span> Books being made into movies are a yes!</div>
+      <div class="rule"><span>✅</span> Memoirs welcome · autobiographies not so much</div>
+      <div class="rule"><span>❌</span> No dense old-timey language (sorry Shakespeare)</div>
+      <div class="rule"><span>🚀</span> Light space themes ok · heavy sci-fi is a hard no</div>
+      <div class="rule"><span>🍷</span> Snacks & drinks mandatory</div>
+      <div class="rule"><span>💖</span> Judgment-free zone always</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>made with 💖 · Triple B · Books, Boobs & Butts (Bush debatable)</footer>
+
+<script>
+  const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_4zVpGQzqr7gDyb1c6oeirA_VD23kq5B';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let selectedBook = null;
+  let currentMonth = 'July';
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+    if (name === 'vote') loadVoting();
+    if (name === 'shelf') loadShelf();
+  }
+
+  // ── LOAD VOTING ──
+  async function loadVoting() {
+    const { data: meeting } = await sb
+      .from('meetings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!meeting) return;
+
+    currentMonth = meeting.month;
+    document.getElementById('voteMonthLabel').textContent = 'Voting for: ' + meeting.month;
+
+    const books = [meeting.book1, meeting.book2, meeting.book3].filter(Boolean);
+    const { data: votes } = await sb.from('votes').select('*').eq('month', meeting.month);
+    const total = votes ? votes.length : 0;
+
+    const container = document.getElementById('bookOptions');
+    container.innerHTML = '';
+
+    books.forEach(book => {
+      const count = votes ? votes.filter(v => v.book === book).length : 0;
+      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+      const div = document.createElement('div');
+      div.className = 'book-option';
+      div.onclick = function() { selectBook(this, book); };
+      div.innerHTML = `
+        <div>
+          <div class="book-name">${book}</div>
+          <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <span class="vote-count">${count}</span>
+      `;
+      container.appendChild(div);
+    });
+
+    document.getElementById('voteBtn').style.display = 'block';
+  }
+
+  function selectBook(el, book) {
+    document.querySelectorAll('.book-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedBook = book;
+  }
+
+  async function castVote() {
+    const name = document.getElementById('voterName').value.trim();
+    if (!selectedBook) { alert('Pick a book first! 📚'); return; }
+    if (!name) { alert('Enter your name! 💜'); return; }
+
+    const { error } = await sb.from('votes').insert({
+      month: currentMonth, book: selectedBook, voter_name: name
+    });
+
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('voteSuccess').style.display = 'block';
+    document.getElementById('voteBtn').style.display = 'none';
+    loadVoting();
+  }
+
+  async function submitBooks() {
+    const host = document.getElementById('hostName').value.trim();
+    const month = document.getElementById('hostMonth').value.trim();
+    const b1 = document.getElementById('book1').value.trim();
+    const b2 = document.getElementById('book2').value.trim();
+    const b3 = document.getElementById('book3').value.trim();
+    const loc = document.getElementById('meetingLocation').value.trim();
+
+    if (!host || !month || !b1 || !b2 || !b3) {
+      alert('Fill in name, month, and all 3 books! 📚'); return;
+    }
+
+    const { error } = await sb.from('meetings').upsert(
+      { month, host, book1: b1, book2: b2, book3: b3, location: loc },
+      { onConflict: 'month' }
+    );
+
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('hostSuccess').style.display = 'block';
+    setTimeout(loadVoting, 500);
+  }
+  // ── SHELF ──
+  async function loadShelf() {
+    const { data } = await sb.from('shelf').select('*').order('created_at', { ascending: false });
+    const container = document.getElementById('shelfList');
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="no-books">No nominations yet — add the first one! 📖</div>';
+      return;
+    }
+    container.innerHTML = data.map(b => `
+      <div class="shelf-item">
+        <div class="book-info">
+          <div class="title">${b.title}</div>
+          <div class="author">by ${b.author}</div>
+        </div>
+        <span class="nominator">💜 ${b.nominated_by}</span>
+      </div>
+    `).join('');
+  }
+
+  async function addToShelf() {
+    const name = document.getElementById('shelfNominee').value.trim();
+    const title = document.getElementById('shelfTitle').value.trim();
+    const author = document.getElementById('shelfAuthor').value.trim();
+
+    if (!name || !title || !author) { alert('Fill in all three fields! 📚'); return; }
+
+    const { error } = await sb.from('shelf').insert({ nominated_by: name, title, author });
+    if (error) { alert('Oops! ' + error.message); return; }
+
+    document.getElementById('shelfSuccess').style.display = 'block';
+    document.getElementById('shelfNominee').value = '';
+    document.getElementById('shelfTitle').value = '';
+    document.getElementById('shelfAuthor').value = '';
+    setTimeout(() => document.getElementById('shelfSuccess').style.display = 'none', 3000);
+    loadShelf();
+  }
+</script>
+
+</body>
+</html>
