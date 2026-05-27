@@ -8,6 +8,72 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .pw-logo {
+      font-size: 3rem;
+      margin-bottom: 8px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .pw-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: var(--pink);
+      margin-bottom: 4px;
+    }
+    .pw-sub {
+      font-size: .8rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+    .pw-input {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--text);
+      text-align: center;
+      outline: none;
+      margin-bottom: 10px;
+      letter-spacing: .1em;
+    }
+    .pw-input:focus { border-color: var(--pink); }
+    .pw-btn {
+      width: 100%;
+      max-width: 280px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: var(--pink);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+    .pw-error {
+      color: #e8409a;
+      font-size: .8rem;
+      margin-top: 8px;
+      display: none;
+      font-style: italic;
+    }
+  </style>
       --bg:      #fdf6ff;
       --surface: #fff;
       --border:  #ead5f7;
@@ -363,6 +429,16 @@
 </head>
 <body>
 
+<div class="pw-screen" id="pwScreen">
+  <div class="pw-logo">📚🍑🌿</div>
+  <div class="pw-title">Triple B Book Club</div>
+  <p class="pw-sub">members only 💜</p>
+  <input class="pw-input" id="pwInput" type="password" placeholder="password..." onkeydown="if(event.key==='Enter')checkPw()"/>
+  <button class="pw-btn" onclick="checkPw()">Enter</button>
+  <p class="pw-error" id="pwError">wrong password, babe 🌿</p>
+</div>
+
+<div id="mainContent" style="display:none;">
 <div class="hero">
   <svg width="100%" viewBox="0 0 680 310" role="img" style="max-width:540px;display:block;margin:0 auto;">
     <title>Triple B Book Club logo</title>
@@ -441,7 +517,7 @@
     </div>
 
     <div class="card">
-      <div class="card-head"><h2>Next Meeting</h2><span class="badge pink">June 18</span></div>
+      <div class="card-head"><h2>Next Meeting</h2><span class="badge pink">June 12</span></div>
       <div class="row">
         <div class="dot hot"></div>
         <div class="row-text" style="width:100%">
@@ -458,14 +534,14 @@
   <div class="tab-content" id="tab-meetings">
     <div class="card">
       <div class="card-head"><h2>2026</h2></div>
-      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 18 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place</div></div><span class="pill hot">Next</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">July 16 — Sasha</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">August 20 — Val</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">September 17 — Simone</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">October 15 — Emily</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">November 19 — Christa</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">December 17 — Katie & Betsy 🎄</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">January 21 — Carly</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 12 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place</div></div><span class="pill hot">Next</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">July 10 — Sasha</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">August 13 — Val</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">September 10 — Simone</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">October 8 — Emily</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">November 12 — Christa</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">January 8 — Carly</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
     </div>
   </div>
 
@@ -501,7 +577,7 @@
       <span class="label" style="margin-top:2px;">Meeting details</span>
       <input class="input" id="meetingLocation" placeholder="Location name & address..."/>
       <div class="two-col">
-        <input class="input" id="meetingDate" placeholder="Date (e.g. July 16)..."/>
+        <input class="input" id="meetingDate" placeholder="Date (e.g. July 10)..."/>
         <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
       </div>
       <button class="btn btn-outline" onclick="submitBooks()">Post for Voting 📚</button>
@@ -551,6 +627,24 @@
 </div>
 
 <footer>Triple B · Books, Boobs & Butts · Bush Debatable 🌿 · Est. 2026</footer>
+</div>
+
+<script>
+  function checkPw() {
+    const val = document.getElementById('pwInput').value.toLowerCase().replace(/\s/g,'');
+    if (val === 'bighairybush') {
+      document.getElementById('pwScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      sessionStorage.setItem('tripleB', 'unlocked');
+    } else {
+      document.getElementById('pwError').style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  }
+  if (sessionStorage.getItem('tripleB') === 'unlocked') {
+    document.getElementById('pwScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+  }
 
 <script>
   const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
