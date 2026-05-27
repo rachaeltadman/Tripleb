@@ -5,6 +5,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Triple B 📚</title>
+  <link rel="manifest" href="data:application/json,{}">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -35,16 +36,9 @@
 
     /* PASSWORD */
     .pw-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
+      position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 24px; text-align: center;
     }
     .pw-logo { font-size: 3rem; margin-bottom: 8px; animation: bounce 2s ease-in-out infinite; }
     .pw-title { font-family: 'Fraunces', serif; font-weight: 900; font-size: 2rem; color: var(--pink); margin-bottom: 4px; }
@@ -63,33 +57,45 @@
     }
     .pw-error { color: var(--pink); font-size: .8rem; margin-top: 8px; display: none; font-style: italic; }
 
-    /* HERO */
-    .hero { text-align: center; padding: 48px 24px 20px; }
-
-    @keyframes bounce {
-      0%,100% { transform: translateY(0) rotate(-3deg); }
-      50%      { transform: translateY(-8px) rotate(3deg); }
+    /* ADD TO HOME SCREEN BANNER */
+    .install-banner {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white; padding: 10px 16px; text-align: center;
+      font-size: .78rem; font-weight: 600; display: none;
+      position: relative;
     }
+    .install-banner button {
+      background: white; color: var(--pink); border: none; border-radius: 99px;
+      padding: 4px 12px; font-size: .72rem; font-weight: 700;
+      margin-left: 8px; cursor: pointer;
+    }
+    .install-close {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: white; font-size: 1rem; cursor: pointer;
+    }
+
+    @keyframes bounce { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
     @keyframes rise { to { opacity:1; transform:translateY(0); } }
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
 
+    .hero { text-align: center; padding: 40px 24px 16px; }
+
     /* TABS */
     .tabs {
-      display: flex; gap: 6px; max-width: 600px; margin: 16px auto 0;
+      display: flex; gap: 6px; max-width: 640px; margin: 12px auto 0;
       padding: 0 16px; overflow-x: auto; scrollbar-width: none;
     }
     .tabs::-webkit-scrollbar { display:none; }
     .tab {
-      flex-shrink: 0; padding: 8px 16px; border-radius: 99px;
+      flex-shrink: 0; padding: 7px 14px; border-radius: 99px;
       border: 1.5px solid var(--border); background: white;
-      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .78rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .75rem;
       color: var(--muted); cursor: pointer; transition: all .15s;
     }
     .tab:hover { border-color: var(--lavender); color: var(--purple); }
     .tab.active { background: var(--pink); border-color: var(--pink); color: white; }
 
-    /* PAGE */
-    .page { max-width: 600px; margin: 0 auto; padding: 14px 16px 80px; }
+    .page { max-width: 640px; margin: 0 auto; padding: 12px 16px 80px; }
     .tab-content { display:none; flex-direction:column; gap:12px; }
     .tab-content.active { display:flex; }
 
@@ -104,6 +110,7 @@
     .card:nth-child(2){ animation-delay:.12s; }
     .card:nth-child(3){ animation-delay:.19s; }
     .card:nth-child(4){ animation-delay:.26s; }
+    .card:nth-child(5){ animation-delay:.33s; }
 
     .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
     .card-head h2 { font-family:'Fraunces',serif; font-weight:700; font-size:1.2rem; color:var(--text); }
@@ -112,8 +119,8 @@
     .badge.pink   { background:#fce7f3; color:var(--pink); border:1px solid #f9a8d4; }
     .badge.muted  { background:#f5f0fa; color:var(--muted); }
     .badge.green  { background:#d1fae5; color:var(--success); }
+    .badge.purple { background:#f3e8ff; color:var(--purple); }
 
-    /* ROWS */
     .row {
       display:flex; align-items:center; gap:12px; padding:10px 12px;
       border-radius:12px; background:var(--bg); border:1.5px solid transparent;
@@ -123,6 +130,7 @@
     .row:hover { border-color:var(--border); transform:scale(1.008); }
     .dot { width:7px; height:7px; border-radius:50%; background:var(--border); flex-shrink:0; }
     .dot.hot { background:var(--pink); box-shadow:0 0 6px rgba(232,64,154,.4); }
+    .dot.done { background: var(--success); }
     .row-text .name { font-weight:600; font-size:.88rem; color:var(--text); }
     .row-text .sub  { font-size:.73rem; color:var(--muted); margin-top:2px; }
     .pill {
@@ -130,13 +138,12 @@
       text-transform:uppercase; border-radius:99px; padding:3px 9px;
       white-space:nowrap; flex-shrink:0; background:#f5f0fa; color:var(--muted);
     }
-    .pill.hot { background:#fce7f3; color:var(--pink); }
+    .pill.hot  { background:#fce7f3; color:var(--pink); }
+    .pill.done { background:#d1fae5; color:var(--success); }
 
-    /* RULES */
     .rule { display:flex; gap:10px; padding:9px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--muted); line-height:1.5; }
     .rule:last-child { border-bottom:none; }
 
-    /* INPUTS */
     .input {
       width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border);
       background:var(--bg); font-family:'DM Sans',sans-serif; font-size:.88rem;
@@ -148,7 +155,6 @@
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .two-col .input { margin-bottom:0; }
 
-    /* BUTTONS */
     .btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
     .btn:hover { opacity:.88; }
     .btn:active { transform:scale(.98); }
@@ -157,7 +163,6 @@
 
     .success-msg { text-align:center; background:#d1fae5; border:1.5px solid #6ee7b7; color:var(--success); border-radius:12px; padding:10px; font-size:.82rem; font-weight:600; margin-top:8px; display:none; }
 
-    /* VOTING */
     .book-option { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; cursor:pointer; transition:all .15s; }
     .book-option:hover { border-color:var(--border); }
     .book-option.selected { border-color:var(--pink); background:#fdf2f8; }
@@ -168,24 +173,51 @@
     .book-option.selected .vote-count { color:var(--pink); }
     .no-content { text-align:center; color:var(--muted); font-size:.84rem; padding:20px 0; font-style:italic; }
 
-    /* SHELF */
     .shelf-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:7px; }
     .shelf-item:last-child { margin-bottom:0; }
     .shelf-item .title  { font-weight:600; font-size:.88rem; color:var(--text); }
     .shelf-item .author { font-size:.73rem; color:var(--muted); margin-top:2px; }
     .shelf-item .nom    { margin-left:auto; font-size:.65rem; color:var(--pink); font-weight:600; white-space:nowrap; flex-shrink:0; }
 
-    .sep { text-align:center; font-size:.68rem; color:var(--muted); font-style:italic; margin:2px 0; }
+    /* MEMBERS GRID */
+    .members-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+    .member { text-align:center; }
+    .member-blob {
+      width:56px; height:56px; border-radius:50% 44% 56% 44% / 44% 50% 50% 56%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; margin:0 auto 6px; transition:transform .2s;
+    }
+    .member:hover .member-blob { transform:rotate(-8deg) scale(1.12); }
+    .member-name { font-size:.78rem; font-weight:700; color:var(--text); }
+    .member-role { font-size:.68rem; color:var(--muted); }
 
-    .photo-btn { display:block; text-align:center; background:var(--bg); color:var(--purple); font-weight:600; font-size:.88rem; padding:14px; border-radius:12px; text-decoration:none; border:1.5px solid var(--border); transition:border-color .15s; }
-    .photo-btn:hover { border-color:var(--lavender); }
+    /* PAST READS */
+    .past-read { padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; }
+    .past-read:last-child { margin-bottom:0; }
+    .past-read .pr-title { font-weight:700; font-size:.9rem; color:var(--text); }
+    .past-read .pr-meta  { font-size:.73rem; color:var(--muted); margin-top:3px; }
+    .past-read .pr-stars { color:var(--pink); font-size:.85rem; margin-top:4px; }
+    .past-read .pr-note  { font-size:.75rem; color:var(--muted); font-style:italic; margin-top:4px; }
+
+    /* DISCUSSION */
+    .q-item { padding:10px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--text); line-height:1.5; display:flex; gap:10px; }
+    .q-item:last-child { border-bottom:none; }
+
+    .sep { text-align:center; font-size:.68rem; color:var(--muted); font-style:italic; margin:2px 0; }
 
     footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
   </style>
 </head>
 <body>
 
-<!-- PASSWORD SCREEN -->
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  📱 Add Triple B to your home screen for easy access!
+  <button onclick="addToHome()">Add</button>
+  <button class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</button>
+</div>
+
+<!-- PASSWORD -->
 <div class="pw-screen" id="pwScreen">
   <div class="pw-logo">📚🍑🌿</div>
   <div class="pw-title">Triple B Book Club</div>
@@ -195,7 +227,7 @@
   <p class="pw-error" id="pwError">wrong password, babe 🌿</p>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div id="mainContent" style="display:none;">
 
 <div class="hero">
@@ -250,7 +282,7 @@
   <button class="tab" onclick="switchTab('vote',this)">🗳 Vote</button>
   <button class="tab" onclick="switchTab('host',this)">👑 Host</button>
   <button class="tab" onclick="switchTab('shelf',this)">📚 Shelf</button>
-  <button class="tab" onclick="switchTab('photos',this)">📸 Photos</button>
+  <button class="tab" onclick="switchTab('past',this)">⭐ Past Reads</button>
   <button class="tab" onclick="switchTab('vibes',this)">💖 Vibes</button>
 </div>
 
@@ -258,6 +290,7 @@
 
   <!-- HOME -->
   <div class="tab-content active" id="tab-home">
+
     <div class="card" style="border-color:var(--pink);background:linear-gradient(135deg,#fff 60%,#fce7f3 100%);">
       <div class="card-head">
         <h2>Currently Reading</h2>
@@ -270,6 +303,9 @@
           <div class="sub">June · Rachael 🏖️ · picked with Sasha ✨</div>
         </div>
       </div>
+      <div id="winnerBanner" style="display:none;margin-top:10px;background:#f3e8ff;border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--purple);font-weight:600;">
+        🏆 This month's winner: <span id="winnerBook"></span>
+      </div>
     </div>
 
     <div class="card">
@@ -280,24 +316,31 @@
           <div class="name">Host: Rachael 🏖️</div>
           <div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div>
           <div class="sub" style="margin-top:2px;" id="nextDateTime">⌚ 6:30pm</div>
-          <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place</div>
+          <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div>
         </div>
       </div>
     </div>
+
+    <!-- Discussion Questions -->
+    <div class="card" id="discussionCard" style="display:none;">
+      <div class="card-head"><h2>Discussion Questions 💬</h2></div>
+      <div id="discussionList"></div>
+    </div>
+
   </div>
 
   <!-- MEETINGS -->
   <div class="tab-content" id="tab-meetings">
     <div class="card">
       <div class="card-head"><h2>2026</h2></div>
-      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 12 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place</div></div><span class="pill hot">Next</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">July 10 — Sasha</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">August 13 — Val</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">September 10 — Simone</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">October 8 — Emily</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">November 12 — Christa</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text"><div class="name">January 8 — Carly</div><div class="sub">book & location TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 12 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div></div><span class="pill hot">Next</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 10 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">September 10 — Simone</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">October 8 — Emily</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">November 12 — Christa</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 8 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
     </div>
   </div>
 
@@ -336,8 +379,40 @@
         <input class="input" id="meetingDate" placeholder="Date (e.g. July 10)..."/>
         <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
       </div>
-      <button class="btn btn-outline" onclick="submitBooks()">Post for Voting 📚</button>
-      <div class="success-msg" id="hostSuccess">✓ Posted! Members can now vote in the Vote tab.</div>
+      <button class="btn btn-outline" onclick="submitBooks()" style="margin-bottom:8px;">Post for Voting 📚</button>
+      <div class="success-msg" id="hostSuccess">✓ Posted! Members can now vote.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Announce Winner 🏆</h2><span class="badge muted">Host Only</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Once voting closes, announce the winning book!</p>
+      <input class="input" id="winnerInput" placeholder="Winning book title..."/>
+      <button class="btn btn-outline" onclick="announceWinner()">Announce Winner 🏆</button>
+      <div class="success-msg" id="winnerSuccess">✓ Winner announced!</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Discussion Questions 💬</h2><span class="badge muted">Host Only</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Add talking points for the meeting!</p>
+      <input class="input" id="discussionMonth" placeholder="Month (e.g. June)..."/>
+      <textarea class="input" id="discussionQ" placeholder="Add a question..." style="height:80px;resize:none;"></textarea>
+      <button class="btn btn-outline" onclick="addDiscussion()">Add Question 💬</button>
+      <div class="success-msg" id="discussionSuccess">✓ Question added!</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Log Past Read ⭐</h2><span class="badge muted">Host Only</span></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">After each meeting, log the book you read!</p>
+      <input class="input" id="pastTitle" placeholder="Book title..."/>
+      <input class="input" id="pastAuthor" placeholder="Author..."/>
+      <input class="input" id="pastHost" placeholder="Who hosted..."/>
+      <input class="input" id="pastMonth" placeholder="Month (e.g. June 2026)..."/>
+      <div class="two-col">
+        <input class="input" id="pastRating" placeholder="Rating (1-5 ⭐)..." type="number" min="1" max="5"/>
+        <input class="input" id="pastNote" placeholder="One word vibe..."/>
+      </div>
+      <button class="btn btn-outline" onclick="logPastRead()">Log It ⭐</button>
+      <div class="success-msg" id="pastSuccess">✓ Logged!</div>
     </div>
   </div>
 
@@ -349,19 +424,19 @@
       <input class="input" id="shelfTitle" placeholder="Book title..."/>
       <input class="input" id="shelfAuthor" placeholder="Author..."/>
       <button class="btn btn-outline" onclick="addToShelf()">Add to Shelf 📖</button>
-      <div class="success-msg" id="shelfSuccess">✓ Added to the shelf!</div>
+      <div class="success-msg" id="shelfSuccess">✓ Added!</div>
     </div>
     <div class="card">
       <div class="card-head"><h2>Nominations</h2></div>
-      <div id="shelfList"><div class="no-content">No nominations yet — add the first one!</div></div>
+      <div id="shelfList"><div class="no-content">No nominations yet!</div></div>
     </div>
   </div>
 
-  <!-- PHOTOS -->
-  <div class="tab-content" id="tab-photos">
+  <!-- PAST READS -->
+  <div class="tab-content" id="tab-past">
     <div class="card">
-      <div class="card-head"><h2>Club Photos 📸</h2></div>
-      <a class="photo-btn" href="https://www.icloud.com/sharedalbum/#B2b5idkMwxQSJV" target="_blank">📸 View Shared Album</a>
+      <div class="card-head"><h2>Past Reads ⭐</h2></div>
+      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here! 📚</div></div>
     </div>
   </div>
 
@@ -394,6 +469,7 @@
       document.getElementById('pwScreen').style.display = 'none';
       document.getElementById('mainContent').style.display = 'block';
       sessionStorage.setItem('tripleB', 'unlocked');
+      showInstallBanner();
     } else {
       document.getElementById('pwError').style.display = 'block';
       document.getElementById('pwInput').value = '';
@@ -404,13 +480,38 @@
     document.getElementById('mainContent').style.display = 'block';
   }
 
+  // INSTALL BANNER
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredPrompt = e;
+    if (sessionStorage.getItem('tripleB') === 'unlocked') showInstallBanner();
+  });
+  function showInstallBanner() {
+    if (deferredPrompt && !localStorage.getItem('installDismissed')) {
+      document.getElementById('installBanner').style.display = 'block';
+    }
+    // Show iOS tip
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    if (isIOS && !localStorage.getItem('installDismissed')) {
+      document.getElementById('installBanner').style.display = 'block';
+      document.getElementById('installBanner').innerHTML = '📱 Add to home screen: tap the share button then "Add to Home Screen" <button class="install-close" onclick="dismissInstall()">✕</button>';
+    }
+  }
+  function addToHome() {
+    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
+    dismissInstall();
+  }
+  function dismissInstall() {
+    localStorage.setItem('installDismissed','1');
+    document.getElementById('installBanner').style.display = 'none';
+  }
+
   // SUPABASE
   const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_4zVpGQzqr7gDyb1c6oeirA_VD23kq5B';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let selectedBook = null;
-  let currentMonth = '';
+  let selectedBook = null, currentMonth = '';
 
   function switchTab(name, el) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -419,29 +520,38 @@
     el.classList.add('active');
     if (name === 'vote') loadVoting();
     if (name === 'shelf') loadShelf();
+    if (name === 'past') loadPastReads();
   }
 
+  // NEXT MEETING
   async function loadNextMeeting() {
     const { data } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
     if (!data) return;
     if (data.location) document.getElementById('nextLocation').textContent = '📍 ' + data.location;
     if (data.meeting_date || data.meeting_time) {
-      const parts = [data.meeting_date, data.meeting_time].filter(Boolean).join(' · ');
-      document.getElementById('nextDateTime').textContent = '⌚ ' + parts;
+      document.getElementById('nextDateTime').textContent = '⌚ ' + [data.meeting_date, data.meeting_time].filter(Boolean).join(' · ');
+    }
+    if (data.winning_book) {
+      document.getElementById('winnerBook').textContent = data.winning_book;
+      document.getElementById('winnerBanner').style.display = 'block';
+    }
+    // load discussion questions
+    const { data: qs } = await sb.from('discussions').select('*').eq('month', data.month).order('created_at');
+    if (qs && qs.length > 0) {
+      document.getElementById('discussionCard').style.display = 'block';
+      document.getElementById('discussionList').innerHTML = qs.map(q =>
+        `<div class="q-item"><span>💬</span>${q.question}</div>`
+      ).join('');
     }
   }
 
+  // VOTING
   async function loadVoting() {
     const { data: meeting } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
     const noVoteYet = document.getElementById('noVoteYet');
     const voteForm = document.getElementById('voteForm');
-    if (!meeting || !meeting.book1) {
-      noVoteYet.style.display = 'block';
-      voteForm.style.display = 'none';
-      return;
-    }
-    noVoteYet.style.display = 'none';
-    voteForm.style.display = 'block';
+    if (!meeting || !meeting.book1) { noVoteYet.style.display='block'; voteForm.style.display='none'; return; }
+    noVoteYet.style.display = 'none'; voteForm.style.display = 'block';
     currentMonth = meeting.month;
     document.getElementById('voteMonthLabel').textContent = 'Voting for: ' + meeting.month;
     const books = [meeting.book1, meeting.book2, meeting.book3].filter(Boolean);
@@ -455,7 +565,7 @@
       const div = document.createElement('div');
       div.className = 'book-option';
       div.onclick = function() { selectBook(this, book); };
-      div.innerHTML = `<div><div class="book-name">${book}</div><div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div></div><span class="vote-count">${count} vote${count !== 1 ? 's' : ''}</span>`;
+      div.innerHTML = `<div><div class="book-name">${book}</div><div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div></div><span class="vote-count">${count} vote${count!==1?'s':''}</span>`;
       container.appendChild(div);
     });
     document.getElementById('voteBtn').style.display = 'block';
@@ -463,8 +573,7 @@
 
   function selectBook(el, book) {
     document.querySelectorAll('.book-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedBook = book;
+    el.classList.add('selected'); selectedBook = book;
   }
 
   async function castVote() {
@@ -488,16 +597,38 @@
     const date = document.getElementById('meetingDate').value.trim();
     const time = document.getElementById('meetingTime').value.trim();
     if (!host || !month || !b1 || !b2 || !b3) { alert('Fill in name, month, and all 3 books!'); return; }
-    const { error } = await sb.from('meetings').upsert({ month, host, book1: b1, book2: b2, book3: b3, location: loc, meeting_date: date, meeting_time: time }, { onConflict: 'month' });
+    const { error } = await sb.from('meetings').upsert({ month, host, book1:b1, book2:b2, book3:b3, location:loc, meeting_date:date, meeting_time:time }, { onConflict:'month' });
     if (error) { alert('Oops! ' + error.message); return; }
     document.getElementById('hostSuccess').style.display = 'block';
     loadNextMeeting();
   }
 
+  async function announceWinner() {
+    const winner = document.getElementById('winnerInput').value.trim();
+    if (!winner) { alert('Enter the winning book!'); return; }
+    const { data: meeting } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
+    if (!meeting) { alert('No meeting found!'); return; }
+    const { error } = await sb.from('meetings').update({ winning_book: winner }).eq('id', meeting.id);
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('winnerSuccess').style.display = 'block';
+    loadNextMeeting();
+  }
+
+  async function addDiscussion() {
+    const month = document.getElementById('discussionMonth').value.trim();
+    const question = document.getElementById('discussionQ').value.trim();
+    if (!month || !question) { alert('Fill in both fields!'); return; }
+    const { error } = await sb.from('discussions').insert({ month, question });
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('discussionSuccess').style.display = 'block';
+    document.getElementById('discussionQ').value = '';
+  }
+
+  // SHELF
   async function loadShelf() {
     const { data } = await sb.from('shelf').select('*').order('created_at', { ascending: false });
     const container = document.getElementById('shelfList');
-    if (!data || data.length === 0) { container.innerHTML = '<div class="no-content">No nominations yet — add the first one!</div>'; return; }
+    if (!data || data.length === 0) { container.innerHTML = '<div class="no-content">No nominations yet!</div>'; return; }
     container.innerHTML = data.map(b => `<div class="shelf-item"><div><div class="title">${b.title}</div><div class="author">by ${b.author}</div></div><span class="nom">${b.nominated_by}</span></div>`).join('');
   }
 
@@ -514,6 +645,36 @@
     document.getElementById('shelfAuthor').value = '';
     setTimeout(() => document.getElementById('shelfSuccess').style.display = 'none', 3000);
     loadShelf();
+  }
+
+  // PAST READS
+  async function loadPastReads() {
+    const { data } = await sb.from('past_reads').select('*').order('created_at', { ascending: false });
+    const container = document.getElementById('pastList');
+    if (!data || data.length === 0) { container.innerHTML = '<div class="no-content">Nothing yet — your reading history will live here! 📚</div>'; return; }
+    container.innerHTML = data.map(b => {
+      const stars = '★'.repeat(b.rating || 0) + '☆'.repeat(5 - (b.rating || 0));
+      return `<div class="past-read">
+        <div class="pr-title">${b.title}</div>
+        <div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div>
+        <div class="pr-stars">${stars}</div>
+        ${b.note ? `<div class="pr-note">"${b.note}"</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  async function logPastRead() {
+    const title = document.getElementById('pastTitle').value.trim();
+    const author = document.getElementById('pastAuthor').value.trim();
+    const hosted_by = document.getElementById('pastHost').value.trim();
+    const month = document.getElementById('pastMonth').value.trim();
+    const rating = parseInt(document.getElementById('pastRating').value) || 0;
+    const note = document.getElementById('pastNote').value.trim();
+    if (!title || !author || !month) { alert('Fill in title, author, and month!'); return; }
+    const { error } = await sb.from('past_reads').insert({ title, author, hosted_by, month, rating, note });
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('pastSuccess').style.display = 'block';
+    ['pastTitle','pastAuthor','pastHost','pastMonth','pastRating','pastNote'].forEach(id => document.getElementById(id).value = '');
   }
 
   loadNextMeeting();
