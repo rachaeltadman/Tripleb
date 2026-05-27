@@ -2,280 +2,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Triple B 📚</title>
-  <link rel="manifest" href="data:application/json,{}">
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;900&family=Lexend+Deca:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    function checkPw() {
-      const val = document.getElementById('pwInput').value.toLowerCase().replace(/\s/g,'');
-      if (val === 'bighairybush') {
-        document.getElementById('pwScreen').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-        sessionStorage.setItem('tripleB', 'unlocked');
-      } else {
-        document.getElementById('pwError').style.display = 'block';
-        document.getElementById('pwInput').value = '';
-      }
-    }
-  </script>
-  <style>
-    :root {
-      --bg:      #ede0ff;
-      --surface: #f8f2ff;
-      --border:  #c4a0e8;
-      --pink:    #7c3aed;
-      --purple:  #5b21b6;
-      --lavender:#8b5cf6;
-      --text:    #2e1065;
-      --muted:   #6d28d9;
-      --success: #059669;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Triple B Book Club</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #ede0ff;
+  --surface: #f8f2ff;
+  --border: #c4a0e8;
+  --purple: #5b21b6;
+  --lavender: #8b5cf6;
+  --text: #2e1065;
+  --muted: #6d28d9;
+  --success: #059669;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Lexend',sans-serif;
+  font-weight:400;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 0% 0%, #ddd6fe 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, #ede9fe 0%, transparent 50%);
+}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+/* PASSWORD */
+#pwScreen {
+  position:fixed; inset:0; background:var(--bg); z-index:9999;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:24px; text-align:center;
+}
+.pw-logo { font-size:3rem; margin-bottom:8px; display:block; animation:bounce 2s ease-in-out infinite; }
+.pw-title { font-family:'Lexend',sans-serif; font-weight:900; font-size:2rem; color:var(--purple); margin-bottom:4px; }
+.pw-sub { font-size:.8rem; color:var(--muted); font-style:italic; margin-bottom:24px; }
+.pw-input {
+  width:100%; max-width:280px; padding:12px 16px; border-radius:12px;
+  border:1.5px solid var(--border); background:white; font-family:'Lexend',sans-serif;
+  font-size:1rem; color:var(--text); text-align:center; outline:none; margin-bottom:10px;
+}
+.pw-input:focus { border-color:var(--purple); }
+.pw-btn {
+  width:100%; max-width:280px; padding:12px; border-radius:12px; border:none;
+  background:var(--purple); color:white; font-family:'Lexend',sans-serif;
+  font-weight:600; font-size:.95rem; cursor:pointer;
+}
+.pw-error { color:var(--purple); font-size:.8rem; margin-top:8px; display:none; font-style:italic; }
 
-    body {
-      font-family: 'Lexend', sans-serif;
-      font-weight: 400;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      background-image:
-        radial-gradient(ellipse at 0% 0%, #ddd6fe 0%, transparent 50%),
-        radial-gradient(ellipse at 100% 100%, #ede9fe 0%, transparent 50%);
-    }
+/* ANIMATIONS */
+@keyframes bounce { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-8px) rotate(3deg); } }
+@keyframes rise { to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
 
-    /* PASSWORD */
-    .pw-screen {
-      position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 24px; text-align: center;
-    }
-    .pw-logo { font-size: 3rem; margin-bottom: 8px; animation: bounce 2s ease-in-out infinite; }
-    .pw-title { font-family: 'Lexend', sans-serif; font-weight: 900; font-size: 2rem; color: var(--pink); margin-bottom: 4px; }
-    .pw-sub { font-size: .8rem; color: var(--muted); font-style: italic; margin-bottom: 24px; }
-    .pw-input {
-      width: 100%; max-width: 280px; padding: 12px 16px; border-radius: 12px;
-      border: 1.5px solid var(--border); background: white; font-family: 'Lexend', sans-serif;
-      font-size: 1rem; color: var(--text); text-align: center; outline: none;
-      margin-bottom: 10px; letter-spacing: .1em;
-    }
-    .pw-input:focus { border-color: var(--pink); }
-    .pw-btn {
-      width: 100%; max-width: 280px; padding: 12px; border-radius: 12px; border: none;
-      background: var(--pink); color: white; font-family: 'Lexend', sans-serif;
-      font-weight: 600; font-size: .95rem; cursor: pointer;
-    }
-    .pw-error { color: var(--pink); font-size: .8rem; margin-top: 8px; display: none; font-style: italic; }
+/* HERO */
+.hero { text-align:center; padding:48px 24px 20px; }
+.hero-sticker { font-size:2.8rem; display:block; margin-bottom:8px; animation:bounce 2s ease-in-out infinite; }
+.hero-title { font-family:'Lexend',sans-serif; font-weight:900; font-size:clamp(3.5rem,12vw,6rem); color:var(--purple); line-height:1; letter-spacing:-.02em; }
+.hero-divider { display:flex; align-items:center; justify-content:center; gap:10px; margin:8px auto; max-width:300px; }
+.hero-divider-line { flex:1; height:1px; background:var(--border); }
+.hero-divider-dot { width:5px; height:5px; border-radius:50%; background:var(--lavender); }
+.hero-sub { font-family:'Lexend',sans-serif; font-weight:700; font-size:clamp(1rem,3.5vw,1.4rem); color:var(--lavender); letter-spacing:.6em; text-transform:uppercase; }
+.hero-tagline { font-size:.78rem; color:var(--muted); margin-top:8px; }
+.hero-est { font-size:.68rem; color:var(--muted); margin-top:4px; opacity:.5; letter-spacing:.15em; text-transform:uppercase; }
 
-    /* ADD TO HOME SCREEN BANNER */
-    .install-banner {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: white; padding: 10px 16px; text-align: center;
-      font-size: .78rem; font-weight: 600; display: none;
-      position: relative;
-    }
-    .install-banner button {
-      background: white; color: var(--pink); border: none; border-radius: 99px;
-      padding: 4px 12px; font-size: .72rem; font-weight: 700;
-      margin-left: 8px; cursor: pointer;
-    }
-    .install-close {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; color: white; font-size: 1rem; cursor: pointer;
-    }
+/* TABS */
+.tabs {
+  display:flex; gap:6px; max-width:640px; margin:14px auto 0;
+  padding:0 16px; overflow-x:auto; scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar { display:none; }
+.tab {
+  flex-shrink:0; padding:7px 14px; border-radius:99px;
+  border:1.5px solid var(--border); background:white;
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.75rem;
+  color:var(--muted); cursor:pointer; transition:all .15s;
+}
+.tab:hover { border-color:var(--lavender); color:var(--purple); }
+.tab.active { background:var(--purple); border-color:var(--purple); color:white; }
 
-    @keyframes bounce { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
-    @keyframes rise { to { opacity:1; transform:translateY(0); } }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+/* PAGE */
+.page { max-width:640px; margin:0 auto; padding:12px 16px 80px; }
+.tab-content { display:none; flex-direction:column; gap:12px; }
+.tab-content.active { display:flex; }
 
-    .hero { text-align: center; padding: 48px 24px 24px; }
-    .hero-sticker { font-size: 2.8rem; margin-bottom: 8px; display: block; animation: bounce 2s ease-in-out infinite; }
-    .hero-title { font-family: 'Lexend', sans-serif; font-weight: 900; font-size: clamp(3.8rem, 14vw, 6.5rem); color: var(--purple); line-height: 1; letter-spacing: -.02em; }
-    .hero-sub { font-family: 'Lexend', sans-serif; font-weight: 700; font-size: clamp(1.1rem, 4vw, 1.6rem); color: var(--lavender); margin-top: 4px; letter-spacing: .6em; text-transform: uppercase; }
-    .hero-divider { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px auto; max-width: 280px; }
-    .hero-divider-line { flex: 1; height: 1px; background: var(--border); }
-    .hero-divider-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lavender); }
-    .hero-tagline { font-size: .78rem; color: var(--muted); margin-top: 2px; letter-spacing: .04em; }
-    .hero-est { font-size: .68rem; color: var(--muted); margin-top: 4px; opacity: .5; letter-spacing: .15em; text-transform: uppercase; }
+/* CARDS */
+.card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:20px; padding:20px 22px;
+  box-shadow:0 2px 16px rgba(91,33,182,.06);
+  opacity:0; transform:translateY(10px); animation:rise .35s ease forwards;
+}
+.card:nth-child(1){ animation-delay:.05s; }
+.card:nth-child(2){ animation-delay:.12s; }
+.card:nth-child(3){ animation-delay:.19s; }
+.card:nth-child(4){ animation-delay:.26s; }
+.card:nth-child(5){ animation-delay:.33s; }
 
-    /* TABS */
-    .tabs {
-      display: flex; gap: 6px; max-width: 640px; margin: 12px auto 0;
-      padding: 0 16px; overflow-x: auto; scrollbar-width: none;
-    }
-    .tabs::-webkit-scrollbar { display:none; }
-    .tab {
-      flex-shrink: 0; padding: 7px 14px; border-radius: 99px;
-      border: 1.5px solid var(--border); background: white;
-      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: .75rem;
-      color: var(--muted); cursor: pointer; transition: all .15s;
-    }
-    .tab:hover { border-color: var(--lavender); color: var(--purple); }
-    .tab.active { background: var(--pink); border-color: var(--pink); color: white; }
+.card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.card-head h2 { font-family:'Lexend',sans-serif; font-weight:700; font-size:1.2rem; color:var(--purple); }
 
-    .page { max-width: 640px; margin: 0 auto; padding: 12px 16px 80px; }
-    .tab-content { display:none; flex-direction:column; gap:12px; }
-    .tab-content.active { display:flex; }
+.badge { font-size:.63rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:99px; }
+.badge.purple { background:#ede9fe; color:var(--purple); }
+.badge.muted  { background:#f0ebff; color:var(--muted); }
+.badge.green  { background:#d1fae5; color:var(--success); }
 
-    /* CARDS */
-    .card {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: 20px; padding: 20px 22px;
-      box-shadow: 0 2px 16px rgba(139,63,207,.06);
-      opacity: 0; transform: translateY(10px); animation: rise .35s ease forwards;
-    }
-    .card:nth-child(1){ animation-delay:.05s; }
-    .card:nth-child(2){ animation-delay:.12s; }
-    .card:nth-child(3){ animation-delay:.19s; }
-    .card:nth-child(4){ animation-delay:.26s; }
-    .card:nth-child(5){ animation-delay:.33s; }
+/* ROWS */
+.row {
+  display:flex; align-items:center; gap:12px; padding:10px 12px;
+  border-radius:12px; background:var(--bg); border:1.5px solid transparent;
+  margin-bottom:7px; transition:border-color .15s, transform .15s;
+}
+.row:last-child { margin-bottom:0; }
+.row:hover { border-color:var(--border); transform:scale(1.008); }
+.dot { width:7px; height:7px; border-radius:50%; background:var(--border); flex-shrink:0; }
+.dot.hot { background:var(--purple); box-shadow:0 0 6px rgba(91,33,182,.4); }
+.row-text .name { font-weight:600; font-size:.88rem; color:var(--text); }
+.row-text .sub  { font-size:.73rem; color:var(--muted); margin-top:2px; }
+.pill { margin-left:auto; font-size:.62rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; border-radius:99px; padding:3px 9px; white-space:nowrap; flex-shrink:0; background:#f0ebff; color:var(--muted); }
+.pill.hot { background:#ede9fe; color:var(--purple); }
 
-    .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-    .card-head h2 { font-family:'Lexend',sans-serif; font-weight:700; font-size:1.2rem; color:var(--purple); }
+/* RULES */
+.rule { display:flex; gap:10px; padding:9px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--muted); line-height:1.5; }
+.rule:last-child { border-bottom:none; }
 
-    .badge { font-size:.63rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:99px; }
-    .badge.pink   { background:#ede0ff; color:var(--pink); border:1px solid #c4a0e8; }
-    .badge.muted  { background:#f5f0fa; color:var(--muted); }
-    .badge.green  { background:#d1fae5; color:var(--success); }
-    .badge.purple { background:#f3e8ff; color:var(--purple); }
+/* INPUTS */
+.input { width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--text); margin-bottom:8px; outline:none; transition:border-color .15s; }
+.input:focus { border-color:var(--lavender); }
+.input::placeholder { color:var(--muted); }
+.label { font-size:.68rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; display:block; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.two-col .input { margin-bottom:0; }
 
-    .row {
-      display:flex; align-items:center; gap:12px; padding:10px 12px;
-      border-radius:12px; background:var(--bg); border:1.5px solid transparent;
-      margin-bottom:7px; transition:border-color .15s, transform .15s;
-    }
-    .row:last-child { margin-bottom:0; }
-    .row:hover { border-color:var(--border); transform:scale(1.008); }
-    .dot { width:7px; height:7px; border-radius:50%; background:var(--border); flex-shrink:0; }
-    .dot.hot { background:var(--purple); box-shadow:0 0 6px rgba(109,40,217,.4); }
-    .dot.done { background: var(--success); }
-    .row-text .name { font-weight:600; font-size:.88rem; color:var(--text); }
-    .row-text .sub  { font-size:.73rem; color:var(--muted); margin-top:2px; }
-    .pill {
-      margin-left:auto; font-size:.62rem; font-weight:600; letter-spacing:.06em;
-      text-transform:uppercase; border-radius:99px; padding:3px 9px;
-      white-space:nowrap; flex-shrink:0; background:#f5f0fa; color:var(--muted);
-    }
-    .pill.hot  { background:#ede0ff; color:var(--pink); }
-    .pill.done { background:#d1fae5; color:var(--success); }
+/* BUTTONS */
+.btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
+.btn:hover { opacity:.88; }
+.btn:active { transform:scale(.98); }
+.btn-purple  { background:var(--purple); color:white; }
+.btn-outline { background:var(--surface); color:var(--purple); border:1.5px solid var(--border); }
 
-    .rule { display:flex; gap:10px; padding:9px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--muted); line-height:1.5; }
-    .rule:last-child { border-bottom:none; }
+.success-msg { text-align:center; background:#d1fae5; border:1.5px solid #6ee7b7; color:var(--success); border-radius:12px; padding:10px; font-size:.82rem; font-weight:600; margin-top:8px; display:none; }
+.no-content { text-align:center; color:var(--muted); font-size:.84rem; padding:20px 0; font-style:italic; }
 
-    .input {
-      width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border);
-      background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem;
-      color:var(--text); margin-bottom:8px; outline:none; transition:border-color .15s;
-    }
-    .input:focus { border-color:var(--lavender); }
-    .input::placeholder { color:var(--muted); }
-    .label { font-size:.68rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; display:block; }
-    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .two-col .input { margin-bottom:0; }
+/* VOTING */
+.book-option { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; cursor:pointer; transition:all .15s; }
+.book-option:hover { border-color:var(--border); }
+.book-option.selected { border-color:var(--purple); background:#ede9fe; }
+.book-option .book-name { font-weight:600; font-size:.88rem; color:var(--text); }
+.vote-bar { height:4px; border-radius:99px; background:var(--border); margin-top:5px; width:110px; overflow:hidden; }
+.vote-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--purple),var(--lavender)); transition:width .4s ease; }
+.vote-count { font-size:.7rem; color:var(--muted); margin-left:10px; flex-shrink:0; font-weight:600; }
+.book-option.selected .vote-count { color:var(--purple); }
 
-    .btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
-    .btn:hover { opacity:.88; }
-    .btn:active { transform:scale(.98); }
-    .btn-pink    { background: var(--purple); color: white; }
-    .btn-outline { background: var(--surface); color: var(--purple); border: 1.5px solid var(--border); }
+/* SHELF */
+.shelf-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:var(--bg); margin-bottom:7px; }
+.shelf-item:last-child { margin-bottom:0; }
+.shelf-item .title  { font-weight:600; font-size:.88rem; color:var(--text); }
+.shelf-item .author { font-size:.73rem; color:var(--muted); margin-top:2px; }
+.shelf-item .nom    { margin-left:auto; font-size:.65rem; color:var(--purple); font-weight:600; white-space:nowrap; flex-shrink:0; }
 
-    .success-msg { text-align:center; background:#d1fae5; border:1.5px solid #6ee7b7; color:var(--success); border-radius:12px; padding:10px; font-size:.82rem; font-weight:600; margin-top:8px; display:none; }
+/* PAST READS */
+.past-read { padding:12px 14px; border-radius:12px; background:var(--bg); margin-bottom:8px; }
+.past-read:last-child { margin-bottom:0; }
+.past-read .pr-title { font-weight:700; font-size:.9rem; color:var(--text); }
+.past-read .pr-meta  { font-size:.73rem; color:var(--muted); margin-top:3px; }
+.past-read .pr-stars { color:var(--purple); font-size:.85rem; margin-top:4px; }
+.past-read .pr-note  { font-size:.75rem; color:var(--muted); font-style:italic; margin-top:4px; }
 
-    .book-option { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; cursor:pointer; transition:all .15s; }
-    .book-option:hover { border-color:var(--border); }
-    .book-option.selected { border-color:var(--pink); background:#f0ebff; }
-    .book-option .book-name { font-weight:600; font-size:.88rem; color:var(--text); }
-    .vote-bar { height:4px; border-radius:99px; background:var(--border); margin-top:5px; width:110px; overflow:hidden; }
-    .vote-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--pink),var(--lavender)); transition:width .4s ease; }
-    .vote-count { font-size:.7rem; color:var(--muted); margin-left:10px; flex-shrink:0; font-weight:600; }
-    .book-option.selected .vote-count { color:var(--pink); }
-    .no-content { text-align:center; color:var(--muted); font-size:.84rem; padding:20px 0; font-style:italic; }
+/* COUNTDOWN */
+.countdown { display:flex; gap:10px; justify-content:center; margin:14px 0 4px; }
+.countdown-box { background:var(--purple); border-radius:12px; padding:10px 14px; text-align:center; min-width:56px; color:white; }
+.countdown-box .num { font-family:'Lexend',sans-serif; font-size:1.8rem; font-weight:900; line-height:1; }
+.countdown-box .lbl { font-size:.6rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; opacity:.85; margin-top:2px; }
+.countdown-today { text-align:center; color:var(--purple); font-weight:700; font-size:.9rem; margin:8px 0; }
 
-    .shelf-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:7px; }
-    .shelf-item:last-child { margin-bottom:0; }
-    .shelf-item .title  { font-weight:600; font-size:.88rem; color:var(--text); }
-    .shelf-item .author { font-size:.73rem; color:var(--muted); margin-top:2px; }
-    .shelf-item .nom    { margin-left:auto; font-size:.65rem; color:var(--pink); font-weight:600; white-space:nowrap; flex-shrink:0; }
+/* RSVP */
+.rsvp-row { display:flex; gap:8px; margin-top:12px; }
+.rsvp-btn { flex:1; padding:10px; border-radius:12px; border:1.5px solid var(--border); font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; cursor:pointer; transition:all .15s; background:white; color:var(--muted); }
+.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:#d1fae5; border-color:#6ee7b7; color:var(--success); }
+.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:#ede9fe; border-color:var(--border); color:var(--purple); }
+.rsvp-input { width:100%; padding:10px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--text); outline:none; margin-bottom:8px; }
+.rsvp-input:focus { border-color:var(--lavender); }
+.rsvp-tally { display:flex; gap:10px; margin-top:10px; }
+.rsvp-tally-box { flex:1; padding:8px 12px; border-radius:10px; text-align:center; font-size:.78rem; font-weight:600; }
+.rsvp-tally-box.yes { background:#d1fae5; color:var(--success); }
+.rsvp-tally-box.no  { background:#ede9fe; color:var(--purple); }
+.rsvp-names { font-size:.72rem; color:var(--muted); margin-top:3px; }
 
-    /* MEMBERS GRID */
-    .members-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-    .member { text-align:center; }
-    .member-blob {
-      width:56px; height:56px; border-radius:50% 44% 56% 44% / 44% 50% 50% 56%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.5rem; margin:0 auto 6px; transition:transform .2s;
-    }
-    .member:hover .member-blob { transform:rotate(-8deg) scale(1.12); }
-    .member-name { font-size:.78rem; font-weight:700; color:var(--text); }
-    .member-role { font-size:.68rem; color:var(--muted); }
-
-    /* PAST READS */
-    .past-read { padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; }
-    .past-read:last-child { margin-bottom:0; }
-    .past-read .pr-title { font-weight:700; font-size:.9rem; color:var(--text); }
-    .past-read .pr-meta  { font-size:.73rem; color:var(--muted); margin-top:3px; }
-    .past-read .pr-stars { color:var(--pink); font-size:.85rem; margin-top:4px; }
-    .past-read .pr-note  { font-size:.75rem; color:var(--muted); font-style:italic; margin-top:4px; }
-
-    /* DISCUSSION */
-    .q-item { padding:10px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--text); line-height:1.5; display:flex; gap:10px; }
-    .q-item:last-child { border-bottom:none; }
-
-    .sep { text-align:center; font-size:.68rem; color:var(--muted); font-style:italic; margin:2px 0; }
-
-    /* COUNTDOWN */
-    .countdown {
-      display: flex; gap: 10px; justify-content: center; margin: 14px 0 4px;
-    }
-    .countdown-box {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      border-radius: 12px; padding: 10px 14px; text-align: center; min-width: 56px;
-      color: white;
-    }
-    .countdown-box .num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; line-height: 1; }
-    .countdown-box .lbl { font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .85; margin-top: 2px; }
-    .countdown-today { text-align: center; color: var(--pink); font-weight: 700; font-size: .9rem; margin: 8px 0; }
-
-    /* RSVP */
-    .rsvp-row { display: flex; gap: 8px; margin-top: 12px; }
-    .rsvp-btn {
-      flex: 1; padding: 10px; border-radius: 12px; border: 1.5px solid var(--border);
-      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: .82rem;
-      cursor: pointer; transition: all .15s; background: white; color: var(--muted);
-    }
-    .rsvp-btn.yes:hover, .rsvp-btn.yes.active { background: #d1fae5; border-color: #6ee7b7; color: var(--success); }
-    .rsvp-btn.no:hover, .rsvp-btn.no.active  { background: #ede0ff; border-color: #c4a0e8; color: var(--pink); }
-    .rsvp-input { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'Lexend', sans-serif; font-size: .88rem; color: var(--text); outline: none; margin-bottom: 8px; }
-    .rsvp-input:focus { border-color: var(--lavender); }
-    .rsvp-list { margin-top: 12px; }
-    .rsvp-tally { display: flex; gap: 10px; margin-top: 10px; }
-    .rsvp-tally-box { flex: 1; padding: 8px 12px; border-radius: 10px; text-align: center; font-size: .78rem; font-weight: 600; }
-    .rsvp-tally-box.yes { background: #d1fae5; color: var(--success); }
-    .rsvp-tally-box.no  { background: #ede0ff; color: var(--pink); }
-    .rsvp-names { font-size: .72rem; color: var(--muted); margin-top: 3px; }
-
-    footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
-  </style>
+footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
+</style>
 </head>
 <body>
 
-<!-- INSTALL BANNER -->
-<div class="install-banner" id="installBanner">
-  📱 Add Triple B to your home screen for easy access!
-  <button onclick="addToHome()">Add</button>
-  <button class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</button>
-</div>
-
 <!-- PASSWORD -->
-<div class="pw-screen" id="pwScreen">
-  <div class="pw-logo">📚🍑🌿</div>
+<div id="pwScreen">
+  <span class="pw-logo">📚🍑🌿</span>
   <div class="pw-title">Triple B Book Club</div>
   <p class="pw-sub">members only 💜</p>
-  <input class="pw-input" id="pwInput" type="password" placeholder="password..." onkeydown="if(event.key==='Enter')checkPw()"/>
-  <button class="pw-btn" onclick="checkPw()">Enter</button>
+  <input class="pw-input" id="pwInput" type="password" placeholder="password..."/>
+  <button class="pw-btn" id="pwBtn">Enter</button>
   <p class="pw-error" id="pwError">wrong password, babe 🌿</p>
 </div>
 
@@ -283,7 +210,7 @@
 <div id="mainContent" style="display:none;">
 
 <div class="hero">
-  <div class="hero-sticker">📚🍑✨</div>
+  <span class="hero-sticker">📚🍑✨</span>
   <h1 class="hero-title">Triple B</h1>
   <div class="hero-divider">
     <div class="hero-divider-line"></div>
@@ -296,13 +223,13 @@
   <p class="hero-est">Est. 2026</p>
 </div>
 
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('home',this)">🏠 Home</button>
-  <button class="tab" onclick="switchTab('meetings',this)">🗓 Meetings</button>
-  <button class="tab" onclick="switchTab('vote',this)">🗳 Vote</button>
-  <button class="tab" onclick="switchTab('host',this)">👑 Host</button>
-  <button class="tab" onclick="switchTab('shelf',this)">📚 Shelf</button>
-  <button class="tab" onclick="switchTab('vibes',this)">💖 Vibes</button>
+<div class="tabs" id="tabBar">
+  <button class="tab active" data-tab="home">🏠 Home</button>
+  <button class="tab" data-tab="meetings">🗓 Meetings</button>
+  <button class="tab" data-tab="vote">🗳 Vote</button>
+  <button class="tab" data-tab="host">👑 Host</button>
+  <button class="tab" data-tab="shelf">📚 Shelf</button>
+  <button class="tab" data-tab="vibes">💖 Vibes</button>
 </div>
 
 <div class="page">
@@ -310,29 +237,26 @@
   <!-- HOME -->
   <div class="tab-content active" id="tab-home">
 
-    <div class="card" style="border-color:var(--pink);background:linear-gradient(135deg,#fff 60%,#ede0ff 100%);">
+    <div class="card" style="border-color:var(--lavender);background:linear-gradient(135deg,#fff 60%,#ede9fe 100%);">
       <div class="card-head">
         <h2>Currently Reading</h2>
-        <span class="badge purple" style="background:var(--purple);color:white;border:none;animation:pulse 2s ease-in-out infinite;">● Reading Now</span>
+        <span class="badge purple" style="background:var(--purple);color:white;animation:pulse 2s ease-in-out infinite;">● Reading Now</span>
       </div>
-      <div class="row" style="border:1.5px solid #c4a0e8;background:#f0ebff;">
+      <div class="row" style="border:1.5px solid var(--border);background:#ede9fe;">
         <div class="dot hot"></div>
         <div class="row-text">
           <div class="name">The Book Club for Troublesome Women</div>
           <div class="sub">June · Rachael 🏖️ · picked with Sasha ✨</div>
         </div>
       </div>
-      <div id="winnerBanner" style="display:none;margin-top:10px;background:#f3e8ff;border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--purple);font-weight:600;">
+      <div id="winnerBanner" style="display:none;margin-top:10px;background:#ede9fe;border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--purple);font-weight:600;">
         🏆 This month's winner: <span id="winnerBook"></span>
       </div>
     </div>
 
     <div class="card">
       <div class="card-head"><h2>Next Meeting</h2><span class="badge purple">June 11</span></div>
-
-      <!-- COUNTDOWN -->
       <div class="countdown" id="countdown"></div>
-
       <div class="row" style="margin-top:10px;">
         <div class="dot hot"></div>
         <div class="row-text" style="width:100%">
@@ -342,13 +266,11 @@
           <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div>
         </div>
       </div>
-
-      <!-- RSVP -->
       <div style="margin-top:14px;">
         <input class="rsvp-input" id="rsvpName" placeholder="Your name..."/>
         <div class="rsvp-row">
-          <button class="rsvp-btn yes" onclick="submitRsvp('yes')">✅ I'm in!</button>
-          <button class="rsvp-btn no" onclick="submitRsvp('no')">❌ Can't make it</button>
+          <button class="rsvp-btn yes" id="rsvpYes">✅ I'm in!</button>
+          <button class="rsvp-btn no" id="rsvpNo">❌ Can't make it</button>
         </div>
         <div class="success-msg" id="rsvpSuccess">💜 RSVP saved!</div>
         <div class="rsvp-tally" id="rsvpTally" style="display:none;">
@@ -358,7 +280,6 @@
       </div>
     </div>
 
-    <!-- Discussion Questions -->
     <div class="card" id="discussionCard" style="display:none;">
       <div class="card-head"><h2>Discussion Questions 💬</h2></div>
       <div id="discussionList"></div>
@@ -369,7 +290,7 @@
   <!-- MEETINGS -->
   <div class="tab-content" id="tab-meetings">
     <div class="card">
-      <div class="card-head"><h2>2026</h2></div>
+      <div class="card-head"><h2>2026 Schedule</h2></div>
       <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 11 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div></div><span class="pill hot">Next</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 9 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
@@ -389,7 +310,7 @@
         <span class="label" id="voteMonthLabel"></span>
         <input class="input" id="voterName" placeholder="Your name..."/>
         <div id="bookOptions"></div>
-        <button class="btn btn-pink" id="voteBtn" onclick="castVote()">Cast My Vote 💜</button>
+        <button class="btn btn-purple" id="voteBtn">Cast My Vote 💜</button>
         <div class="success-msg" id="voteSuccess">💜 Vote cast! Thanks!</div>
       </div>
       <div id="noVoteYet" class="no-content">The host hasn't posted their picks yet — check back soon! 📚</div>
@@ -400,7 +321,7 @@
   <div class="tab-content" id="tab-host">
     <div class="card">
       <div class="card-head"><h2>Host Controls 👑</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Post your 3 picks and meeting details — members will see them instantly in the Vote tab!</p>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Post your 3 picks and meeting details — members see them instantly in the Vote tab!</p>
       <span class="label">Your name & month</span>
       <div class="two-col">
         <input class="input" id="hostName" placeholder="Your name..."/>
@@ -416,39 +337,33 @@
         <input class="input" id="meetingDate" placeholder="Date (e.g. July 9)..."/>
         <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
       </div>
-      <button class="btn btn-outline" onclick="submitBooks()" style="margin-bottom:8px;">Post for Voting 📚</button>
+      <button class="btn btn-outline" id="submitBooksBtn" style="margin-bottom:8px;">Post for Voting 📚</button>
       <div class="success-msg" id="hostSuccess">✓ Posted! Members can now vote.</div>
     </div>
-
     <div class="card">
       <div class="card-head"><h2>Announce Winner 🏆</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Once voting closes, announce the winning book!</p>
       <input class="input" id="winnerInput" placeholder="Winning book title..."/>
-      <button class="btn btn-outline" onclick="announceWinner()">Announce Winner 🏆</button>
+      <button class="btn btn-outline" id="announceWinnerBtn">Announce Winner 🏆</button>
       <div class="success-msg" id="winnerSuccess">✓ Winner announced!</div>
     </div>
-
     <div class="card">
       <div class="card-head"><h2>Discussion Questions 💬</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Add talking points for the meeting!</p>
       <input class="input" id="discussionMonth" placeholder="Month (e.g. June)..."/>
       <textarea class="input" id="discussionQ" placeholder="Add a question..." style="height:80px;resize:none;"></textarea>
-      <button class="btn btn-outline" onclick="addDiscussion()">Add Question 💬</button>
+      <button class="btn btn-outline" id="addDiscussionBtn">Add Question 💬</button>
       <div class="success-msg" id="discussionSuccess">✓ Question added!</div>
     </div>
-
     <div class="card">
       <div class="card-head"><h2>Log Past Read ⭐</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">After each meeting, log the book you read!</p>
       <input class="input" id="pastTitle" placeholder="Book title..."/>
       <input class="input" id="pastAuthor" placeholder="Author..."/>
       <input class="input" id="pastHost" placeholder="Who hosted..."/>
       <input class="input" id="pastMonth" placeholder="Month (e.g. June 2026)..."/>
       <div class="two-col">
-        <input class="input" id="pastRating" placeholder="Rating (1-5 ⭐)..." type="number" min="1" max="5"/>
+        <input class="input" id="pastRating" placeholder="Rating (1-5)..." type="number" min="1" max="5"/>
         <input class="input" id="pastNote" placeholder="One word vibe..."/>
       </div>
-      <button class="btn btn-outline" onclick="logPastRead()">Log It ⭐</button>
+      <button class="btn btn-outline" id="logPastReadBtn">Log It ⭐</button>
       <div class="success-msg" id="pastSuccess">✓ Logged!</div>
     </div>
   </div>
@@ -460,21 +375,13 @@
       <input class="input" id="shelfNominee" placeholder="Your name..."/>
       <input class="input" id="shelfTitle" placeholder="Book title..."/>
       <input class="input" id="shelfAuthor" placeholder="Author..."/>
-      <button class="btn btn-outline" onclick="addToShelf()">Add to Shelf 📖</button>
+      <button class="btn btn-outline" id="addToShelfBtn">Add to Shelf 📖</button>
       <div class="success-msg" id="shelfSuccess">✓ Added!</div>
     </div>
     <div class="card">
       <div class="card-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet!</div></div>
     </div>
-    <div class="card">
-      <div class="card-head"><h2>Past Reads ⭐</h2></div>
-      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here! 📚</div></div>
-    </div>
-  </div>
-
-  <!-- PAST READS -->
-  <div class="tab-content" id="tab-past">
     <div class="card">
       <div class="card-head"><h2>Past Reads ⭐</h2></div>
       <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here! 📚</div></div>
@@ -503,242 +410,235 @@
 </div>
 
 <script>
-  if (sessionStorage.getItem('tripleB') === 'unlocked') {
+const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_4zVpGQzqr7gDyb1c6oeirA_VD23kq5B';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// PASSWORD
+document.getElementById('pwBtn').addEventListener('click', checkPw);
+document.getElementById('pwInput').addEventListener('keydown', function(e){ if(e.key==='Enter') checkPw(); });
+
+function checkPw() {
+  const val = document.getElementById('pwInput').value.toLowerCase().replace(/\s/g,'');
+  if (val === 'bighairybush') {
     document.getElementById('pwScreen').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
+    sessionStorage.setItem('tripleB','unlocked');
+    init();
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').value = '';
   }
+}
 
-  // SUPABASE
-  const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_4zVpGQzqr7gDyb1c6oeirA_VD23kq5B';
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+if (sessionStorage.getItem('tripleB') === 'unlocked') {
+  document.getElementById('pwScreen').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  init();
+}
 
-  let selectedBook = null, currentMonth = '';
+// TABS — using event delegation
+document.getElementById('tabBar').addEventListener('click', function(e) {
+  const btn = e.target.closest('.tab');
+  if (!btn) return;
+  const name = btn.dataset.tab;
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'vote') loadVoting();
+  if (name === 'shelf') { loadShelf(); loadPastReads(); }
+});
 
-  function addToHome() {}
-  function dismissInstall() { document.getElementById('installBanner').style.display='none'; }
-
-  function switchTab(name, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    el.classList.add('active');
-    if (name === 'vote') loadVoting();
-    if (name === 'shelf') { loadShelf(); loadPastReads(); }
-  }
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    el.classList.add('active');
-    if (name === 'vote') loadVoting();
-    if (name === 'shelf') { loadShelf(); loadPastReads(); }
-    if (name === 'past') loadPastReads();
-  }
-
-  // NEXT MEETING
-  async function loadNextMeeting() {
-    const { data } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
-    if (!data) return;
-    if (data.location) document.getElementById('nextLocation').textContent = '📍 ' + data.location;
-    if (data.meeting_date || data.meeting_time) {
-      document.getElementById('nextDateTime').textContent = '⌚ ' + [data.meeting_date, data.meeting_time].filter(Boolean).join(' · ');
-    }
-    if (data.winning_book) {
-      document.getElementById('winnerBook').textContent = data.winning_book;
-      document.getElementById('winnerBanner').style.display = 'block';
-    }
-    // load discussion questions
-    const { data: qs } = await sb.from('discussions').select('*').eq('month', data.month).order('created_at');
-    if (qs && qs.length > 0) {
-      document.getElementById('discussionCard').style.display = 'block';
-      document.getElementById('discussionList').innerHTML = qs.map(q =>
-        `<div class="q-item"><span>💬</span>${q.question}</div>`
-      ).join('');
-    }
-  }
-
-  // VOTING
-  async function loadVoting() {
-    const { data: meeting } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
-    const noVoteYet = document.getElementById('noVoteYet');
-    const voteForm = document.getElementById('voteForm');
-    if (!meeting || !meeting.book1) { noVoteYet.style.display='block'; voteForm.style.display='none'; return; }
-    noVoteYet.style.display = 'none'; voteForm.style.display = 'block';
-    currentMonth = meeting.month;
-    document.getElementById('voteMonthLabel').textContent = 'Voting for: ' + meeting.month;
-    const books = [meeting.book1, meeting.book2, meeting.book3].filter(Boolean);
-    const { data: votes } = await sb.from('votes').select('*').eq('month', meeting.month);
-    const total = votes ? votes.length : 0;
-    const container = document.getElementById('bookOptions');
-    container.innerHTML = '';
-    books.forEach(book => {
-      const count = votes ? votes.filter(v => v.book === book).length : 0;
-      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-      const div = document.createElement('div');
-      div.className = 'book-option';
-      div.onclick = function() { selectBook(this, book); };
-      div.innerHTML = `<div><div class="book-name">${book}</div><div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div></div><span class="vote-count">${count} vote${count!==1?'s':''}</span>`;
-      container.appendChild(div);
-    });
-    document.getElementById('voteBtn').style.display = 'block';
-  }
-
-  function selectBook(el, book) {
-    document.querySelectorAll('.book-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected'); selectedBook = book;
-  }
-
-  async function castVote() {
-    const name = document.getElementById('voterName').value.trim();
-    if (!selectedBook) { alert('Pick a book first!'); return; }
-    if (!name) { alert('Enter your name!'); return; }
-    const { error } = await sb.from('votes').insert({ month: currentMonth, book: selectedBook, voter_name: name });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('voteSuccess').style.display = 'block';
-    document.getElementById('voteBtn').style.display = 'none';
-    loadVoting();
-  }
-
-  async function submitBooks() {
-    const host = document.getElementById('hostName').value.trim();
-    const month = document.getElementById('hostMonth').value.trim();
-    const b1 = document.getElementById('book1').value.trim();
-    const b2 = document.getElementById('book2').value.trim();
-    const b3 = document.getElementById('book3').value.trim();
-    const loc = document.getElementById('meetingLocation').value.trim();
-    const date = document.getElementById('meetingDate').value.trim();
-    const time = document.getElementById('meetingTime').value.trim();
-    if (!host || !month || !b1 || !b2 || !b3) { alert('Fill in name, month, and all 3 books!'); return; }
-    const { error } = await sb.from('meetings').upsert({ month, host, book1:b1, book2:b2, book3:b3, location:loc, meeting_date:date, meeting_time:time }, { onConflict:'month' });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('hostSuccess').style.display = 'block';
-    loadNextMeeting();
-  }
-
-  async function announceWinner() {
-    const winner = document.getElementById('winnerInput').value.trim();
-    if (!winner) { alert('Enter the winning book!'); return; }
-    const { data: meeting } = await sb.from('meetings').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle();
-    if (!meeting) { alert('No meeting found!'); return; }
-    const { error } = await sb.from('meetings').update({ winning_book: winner }).eq('id', meeting.id);
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('winnerSuccess').style.display = 'block';
-    loadNextMeeting();
-  }
-
-  async function addDiscussion() {
-    const month = document.getElementById('discussionMonth').value.trim();
-    const question = document.getElementById('discussionQ').value.trim();
-    if (!month || !question) { alert('Fill in both fields!'); return; }
-    const { error } = await sb.from('discussions').insert({ month, question });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('discussionSuccess').style.display = 'block';
-    document.getElementById('discussionQ').value = '';
-  }
-
-  // SHELF
-  async function loadShelf() {
-    const { data } = await sb.from('shelf').select('*').order('created_at', { ascending: false });
-    const container = document.getElementById('shelfList');
-    if (!data || data.length === 0) { container.innerHTML = '<div class="no-content">No nominations yet!</div>'; return; }
-    container.innerHTML = data.map(b => `<div class="shelf-item"><div><div class="title">${b.title}</div><div class="author">by ${b.author}</div></div><span class="nom">${b.nominated_by}</span></div>`).join('');
-  }
-
-  async function addToShelf() {
-    const name = document.getElementById('shelfNominee').value.trim();
-    const title = document.getElementById('shelfTitle').value.trim();
-    const author = document.getElementById('shelfAuthor').value.trim();
-    if (!name || !title || !author) { alert('Fill in all three fields!'); return; }
-    const { error } = await sb.from('shelf').insert({ nominated_by: name, title, author });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('shelfSuccess').style.display = 'block';
-    document.getElementById('shelfNominee').value = '';
-    document.getElementById('shelfTitle').value = '';
-    document.getElementById('shelfAuthor').value = '';
-    setTimeout(() => document.getElementById('shelfSuccess').style.display = 'none', 3000);
-    loadShelf();
-  }
-
-  // PAST READS
-  async function loadPastReads() {
-    const { data } = await sb.from('past_reads').select('*').order('created_at', { ascending: false });
-    const container = document.getElementById('pastList');
-    if (!data || data.length === 0) { container.innerHTML = '<div class="no-content">Nothing yet — your reading history will live here! 📚</div>'; return; }
-    container.innerHTML = data.map(b => {
-      const stars = '★'.repeat(b.rating || 0) + '☆'.repeat(5 - (b.rating || 0));
-      return `<div class="past-read">
-        <div class="pr-title">${b.title}</div>
-        <div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div>
-        <div class="pr-stars">${stars}</div>
-        ${b.note ? `<div class="pr-note">"${b.note}"</div>` : ''}
-      </div>`;
-    }).join('');
-  }
-
-  async function logPastRead() {
-    const title = document.getElementById('pastTitle').value.trim();
-    const author = document.getElementById('pastAuthor').value.trim();
-    const hosted_by = document.getElementById('pastHost').value.trim();
-    const month = document.getElementById('pastMonth').value.trim();
-    const rating = parseInt(document.getElementById('pastRating').value) || 0;
-    const note = document.getElementById('pastNote').value.trim();
-    if (!title || !author || !month) { alert('Fill in title, author, and month!'); return; }
-    const { error } = await sb.from('past_reads').insert({ title, author, hosted_by, month, rating, note });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('pastSuccess').style.display = 'block';
-    ['pastTitle','pastAuthor','pastHost','pastMonth','pastRating','pastNote'].forEach(id => document.getElementById(id).value = '');
-  }
-
+function init() {
   loadNextMeeting();
-
-  // COUNTDOWN
-  function updateCountdown() {
-    const next = new Date('2026-06-11T18:30:00');
-    const now = new Date();
-    const diff = next - now;
-    const el = document.getElementById('countdown');
-    if (!el) return;
-    if (diff <= 0) { el.innerHTML = '<div class="countdown-today">🎉 It\'s meeting day!</div>'; return; }
-    const days  = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-    const mins  = Math.floor((diff % (1000*60*60)) / (1000*60));
-    el.innerHTML = `
-      <div class="countdown-box"><div class="num">${days}</div><div class="lbl">days</div></div>
-      <div class="countdown-box"><div class="num">${hours}</div><div class="lbl">hours</div></div>
-      <div class="countdown-box"><div class="num">${mins}</div><div class="lbl">mins</div></div>
-    `;
-  }
+  loadRsvp();
   updateCountdown();
   setInterval(updateCountdown, 60000);
+}
 
-  // RSVP
-  const RSVP_MONTH = 'June 2026';
+// COUNTDOWN
+function updateCountdown() {
+  const next = new Date('2026-06-11T18:30:00');
+  const now = new Date();
+  const diff = next - now;
+  const el = document.getElementById('countdown');
+  if (!el) return;
+  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">🎉 It\'s meeting day!</div>'; return; }
+  const days  = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins  = Math.floor((diff%(1000*60*60))/(1000*60));
+  el.innerHTML = `
+    <div class="countdown-box"><div class="num">${days}</div><div class="lbl">days</div></div>
+    <div class="countdown-box"><div class="num">${hours}</div><div class="lbl">hours</div></div>
+    <div class="countdown-box"><div class="num">${mins}</div><div class="lbl">mins</div></div>
+  `;
+}
 
-  async function loadRsvp() {
-    const { data } = await sb.from('rsvps').select('*').eq('month', RSVP_MONTH);
-    if (!data || data.length === 0) return;
-    const yes = data.filter(r => r.status === 'yes');
-    const no  = data.filter(r => r.status === 'no');
-    document.getElementById('yesCount').textContent = yes.length;
-    document.getElementById('noCount').textContent  = no.length;
-    document.getElementById('yesNames').textContent = yes.map(r => r.name).join(', ');
-    document.getElementById('noNames').textContent  = no.map(r => r.name).join(', ');
-    document.getElementById('rsvpTally').style.display = 'flex';
+// NEXT MEETING
+async function loadNextMeeting() {
+  const { data } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
+  if (!data) return;
+  if (data.location) document.getElementById('nextLocation').textContent = '📍 ' + data.location;
+  if (data.meeting_date || data.meeting_time) document.getElementById('nextDateTime').textContent = '⌚ ' + [data.meeting_date,data.meeting_time].filter(Boolean).join(' · ');
+  if (data.winning_book) { document.getElementById('winnerBook').textContent = data.winning_book; document.getElementById('winnerBanner').style.display='block'; }
+  const { data: qs } = await sb.from('discussions').select('*').eq('month',data.month).order('created_at');
+  if (qs && qs.length > 0) {
+    document.getElementById('discussionCard').style.display = 'block';
+    document.getElementById('discussionList').innerHTML = qs.map(q=>`<div class="rule"><span>💬</span>${q.question}</div>`).join('');
   }
+}
 
-  async function submitRsvp(status) {
-    const name = document.getElementById('rsvpName').value.trim();
-    if (!name) { alert('Enter your name first!'); return; }
-    const { error } = await sb.from('rsvps').upsert({ month: RSVP_MONTH, name, status }, { onConflict: 'month,name' });
-    if (error) { alert('Oops! ' + error.message); return; }
-    document.getElementById('rsvpSuccess').style.display = 'block';
-    document.getElementById('rsvpName').value = '';
-    setTimeout(() => document.getElementById('rsvpSuccess').style.display = 'none', 3000);
-    loadRsvp();
-  }
+// VOTING
+let selectedBook = null, currentMonth = '';
+async function loadVoting() {
+  const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
+  const noVote = document.getElementById('noVoteYet');
+  const form   = document.getElementById('voteForm');
+  if (!meeting || !meeting.book1) { noVote.style.display='block'; form.style.display='none'; return; }
+  noVote.style.display='none'; form.style.display='block';
+  currentMonth = meeting.month;
+  document.getElementById('voteMonthLabel').textContent = 'Voting for: ' + meeting.month;
+  const books = [meeting.book1,meeting.book2,meeting.book3].filter(Boolean);
+  const { data: votes } = await sb.from('votes').select('*').eq('month',meeting.month);
+  const total = votes ? votes.length : 0;
+  const container = document.getElementById('bookOptions');
+  container.innerHTML = '';
+  books.forEach(book => {
+    const count = votes ? votes.filter(v=>v.book===book).length : 0;
+    const pct = total > 0 ? Math.round((count/total)*100) : 0;
+    const div = document.createElement('div');
+    div.className = 'book-option';
+    div.innerHTML = `<div><div class="book-name">${book}</div><div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div></div><span class="vote-count">${count} vote${count!==1?'s':''}</span>`;
+    div.addEventListener('click', function(){ document.querySelectorAll('.book-option').forEach(o=>o.classList.remove('selected')); div.classList.add('selected'); selectedBook=book; });
+    container.appendChild(div);
+  });
+}
 
+document.getElementById('voteBtn').addEventListener('click', async function() {
+  const name = document.getElementById('voterName').value.trim();
+  if (!selectedBook) { alert('Pick a book first!'); return; }
+  if (!name) { alert('Enter your name!'); return; }
+  const { error } = await sb.from('votes').insert({month:currentMonth,book:selectedBook,voter_name:name});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('voteSuccess').style.display='block';
+  document.getElementById('voteBtn').style.display='none';
+  loadVoting();
+});
+
+// HOST
+document.getElementById('submitBooksBtn').addEventListener('click', async function() {
+  const host = document.getElementById('hostName').value.trim();
+  const month = document.getElementById('hostMonth').value.trim();
+  const b1 = document.getElementById('book1').value.trim();
+  const b2 = document.getElementById('book2').value.trim();
+  const b3 = document.getElementById('book3').value.trim();
+  const loc = document.getElementById('meetingLocation').value.trim();
+  const date = document.getElementById('meetingDate').value.trim();
+  const time = document.getElementById('meetingTime').value.trim();
+  if (!host||!month||!b1||!b2||!b3) { alert('Fill in name, month, and all 3 books!'); return; }
+  const { error } = await sb.from('meetings').upsert({month,host,book1:b1,book2:b2,book3:b3,location:loc,meeting_date:date,meeting_time:time},{onConflict:'month'});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('hostSuccess').style.display='block';
+  loadNextMeeting();
+});
+
+document.getElementById('announceWinnerBtn').addEventListener('click', async function() {
+  const winner = document.getElementById('winnerInput').value.trim();
+  if (!winner) { alert('Enter the winning book!'); return; }
+  const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
+  if (!meeting) { alert('No meeting found!'); return; }
+  const { error } = await sb.from('meetings').update({winning_book:winner}).eq('id',meeting.id);
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('winnerSuccess').style.display='block';
+  loadNextMeeting();
+});
+
+document.getElementById('addDiscussionBtn').addEventListener('click', async function() {
+  const month = document.getElementById('discussionMonth').value.trim();
+  const question = document.getElementById('discussionQ').value.trim();
+  if (!month||!question) { alert('Fill in both fields!'); return; }
+  const { error } = await sb.from('discussions').insert({month,question});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('discussionSuccess').style.display='block';
+  document.getElementById('discussionQ').value='';
+});
+
+document.getElementById('logPastReadBtn').addEventListener('click', async function() {
+  const title = document.getElementById('pastTitle').value.trim();
+  const author = document.getElementById('pastAuthor').value.trim();
+  const hosted_by = document.getElementById('pastHost').value.trim();
+  const month = document.getElementById('pastMonth').value.trim();
+  const rating = parseInt(document.getElementById('pastRating').value)||0;
+  const note = document.getElementById('pastNote').value.trim();
+  if (!title||!author||!month) { alert('Fill in title, author, and month!'); return; }
+  const { error } = await sb.from('past_reads').insert({title,author,hosted_by,month,rating,note});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('pastSuccess').style.display='block';
+  ['pastTitle','pastAuthor','pastHost','pastMonth','pastRating','pastNote'].forEach(id=>document.getElementById(id).value='');
+});
+
+// SHELF
+async function loadShelf() {
+  const { data } = await sb.from('shelf').select('*').order('created_at',{ascending:false});
+  const container = document.getElementById('shelfList');
+  if (!data||data.length===0) { container.innerHTML='<div class="no-content">No nominations yet!</div>'; return; }
+  container.innerHTML = data.map(b=>`<div class="shelf-item"><div><div class="title">${b.title}</div><div class="author">by ${b.author}</div></div><span class="nom">${b.nominated_by}</span></div>`).join('');
+}
+
+document.getElementById('addToShelfBtn').addEventListener('click', async function() {
+  const name = document.getElementById('shelfNominee').value.trim();
+  const title = document.getElementById('shelfTitle').value.trim();
+  const author = document.getElementById('shelfAuthor').value.trim();
+  if (!name||!title||!author) { alert('Fill in all three fields!'); return; }
+  const { error } = await sb.from('shelf').insert({nominated_by:name,title,author});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('shelfSuccess').style.display='block';
+  document.getElementById('shelfNominee').value='';
+  document.getElementById('shelfTitle').value='';
+  document.getElementById('shelfAuthor').value='';
+  setTimeout(()=>document.getElementById('shelfSuccess').style.display='none',3000);
+  loadShelf();
+});
+
+// PAST READS
+async function loadPastReads() {
+  const { data } = await sb.from('past_reads').select('*').order('created_at',{ascending:false});
+  const container = document.getElementById('pastList');
+  if (!data||data.length===0) { container.innerHTML='<div class="no-content">Nothing yet — your reading history will live here! 📚</div>'; return; }
+  container.innerHTML = data.map(b=>{
+    const stars = '★'.repeat(b.rating||0)+'☆'.repeat(5-(b.rating||0));
+    return `<div class="past-read"><div class="pr-title">${b.title}</div><div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div><div class="pr-stars">${stars}</div>${b.note?`<div class="pr-note">"${b.note}"</div>`:''}</div>`;
+  }).join('');
+}
+
+// RSVP
+const RSVP_MONTH = 'June 2026';
+async function loadRsvp() {
+  const { data } = await sb.from('rsvps').select('*').eq('month',RSVP_MONTH);
+  if (!data||data.length===0) return;
+  const yes = data.filter(r=>r.status==='yes');
+  const no  = data.filter(r=>r.status==='no');
+  document.getElementById('yesCount').textContent = yes.length;
+  document.getElementById('noCount').textContent  = no.length;
+  document.getElementById('yesNames').textContent = yes.map(r=>r.name).join(', ');
+  document.getElementById('noNames').textContent  = no.map(r=>r.name).join(', ');
+  document.getElementById('rsvpTally').style.display='flex';
+}
+
+async function submitRsvp(status) {
+  const name = document.getElementById('rsvpName').value.trim();
+  if (!name) { alert('Enter your name first!'); return; }
+  const { error } = await sb.from('rsvps').upsert({month:RSVP_MONTH,name,status},{onConflict:'month,name'});
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('rsvpSuccess').style.display='block';
+  document.getElementById('rsvpName').value='';
+  setTimeout(()=>document.getElementById('rsvpSuccess').style.display='none',3000);
   loadRsvp();
+}
 
+document.getElementById('rsvpYes').addEventListener('click', ()=>submitRsvp('yes'));
+document.getElementById('rsvpNo').addEventListener('click',  ()=>submitRsvp('no'));
 </script>
 
 </body>
