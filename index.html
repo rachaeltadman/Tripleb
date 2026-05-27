@@ -91,12 +91,15 @@
     @keyframes rise { to { opacity:1; transform:translateY(0); } }
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
 
-    .hero { text-align: center; padding: 48px 24px 20px; }
+    .hero { text-align: center; padding: 48px 24px 24px; }
     .hero-sticker { font-size: 2.8rem; margin-bottom: 8px; display: block; animation: bounce 2s ease-in-out infinite; }
-    .hero-title { font-family: 'Lexend', sans-serif; font-weight: 900; font-size: clamp(3.5rem, 12vw, 6rem); color: var(--purple); line-height: 1; letter-spacing: -.02em; }
-    .hero-sub { font-family: 'Lexend', sans-serif; font-weight: 600; font-size: clamp(1.2rem, 4vw, 1.8rem); color: var(--lavender); margin-top: 4px; }
-    .hero-tagline { font-size: .82rem; color: var(--muted); margin-top: 8px; }
-    .hero-est { font-size: .72rem; color: var(--muted); margin-top: 4px; opacity: .6; letter-spacing: .1em; }
+    .hero-title { font-family: 'Lexend', sans-serif; font-weight: 900; font-size: clamp(3.8rem, 14vw, 6.5rem); color: var(--purple); line-height: 1; letter-spacing: -.02em; }
+    .hero-sub { font-family: 'Lexend', sans-serif; font-weight: 300; font-size: clamp(.9rem, 3vw, 1.2rem); color: var(--lavender); margin-top: 6px; letter-spacing: .45em; text-transform: uppercase; }
+    .hero-divider { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px auto; max-width: 280px; }
+    .hero-divider-line { flex: 1; height: 1px; background: var(--border); }
+    .hero-divider-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--lavender); }
+    .hero-tagline { font-size: .78rem; color: var(--muted); margin-top: 2px; letter-spacing: .04em; }
+    .hero-est { font-size: .68rem; color: var(--muted); margin-top: 4px; opacity: .5; letter-spacing: .15em; text-transform: uppercase; }
 
     /* TABS */
     .tabs {
@@ -282,7 +285,13 @@
 <div class="hero">
   <div class="hero-sticker">📚🍑✨</div>
   <h1 class="hero-title">Triple B</h1>
-  <h2 class="hero-sub">Book Club</h2>
+  <div class="hero-divider">
+    <div class="hero-divider-line"></div>
+    <div class="hero-divider-dot"></div>
+    <h2 class="hero-sub">Book Club</h2>
+    <div class="hero-divider-dot"></div>
+    <div class="hero-divider-line"></div>
+  </div>
   <p class="hero-tagline">Books · Boobs · Butts · <em>(Bush: debatable 🌿)</em></p>
   <p class="hero-est">Est. 2026</p>
 </div>
@@ -506,7 +515,8 @@
 
   let selectedBook = null, currentMonth = '';
 
-  function switchTab(name, el) {
+  function addToHome() {}
+  function dismissInstall() { document.getElementById('installBanner').style.display='none'; }
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
