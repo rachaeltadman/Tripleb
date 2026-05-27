@@ -6,31 +6,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Triple B 📚</title>
   <link rel="manifest" href="data:application/json,{}">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;900&family=Lexend+Deca:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    function checkPw() {
+      const val = document.getElementById('pwInput').value.toLowerCase().replace(/\s/g,'');
+      if (val === 'bighairybush') {
+        document.getElementById('pwScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        sessionStorage.setItem('tripleB', 'unlocked');
+      } else {
+        document.getElementById('pwError').style.display = 'block';
+        document.getElementById('pwInput').value = '';
+      }
+    }
+  </script>
   <style>
     :root {
-      --bg:      #fdf6ff;
-      --surface: #fff;
-      --border:  #ead5f7;
-      --pink:    #e8409a;
-      --purple:  #8b3fcf;
-      --lavender:#c084fc;
-      --text:    #1e0a2e;
-      --muted:   #9d7db5;
+      --bg:      #ede0ff;
+      --surface: #f8f2ff;
+      --border:  #c4a0e8;
+      --pink:    #7c3aed;
+      --purple:  #5b21b6;
+      --lavender:#8b5cf6;
+      --text:    #2e1065;
+      --muted:   #6d28d9;
       --success: #059669;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Lexend', sans-serif;
       font-weight: 400;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       background-image:
-        radial-gradient(ellipse at 0% 0%, #fce7f3 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 0%, #ddd6fe 0%, transparent 50%),
         radial-gradient(ellipse at 100% 100%, #ede9fe 0%, transparent 50%);
     }
 
@@ -41,18 +54,18 @@
       justify-content: center; padding: 24px; text-align: center;
     }
     .pw-logo { font-size: 3rem; margin-bottom: 8px; animation: bounce 2s ease-in-out infinite; }
-    .pw-title { font-family: 'Fraunces', serif; font-weight: 900; font-size: 2rem; color: var(--pink); margin-bottom: 4px; }
+    .pw-title { font-family: 'Lexend', sans-serif; font-weight: 900; font-size: 2rem; color: var(--pink); margin-bottom: 4px; }
     .pw-sub { font-size: .8rem; color: var(--muted); font-style: italic; margin-bottom: 24px; }
     .pw-input {
       width: 100%; max-width: 280px; padding: 12px 16px; border-radius: 12px;
-      border: 1.5px solid var(--border); background: white; font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid var(--border); background: white; font-family: 'Lexend', sans-serif;
       font-size: 1rem; color: var(--text); text-align: center; outline: none;
       margin-bottom: 10px; letter-spacing: .1em;
     }
     .pw-input:focus { border-color: var(--pink); }
     .pw-btn {
       width: 100%; max-width: 280px; padding: 12px; border-radius: 12px; border: none;
-      background: var(--pink); color: white; font-family: 'DM Sans', sans-serif;
+      background: var(--pink); color: white; font-family: 'Lexend', sans-serif;
       font-weight: 600; font-size: .95rem; cursor: pointer;
     }
     .pw-error { color: var(--pink); font-size: .8rem; margin-top: 8px; display: none; font-style: italic; }
@@ -89,7 +102,7 @@
     .tab {
       flex-shrink: 0; padding: 7px 14px; border-radius: 99px;
       border: 1.5px solid var(--border); background: white;
-      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: .75rem;
+      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: .75rem;
       color: var(--muted); cursor: pointer; transition: all .15s;
     }
     .tab:hover { border-color: var(--lavender); color: var(--purple); }
@@ -113,7 +126,7 @@
     .card:nth-child(5){ animation-delay:.33s; }
 
     .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-    .card-head h2 { font-family:'Fraunces',serif; font-weight:700; font-size:1.2rem; color:var(--text); }
+    .card-head h2 { font-family:'Lexend',sans-serif; font-weight:700; font-size:1.2rem; color:var(--purple); }
 
     .badge { font-size:.63rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:99px; }
     .badge.pink   { background:#fce7f3; color:var(--pink); border:1px solid #f9a8d4; }
@@ -146,7 +159,7 @@
 
     .input {
       width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border);
-      background:var(--bg); font-family:'DM Sans',sans-serif; font-size:.88rem;
+      background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem;
       color:var(--text); margin-bottom:8px; outline:none; transition:border-color .15s;
     }
     .input:focus { border-color:var(--lavender); }
@@ -155,11 +168,11 @@
     .two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .two-col .input { margin-bottom:0; }
 
-    .btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
+    .btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
     .btn:hover { opacity:.88; }
     .btn:active { transform:scale(.98); }
-    .btn-pink    { background:var(--pink); color:white; }
-    .btn-outline { background:white; color:var(--purple); border:1.5px solid var(--border); }
+    .btn-pink    { background: var(--purple); color: white; }
+    .btn-outline { background: var(--surface); color: var(--purple); border: 1.5px solid var(--border); }
 
     .success-msg { text-align:center; background:#d1fae5; border:1.5px solid #6ee7b7; color:var(--success); border-radius:12px; padding:10px; font-size:.82rem; font-weight:600; margin-top:8px; display:none; }
 
@@ -205,6 +218,37 @@
 
     .sep { text-align:center; font-size:.68rem; color:var(--muted); font-style:italic; margin:2px 0; }
 
+    /* COUNTDOWN */
+    .countdown {
+      display: flex; gap: 10px; justify-content: center; margin: 14px 0 4px;
+    }
+    .countdown-box {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      border-radius: 12px; padding: 10px 14px; text-align: center; min-width: 56px;
+      color: white;
+    }
+    .countdown-box .num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; line-height: 1; }
+    .countdown-box .lbl { font-size: .6rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; opacity: .85; margin-top: 2px; }
+    .countdown-today { text-align: center; color: var(--pink); font-weight: 700; font-size: .9rem; margin: 8px 0; }
+
+    /* RSVP */
+    .rsvp-row { display: flex; gap: 8px; margin-top: 12px; }
+    .rsvp-btn {
+      flex: 1; padding: 10px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: 'Lexend', sans-serif; font-weight: 600; font-size: .82rem;
+      cursor: pointer; transition: all .15s; background: white; color: var(--muted);
+    }
+    .rsvp-btn.yes:hover, .rsvp-btn.yes.active { background: #d1fae5; border-color: #6ee7b7; color: var(--success); }
+    .rsvp-btn.no:hover, .rsvp-btn.no.active  { background: #fce7f3; border-color: #f9a8d4; color: var(--pink); }
+    .rsvp-input { width: 100%; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg); font-family: 'Lexend', sans-serif; font-size: .88rem; color: var(--text); outline: none; margin-bottom: 8px; }
+    .rsvp-input:focus { border-color: var(--lavender); }
+    .rsvp-list { margin-top: 12px; }
+    .rsvp-tally { display: flex; gap: 10px; margin-top: 10px; }
+    .rsvp-tally-box { flex: 1; padding: 8px 12px; border-radius: 10px; text-align: center; font-size: .78rem; font-weight: 600; }
+    .rsvp-tally-box.yes { background: #d1fae5; color: var(--success); }
+    .rsvp-tally-box.no  { background: #fce7f3; color: var(--pink); }
+    .rsvp-names { font-size: .72rem; color: var(--muted); margin-top: 3px; }
+
     footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
   </style>
 </head>
@@ -233,7 +277,7 @@
 <div class="hero">
   <svg width="100%" viewBox="0 0 680 310" role="img" style="max-width:540px;display:block;margin:0 auto;">
     <title>Triple B Book Club logo</title>
-    <style>.ltitle{font-family:Georgia,serif;font-weight:900;fill:#e8409a;}.lsub{font-family:Georgia,serif;font-style:italic;fill:#8b3fcf;}</style>
+    <style>.ltitle{font-family:'Lexend',sans-serif;font-weight:900;fill:#5b21b6;}.lsub{font-family:'Lexend',sans-serif;font-weight:400;fill:#6d28d9;}</style>
     <path d="M148 32 L255 32 Q318 32 318 95 Q318 150 255 158 Q325 163 325 228 Q325 288 255 288 L148 288 Z" fill="#7c2fa0"/>
     <path d="M190 55 L248 55 Q292 55 292 95 Q292 134 248 134 L190 134 Z" fill="#fdf6ff"/>
     <path d="M190 170 L250 170 Q302 170 302 228 Q302 265 250 265 L190 265 Z" fill="#fdf6ff"/>
@@ -268,11 +312,11 @@
     <circle cx="260" cy="222" r="30" fill="#d8b4fe" clip-path="url(#bc)"/>
     <circle cx="212" cy="230" r="22" fill="#c084fc" opacity="0.4" clip-path="url(#bc)"/>
     <circle cx="260" cy="230" r="22" fill="#c084fc" opacity="0.4" clip-path="url(#bc)"/>
-    <text x="385" y="118" class="ltitle" font-size="54">Triple B</text>
-    <text x="385" y="163" class="ltitle" font-size="27">Book Club</text>
-    <text x="385" y="197" class="lsub" font-size="16">Books · Boobs · Butts</text>
-    <text x="385" y="221" class="lsub" font-size="13" opacity="0.6">(Bush: debatable 🌿)</text>
-    <text x="385" y="244" class="lsub" font-size="11" opacity="0.4">Est. 2026</text>
+    <text x="385" y="110" class="ltitle" font-size="64">Triple B</text>
+    <text x="385" y="155" class="ltitle" font-size="28" opacity="0.8">Book Club</text>
+    <text x="385" y="190" class="lsub" font-size="14">Books · Boobs · Butts</text>
+    <text x="385" y="212" class="lsub" font-size="11" opacity="0.6">(Bush: debatable 🌿)</text>
+    <text x="385" y="232" class="lsub" font-size="10" opacity="0.4">Est. 2026</text>
   </svg>
 </div>
 
@@ -309,14 +353,32 @@
     </div>
 
     <div class="card">
-      <div class="card-head"><h2>Next Meeting</h2><span class="badge pink">June 12</span></div>
-      <div class="row">
+      <div class="card-head"><h2>Next Meeting</h2><span class="badge pink">June 11</span></div>
+
+      <!-- COUNTDOWN -->
+      <div class="countdown" id="countdown"></div>
+
+      <div class="row" style="margin-top:10px;">
         <div class="dot hot"></div>
         <div class="row-text" style="width:100%">
           <div class="name">Host: Rachael 🏖️</div>
           <div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div>
           <div class="sub" style="margin-top:2px;" id="nextDateTime">⌚ 6:30pm</div>
           <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div>
+        </div>
+      </div>
+
+      <!-- RSVP -->
+      <div style="margin-top:14px;">
+        <input class="rsvp-input" id="rsvpName" placeholder="Your name..."/>
+        <div class="rsvp-row">
+          <button class="rsvp-btn yes" onclick="submitRsvp('yes')">✅ I'm in!</button>
+          <button class="rsvp-btn no" onclick="submitRsvp('no')">❌ Can't make it</button>
+        </div>
+        <div class="success-msg" id="rsvpSuccess">💜 RSVP saved!</div>
+        <div class="rsvp-tally" id="rsvpTally" style="display:none;">
+          <div class="rsvp-tally-box yes"><div id="yesCount">0</div><div>going</div><div class="rsvp-names" id="yesNames"></div></div>
+          <div class="rsvp-tally-box no"><div id="noCount">0</div><div>can't make it</div><div class="rsvp-names" id="noNames"></div></div>
         </div>
       </div>
     </div>
@@ -333,14 +395,14 @@
   <div class="tab-content" id="tab-meetings">
     <div class="card">
       <div class="card-head"><h2>2026</h2></div>
-      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 12 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div></div><span class="pill hot">Next</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 10 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 11 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div></div><span class="pill hot">Next</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 9 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">September 10 — Simone</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">October 8 — Emily</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">November 12 — Christa</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
       <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 8 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 14 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
     </div>
   </div>
 
@@ -376,7 +438,7 @@
       <span class="label" style="margin-top:2px;">Meeting details</span>
       <input class="input" id="meetingLocation" placeholder="Location name & address..."/>
       <div class="two-col">
-        <input class="input" id="meetingDate" placeholder="Date (e.g. July 10)..."/>
+        <input class="input" id="meetingDate" placeholder="Date (e.g. July 9)..."/>
         <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
       </div>
       <button class="btn btn-outline" onclick="submitBooks()" style="margin-bottom:8px;">Post for Voting 📚</button>
@@ -430,6 +492,10 @@
       <div class="card-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet!</div></div>
     </div>
+    <div class="card">
+      <div class="card-head"><h2>Past Reads ⭐</h2></div>
+      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here! 📚</div></div>
+    </div>
   </div>
 
   <!-- PAST READS -->
@@ -462,48 +528,9 @@
 </div>
 
 <script>
-  // PASSWORD
-  function checkPw() {
-    const val = document.getElementById('pwInput').value.toLowerCase().replace(/\s/g,'');
-    if (val === 'bighairybush') {
-      document.getElementById('pwScreen').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'block';
-      sessionStorage.setItem('tripleB', 'unlocked');
-      showInstallBanner();
-    } else {
-      document.getElementById('pwError').style.display = 'block';
-      document.getElementById('pwInput').value = '';
-    }
-  }
   if (sessionStorage.getItem('tripleB') === 'unlocked') {
     document.getElementById('pwScreen').style.display = 'none';
     document.getElementById('mainContent').style.display = 'block';
-  }
-
-  // INSTALL BANNER
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); deferredPrompt = e;
-    if (sessionStorage.getItem('tripleB') === 'unlocked') showInstallBanner();
-  });
-  function showInstallBanner() {
-    if (deferredPrompt && !localStorage.getItem('installDismissed')) {
-      document.getElementById('installBanner').style.display = 'block';
-    }
-    // Show iOS tip
-    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
-    if (isIOS && !localStorage.getItem('installDismissed')) {
-      document.getElementById('installBanner').style.display = 'block';
-      document.getElementById('installBanner').innerHTML = '📱 Add to home screen: tap the share button then "Add to Home Screen" <button class="install-close" onclick="dismissInstall()">✕</button>';
-    }
-  }
-  function addToHome() {
-    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
-    dismissInstall();
-  }
-  function dismissInstall() {
-    localStorage.setItem('installDismissed','1');
-    document.getElementById('installBanner').style.display = 'none';
   }
 
   // SUPABASE
@@ -519,7 +546,7 @@
     document.getElementById('tab-' + name).classList.add('active');
     el.classList.add('active');
     if (name === 'vote') loadVoting();
-    if (name === 'shelf') loadShelf();
+    if (name === 'shelf') { loadShelf(); loadPastReads(); }
     if (name === 'past') loadPastReads();
   }
 
@@ -678,7 +705,54 @@
   }
 
   loadNextMeeting();
-</script>
+
+  // COUNTDOWN
+  function updateCountdown() {
+    const next = new Date('2026-06-11T18:30:00');
+    const now = new Date();
+    const diff = next - now;
+    const el = document.getElementById('countdown');
+    if (!el) return;
+    if (diff <= 0) { el.innerHTML = '<div class="countdown-today">🎉 It\'s meeting day!</div>'; return; }
+    const days  = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const mins  = Math.floor((diff % (1000*60*60)) / (1000*60));
+    el.innerHTML = `
+      <div class="countdown-box"><div class="num">${days}</div><div class="lbl">days</div></div>
+      <div class="countdown-box"><div class="num">${hours}</div><div class="lbl">hours</div></div>
+      <div class="countdown-box"><div class="num">${mins}</div><div class="lbl">mins</div></div>
+    `;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // RSVP
+  const RSVP_MONTH = 'June 2026';
+
+  async function loadRsvp() {
+    const { data } = await sb.from('rsvps').select('*').eq('month', RSVP_MONTH);
+    if (!data || data.length === 0) return;
+    const yes = data.filter(r => r.status === 'yes');
+    const no  = data.filter(r => r.status === 'no');
+    document.getElementById('yesCount').textContent = yes.length;
+    document.getElementById('noCount').textContent  = no.length;
+    document.getElementById('yesNames').textContent = yes.map(r => r.name).join(', ');
+    document.getElementById('noNames').textContent  = no.map(r => r.name).join(', ');
+    document.getElementById('rsvpTally').style.display = 'flex';
+  }
+
+  async function submitRsvp(status) {
+    const name = document.getElementById('rsvpName').value.trim();
+    if (!name) { alert('Enter your name first!'); return; }
+    const { error } = await sb.from('rsvps').upsert({ month: RSVP_MONTH, name, status }, { onConflict: 'month,name' });
+    if (error) { alert('Oops! ' + error.message); return; }
+    document.getElementById('rsvpSuccess').style.display = 'block';
+    document.getElementById('rsvpName').value = '';
+    setTimeout(() => document.getElementById('rsvpSuccess').style.display = 'none', 3000);
+    loadRsvp();
+  }
+
+  loadRsvp();
 
 </body>
 </html>
