@@ -255,7 +255,7 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
     </div>
 
     <div class="card">
-      <div class="card-head"><h2>Next Meeting</h2><span class="badge purple">June 11</span></div>
+      <div class="card-head"><h2>Next Meeting</h2><span class="badge purple">June 24</span></div>
       <div class="countdown" id="countdown"></div>
       <div class="row" style="margin-top:10px;">
         <div class="dot hot"></div>
@@ -264,10 +264,13 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
           <div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div>
           <div class="sub" style="margin-top:2px;" id="nextDateTime">⌚ 6:30pm</div>
           <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div>
+          <div class="sub" style="margin-top:2px;" id="nextFood">🍽️ Potluck — Appetizers</div>
+          <div class="sub" style="margin-top:2px;" id="nextTheme"></div>
         </div>
       </div>
       <div style="margin-top:14px;">
         <input class="rsvp-input" id="rsvpName" placeholder="Your name..."/>
+        <input class="rsvp-input" id="rsvpFood" placeholder="What are you bringing?"/>
         <div class="rsvp-row">
           <button class="rsvp-btn yes" id="rsvpYes">✅ I'm in!</button>
           <button class="rsvp-btn no" id="rsvpNo">❌ Can't make it</button>
@@ -277,6 +280,7 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
           <div class="rsvp-tally-box yes"><div id="yesCount">0</div><div>going</div><div class="rsvp-names" id="yesNames"></div></div>
           <div class="rsvp-tally-box no"><div id="noCount">0</div><div>can't make it</div><div class="rsvp-names" id="noNames"></div></div>
         </div>
+        <div id="foodList" style="display:none;margin-top:10px;"></div>
       </div>
     </div>
 
@@ -291,14 +295,14 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
   <div class="tab-content" id="tab-meetings">
     <div class="card">
       <div class="card-head"><h2>2026 Schedule</h2></div>
-      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 11 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div></div><span class="pill hot">Next</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 9 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">September 10 — Simone</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">October 8 — Emily</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">November 12 — Christa</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 14 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 24 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div><div class="sub" style="margin-top:2px;">🍽️ Potluck — Appetizers</div></div><span class="pill hot">Next</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 9 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">September 10 — Simone</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">October 8 — Emily</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">November 12 — Christa</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 14 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
     </div>
   </div>
 
@@ -319,9 +323,15 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
 
   <!-- HOST -->
   <div class="tab-content" id="tab-host">
+
     <div class="card">
-      <div class="card-head"><h2>Host Controls 👑</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Post your 3 picks and meeting details — members see them instantly in the Vote tab!</p>
+      <div class="card-head"><h2>👑 Host Controls</h2><span class="badge muted">Host Only</span></div>
+      <p style="font-size:.8rem;color:var(--muted);">Follow these steps each month to set up your meeting!</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>Step 1 — Post Your 3 Books</h2></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Post your picks so members can vote in the Vote tab!</p>
       <span class="label">Your name & month</span>
       <div class="two-col">
         <input class="input" id="hostName" placeholder="Your name..."/>
@@ -331,41 +341,33 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
       <input class="input" id="book1" placeholder="Book option 1..."/>
       <input class="input" id="book2" placeholder="Book option 2..."/>
       <input class="input" id="book3" placeholder="Book option 3..."/>
-      <span class="label" style="margin-top:2px;">Meeting details</span>
-      <input class="input" id="meetingLocation" placeholder="Location name & address..."/>
-      <div class="two-col">
-        <input class="input" id="meetingDate" placeholder="Date (e.g. July 9)..."/>
-        <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
-      </div>
-      <button class="btn btn-outline" id="submitBooksBtn" style="margin-bottom:8px;">Post for Voting 📚</button>
+      <button class="btn btn-outline" id="submitBooksBtn">Post for Voting 📚</button>
       <div class="success-msg" id="hostSuccess">✓ Posted! Members can now vote.</div>
     </div>
+
     <div class="card">
-      <div class="card-head"><h2>Announce Winner 🏆</h2><span class="badge muted">Host Only</span></div>
+      <div class="card-head"><h2>Step 2 — Announce Winning Book 🏆</h2></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">After voting closes, announce the book you'll be reading!</p>
       <input class="input" id="winnerInput" placeholder="Winning book title..."/>
       <button class="btn btn-outline" id="announceWinnerBtn">Announce Winner 🏆</button>
       <div class="success-msg" id="winnerSuccess">✓ Winner announced!</div>
     </div>
+
     <div class="card">
-      <div class="card-head"><h2>Discussion Questions 💬</h2><span class="badge muted">Host Only</span></div>
-      <input class="input" id="discussionMonth" placeholder="Month (e.g. June)..."/>
-      <textarea class="input" id="discussionQ" placeholder="Add a question..." style="height:80px;resize:none;"></textarea>
-      <button class="btn btn-outline" id="addDiscussionBtn">Add Question 💬</button>
-      <div class="success-msg" id="discussionSuccess">✓ Question added!</div>
-    </div>
-    <div class="card">
-      <div class="card-head"><h2>Log Past Read ⭐</h2><span class="badge muted">Host Only</span></div>
-      <input class="input" id="pastTitle" placeholder="Book title..."/>
-      <input class="input" id="pastAuthor" placeholder="Author..."/>
-      <input class="input" id="pastHost" placeholder="Who hosted..."/>
-      <input class="input" id="pastMonth" placeholder="Month (e.g. June 2026)..."/>
+      <div class="card-head"><h2>Step 3 — Meeting Details 📍</h2></div>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Set up the meeting so everyone knows where to be!</p>
+      <input class="input" id="meetingHost" placeholder="Host name..."/>
+      <input class="input" id="meetingLocation" placeholder="Location name & address..."/>
+      <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers, Dessert Night...)"/>
+      <input class="input" id="meetingTheme" placeholder="Theme or things to know (e.g. wear PJs, bring a gift, outdoor vibes...)"/>
       <div class="two-col">
-        <input class="input" id="pastRating" placeholder="Rating (1-5)..." type="number" min="1" max="5"/>
-        <input class="input" id="pastNote" placeholder="One word vibe..."/>
+        <input class="input" id="meetingDate" placeholder="Date (e.g. July 9)..."/>
+        <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
       </div>
-      <button class="btn btn-outline" id="logPastReadBtn">Log It ⭐</button>
-      <div class="success-msg" id="pastSuccess">✓ Logged!</div>
+      <button class="btn btn-outline" id="submitBooksBtn2">Save Meeting Details 📍</button>
+      <div class="success-msg" id="hostSuccess2">✓ Meeting details saved!</div>
     </div>
+
   </div>
 
   <!-- SHELF -->
@@ -400,6 +402,13 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
       <div class="rule"><span>🚀</span> Light space themes ok · heavy sci-fi is a hard no</div>
       <div class="rule"><span>🍷</span> Snacks & drinks mandatory</div>
       <div class="rule"><span>💖</span> Judgment-free zone always</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2>🍽️ Food Heads Up</h2></div>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:12px;font-style:italic;">Keep these in mind when bringing food to book club!</p>
+      <div class="rule"><span>⚠️</span> <div><strong>Intolerances & Allergies:</strong> pine nuts, shellfish, dairy <span style="font-size:.75rem;color:var(--muted);">(hard cheese & butter ok in small amounts)</span></div></div>
+      <div class="rule"><span>🙅</span> <div><strong>Preferences:</strong> no red meat, no cilantro</div></div>
     </div>
   </div>
 
@@ -459,7 +468,7 @@ function init() {
 
 // COUNTDOWN
 function updateCountdown() {
-  const next = new Date('2026-06-11T18:30:00');
+  const next = new Date('2026-06-24T18:30:00');
   const now = new Date();
   const diff = next - now;
   const el = document.getElementById('countdown');
@@ -481,6 +490,14 @@ async function loadNextMeeting() {
   if (!data) return;
   if (data.location) document.getElementById('nextLocation').textContent = '📍 ' + data.location;
   if (data.meeting_date || data.meeting_time) document.getElementById('nextDateTime').textContent = '⌚ ' + [data.meeting_date,data.meeting_time].filter(Boolean).join(' · ');
+  if (data.food_theme) {
+    const foodEl = document.getElementById('nextFood');
+    if (foodEl) foodEl.textContent = '🍽️ ' + data.food_theme;
+  }
+  if (data.theme) {
+    const themeEl = document.getElementById('nextTheme');
+    if (themeEl) themeEl.textContent = '✨ ' + data.theme;
+  }
   if (data.winning_book) { document.getElementById('winnerBook').textContent = data.winning_book; document.getElementById('winnerBanner').style.display='block'; }
   const { data: qs } = await sb.from('discussions').select('*').eq('month',data.month).order('created_at');
   if (qs && qs.length > 0) {
@@ -533,13 +550,26 @@ document.getElementById('submitBooksBtn').addEventListener('click', async functi
   const b1 = document.getElementById('book1').value.trim();
   const b2 = document.getElementById('book2').value.trim();
   const b3 = document.getElementById('book3').value.trim();
-  const loc = document.getElementById('meetingLocation').value.trim();
-  const date = document.getElementById('meetingDate').value.trim();
-  const time = document.getElementById('meetingTime').value.trim();
   if (!host||!month||!b1||!b2||!b3) { alert('Fill in name, month, and all 3 books!'); return; }
-  const { error } = await sb.from('meetings').upsert({month,host,book1:b1,book2:b2,book3:b3,location:loc,meeting_date:date,meeting_time:time},{onConflict:'month'});
+  const { error } = await sb.from('meetings').upsert({month,host,book1:b1,book2:b2,book3:b3},{onConflict:'month'});
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('hostSuccess').style.display='block';
+  loadNextMeeting();
+});
+
+document.getElementById('submitBooksBtn2').addEventListener('click', async function() {
+  const host  = document.getElementById('meetingHost').value.trim();
+  const loc   = document.getElementById('meetingLocation').value.trim();
+  const food  = document.getElementById('meetingFood').value.trim();
+  const theme = document.getElementById('meetingTheme').value.trim();
+  const date  = document.getElementById('meetingDate').value.trim();
+  const time  = document.getElementById('meetingTime').value.trim();
+  if (!loc) { alert('Enter the location!'); return; }
+  const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
+  if (!meeting) { alert('Post books first in Step 1!'); return; }
+  const { error } = await sb.from('meetings').update({host:host||meeting.host,location:loc,food_theme:food,theme,meeting_date:date,meeting_time:time}).eq('id',meeting.id);
+  if (error) { alert('Oops! '+error.message); return; }
+  document.getElementById('hostSuccess2').style.display='block';
   loadNextMeeting();
 });
 
@@ -552,30 +582,6 @@ document.getElementById('announceWinnerBtn').addEventListener('click', async fun
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('winnerSuccess').style.display='block';
   loadNextMeeting();
-});
-
-document.getElementById('addDiscussionBtn').addEventListener('click', async function() {
-  const month = document.getElementById('discussionMonth').value.trim();
-  const question = document.getElementById('discussionQ').value.trim();
-  if (!month||!question) { alert('Fill in both fields!'); return; }
-  const { error } = await sb.from('discussions').insert({month,question});
-  if (error) { alert('Oops! '+error.message); return; }
-  document.getElementById('discussionSuccess').style.display='block';
-  document.getElementById('discussionQ').value='';
-});
-
-document.getElementById('logPastReadBtn').addEventListener('click', async function() {
-  const title = document.getElementById('pastTitle').value.trim();
-  const author = document.getElementById('pastAuthor').value.trim();
-  const hosted_by = document.getElementById('pastHost').value.trim();
-  const month = document.getElementById('pastMonth').value.trim();
-  const rating = parseInt(document.getElementById('pastRating').value)||0;
-  const note = document.getElementById('pastNote').value.trim();
-  if (!title||!author||!month) { alert('Fill in title, author, and month!'); return; }
-  const { error } = await sb.from('past_reads').insert({title,author,hosted_by,month,rating,note});
-  if (error) { alert('Oops! '+error.message); return; }
-  document.getElementById('pastSuccess').style.display='block';
-  ['pastTitle','pastAuthor','pastHost','pastMonth','pastRating','pastNote'].forEach(id=>document.getElementById(id).value='');
 });
 
 // SHELF
@@ -624,15 +630,25 @@ async function loadRsvp() {
   document.getElementById('yesNames').textContent = yes.map(r=>r.name).join(', ');
   document.getElementById('noNames').textContent  = no.map(r=>r.name).join(', ');
   document.getElementById('rsvpTally').style.display='flex';
+  const bringing = yes.filter(r=>r.food);
+  if (bringing.length > 0) {
+    document.getElementById('foodList').style.display='block';
+    document.getElementById('foodList').innerHTML = `
+      <div style="font-size:.75rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">🍽️ Who's bringing what</div>
+      ${bringing.map(r=>`<div class="row" style="margin-bottom:6px;"><div class="dot hot"></div><div class="row-text"><div class="name">${r.name}</div><div class="sub">${r.food}</div></div></div>`).join('')}
+    `;
+  }
 }
 
 async function submitRsvp(status) {
   const name = document.getElementById('rsvpName').value.trim();
+  const food = document.getElementById('rsvpFood').value.trim();
   if (!name) { alert('Enter your name first!'); return; }
-  const { error } = await sb.from('rsvps').upsert({month:RSVP_MONTH,name,status},{onConflict:'month,name'});
+  const { error } = await sb.from('rsvps').upsert({month:RSVP_MONTH,name,status,food},{onConflict:'month,name'});
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('rsvpSuccess').style.display='block';
   document.getElementById('rsvpName').value='';
+  document.getElementById('rsvpFood').value='';
   setTimeout(()=>document.getElementById('rsvpSuccess').style.display='none',3000);
   loadRsvp();
 }
@@ -643,3 +659,4 @@ document.getElementById('rsvpNo').addEventListener('click',  ()=>submitRsvp('no'
 
 </body>
 </html>
+
