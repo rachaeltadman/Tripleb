@@ -443,17 +443,17 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
 
   <!-- SHELF -->
   <div class="tab-content" id="tab-shelf">
-    <div class="section boxed tint-pink">
-      <div class="section-head"><h2>Nominate a Book</h2></div>
-      <input class="input" id="shelfNominee" placeholder="Your name"/>
-      <input class="input" id="shelfTitle" placeholder="Book title"/>
-      <input class="input" id="shelfAuthor" placeholder="Author"/>
-      <button class="btn btn-secondary" id="addToShelfBtn">Add to Shelf</button>
-      <div class="success-msg" id="shelfSuccess">Added to the shelf.</div>
-    </div>
     <div class="section boxed tint-lav">
       <div class="section-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet.</div></div>
+      <div style="margin-top:18px;border-top:1px solid var(--border);padding-top:18px;">
+        <p class="section-note" style="margin-bottom:10px;">Have a book to suggest? Add it below.</p>
+        <input class="input" id="shelfNominee" placeholder="Your name"/>
+        <input class="input" id="shelfTitle" placeholder="Book title"/>
+        <input class="input" id="shelfAuthor" placeholder="Author"/>
+        <button class="btn btn-secondary" id="addToShelfBtn">Submit Nomination</button>
+        <div class="success-msg" id="shelfSuccess">Added to the nominations list.</div>
+      </div>
     </div>
     <div class="section boxed tint-ink">
       <div class="section-head"><h2>Past Reads</h2></div>
@@ -671,19 +671,12 @@ async function loadMeetingsSchedule() {
     })
     .map(planned => {
       const real = byMonth[planned.month];
-
-      const title = planned.month + ' — ' + (real && real.host ? real.host : planned.host);
-      const lines = [];
-      lines.push(real && real.winning_book ? real.winning_book : 'Book TBD');
-      lines.push('Tentative: ' + planned.tentativeDate + ' (2nd Thursday)');
-      if (real && real.location) lines.push(real.location);
-      if (real && real.food_theme) lines.push(real.food_theme);
+      const person = real && real.host ? real.host : planned.host;
 
       return `<div class="entry">
         <div class="entry-marker"></div>
         <div class="entry-body" style="width:100%">
-          <div class="entry-title">${title}</div>
-          ${lines.map(l => `<div class="entry-meta">${l}</div>`).join('')}
+          <div class="entry-title">${person} — ${planned.month}</div>
         </div>
         <span class="entry-tag">${planned.tentativeDate}</span>
       </div>`;
@@ -753,9 +746,10 @@ document.getElementById('submitBooksBtn2').addEventListener('click', async funct
   const time  = document.getElementById('meetingTime').value.trim();
   if (!month) { alert('Enter which month this is for!'); return; }
   if (!loc) { alert('Enter the location!'); return; }
-  const { data: meeting } = await sb.from('meetings').select('*').eq('month',month).maybeSingle();
-  if (!meeting) { alert('No meeting found for that month — post books in Step 1 first!'); return; }
-  const { error } = await sb.from('meetings').update({host:host||meeting.host,location:loc,food_theme:food,theme,meeting_date:date,meeting_time:time}).eq('id',meeting.id);
+  const payload = { month, location:loc, food_theme:food, theme, meeting_date:date, meeting_time:time };
+  if (host) payload.host = host; // only overwrite host if one was actually selected
+  // create the meeting row if it doesn't exist yet, otherwise update it
+  const { error } = await sb.from('meetings').upsert(payload, { onConflict: 'month' });
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('hostSuccess2').style.display='block';
   loadNextMeeting();
@@ -766,10 +760,20 @@ document.getElementById('announceWinnerBtn').addEventListener('click', async fun
   const winner = document.getElementById('winnerInput').value.trim();
   if (!month) { alert('Enter which month this is for!'); return; }
   if (!winner) { alert('Enter the winning book!'); return; }
-  const { data: meeting } = await sb.from('meetings').select('*').eq('month',month).maybeSingle();
-  if (!meeting) { alert('No meeting found for that month — post books in Step 1 first!'); return; }
-  const { error } = await sb.from('meetings').update({winning_book:winner}).eq('id',meeting.id);
+  // create the meeting row if it doesn't exist yet, otherwise just update the winner
+  const { error } = await sb.from('meetings').upsert(
+    { month, winning_book: winner },
+    { onConflict: 'month' }
+  );
   if (error) { alert('Oops! '+error.message); return; }
+
+  // if this book was on the nominations list, remove it now that it's been picked
+  const { data: shelfMatches } = await sb.from('shelf').select('id,title').ilike('title', winner);
+  if (shelfMatches && shelfMatches.length > 0) {
+    await sb.from('shelf').delete().eq('id', shelfMatches[0].id);
+    loadShelf();
+  }
+
   document.getElementById('winnerSuccess').style.display='block';
   loadNextMeeting();
 });
