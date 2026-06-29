@@ -222,11 +222,22 @@ select.input {
 .past-read .pr-note  { font-size:.8rem; color:var(--muted); font-style:italic; margin-top:5px; }
 
 /* COUNTDOWN */
-.countdown { display:flex; gap:24px; margin:18px 0 6px; }
+.countdown { display:flex; gap:28px; justify-content:center; margin:18px 0 22px; padding-bottom:18px; border-bottom:1px solid rgba(0,0,0,.08); }
 .countdown-box { text-align:center; }
-.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.2rem; font-weight:600; line-height:1; color:var(--warm); }
+.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.4rem; font-weight:700; line-height:1; color:var(--warm); }
 .countdown-box .lbl { font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
-.countdown-today { color:var(--accent); font-weight:600; font-size:.92rem; margin:10px 0; }
+.countdown-today { text-align:center; color:var(--warm); font-weight:700; font-size:1rem; margin:10px 0 22px; }
+
+/* NEXT MEETING DETAILS */
+.next-meeting-details { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.nmd-row { display:flex; gap:14px; align-items:baseline; }
+.nmd-label {
+  flex-shrink:0; width:64px; font-size:.66rem; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent);
+}
+.nmd-value { font-size:.92rem; color:var(--ink); font-weight:500; line-height:1.4; }
+
+.rsvp-block { border-top:1px solid rgba(0,0,0,.08); padding-top:18px; }
 
 /* RSVP */
 .rsvp-row { display:flex; gap:10px; margin-top:14px; }
@@ -304,19 +315,20 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
 
     <div class="section boxed tint-lav" id="nextMeetingCard" style="display:none;">
       <div class="section-head"><h2>Next Meeting</h2><span class="badge muted" id="nextMeetingBadge"></span></div>
+
       <div class="countdown" id="countdown"></div>
-      <div class="entry" style="margin-top:6px;">
-        <div class="entry-marker active"></div>
-        <div class="entry-body" style="width:100%">
-          <div class="entry-title" id="nextHost"></div>
-          <div class="entry-meta" id="nextBook"></div>
-          <div class="entry-meta" id="nextDateTime"></div>
-          <div class="entry-meta" id="nextLocation"></div>
-          <div class="entry-meta" id="nextFood"></div>
-          <div class="entry-meta" id="nextTheme"></div>
-        </div>
+
+      <div class="next-meeting-details">
+        <div class="nmd-row"><span class="nmd-label">Host</span><span class="nmd-value" id="nextHost"></span></div>
+        <div class="nmd-row"><span class="nmd-label">Book</span><span class="nmd-value" id="nextBook"></span></div>
+        <div class="nmd-row" id="nextDateTimeRow"><span class="nmd-label">When</span><span class="nmd-value" id="nextDateTime"></span></div>
+        <div class="nmd-row" id="nextLocationRow"><span class="nmd-label">Where</span><span class="nmd-value" id="nextLocation"></span></div>
+        <div class="nmd-row" id="nextFoodRow"><span class="nmd-label">Food</span><span class="nmd-value" id="nextFood"></span></div>
+        <div class="nmd-row" id="nextThemeRow"><span class="nmd-label">Theme</span><span class="nmd-value" id="nextTheme"></span></div>
       </div>
-      <div style="margin-top:18px;">
+
+      <div class="rsvp-block">
+        <p class="section-note" style="margin-bottom:10px;">RSVP below</p>
         <input class="rsvp-input" id="rsvpName" placeholder="Your name"/>
         <input class="rsvp-input" id="rsvpFood" placeholder="What are you bringing?"/>
         <div class="rsvp-row">
@@ -620,16 +632,25 @@ async function loadNextMeeting() {
 
   // NEXT MEETING CARD
   if (nextMeeting) {
-    document.getElementById('nextMeetingCard').style.display = 'flex';
+    document.getElementById('nextMeetingCard').style.display = 'block';
     document.getElementById('noMeetingCard').style.display = 'none';
 
     document.getElementById('nextMeetingBadge').textContent = nextMeeting.month || '';
-    document.getElementById('nextHost').textContent = 'Host: ' + (nextMeeting.host || 'TBD');
+    document.getElementById('nextHost').textContent = nextMeeting.host || 'TBD';
     document.getElementById('nextBook').textContent = nextMeeting.winning_book ? nextMeeting.winning_book : 'Book Selection Loading...';
-    document.getElementById('nextDateTime').textContent = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
+
+    const whenText = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
+    document.getElementById('nextDateTime').textContent = whenText;
+    document.getElementById('nextDateTimeRow').style.display = whenText ? 'flex' : 'none';
+
     document.getElementById('nextLocation').textContent = nextMeeting.location || '';
+    document.getElementById('nextLocationRow').style.display = nextMeeting.location ? 'flex' : 'none';
+
     document.getElementById('nextFood').textContent = nextMeeting.food_theme || '';
+    document.getElementById('nextFoodRow').style.display = nextMeeting.food_theme ? 'flex' : 'none';
+
     document.getElementById('nextTheme').textContent = nextMeeting.theme || '';
+    document.getElementById('nextThemeRow').style.display = nextMeeting.theme ? 'flex' : 'none';
 
     window.currentMeetingMonth = nextMeeting.month;
     window.currentMeetingDate = nextMeeting.meeting_date;
@@ -814,11 +835,13 @@ document.getElementById('addToShelfBtn').addEventListener('click', async functio
 
 // AUTO-SYNC completed meetings into Past Reads
 async function syncPastReads(completedMeetings) {
-  const { data: existing } = await sb.from('past_reads').select('month');
-  const existingMonths = new Set((existing || []).map(r => r.month));
+  const { data: existing } = await sb.from('past_reads').select('month,title');
+  const existingKeys = new Set((existing || []).map(r => (r.month + '|' + r.title).toLowerCase()));
 
   for (const m of completedMeetings) {
-    if (existingMonths.has(m.month)) continue;
+    const key = (m.month + '|' + m.winning_book).toLowerCase();
+    const titleAlreadyLogged = (existing || []).some(r => r.title.toLowerCase() === (m.winning_book || '').toLowerCase());
+    if (existingKeys.has(key) || titleAlreadyLogged) continue;
     await sb.from('past_reads').insert({
       title: m.winning_book,
       author: '',
@@ -836,8 +859,7 @@ async function loadPastReads() {
   const container = document.getElementById('pastList');
   if (!data||data.length===0) { container.innerHTML='<div class="no-content">Nothing yet — your reading history will live here.</div>'; return; }
   container.innerHTML = data.map(b=>{
-    const stars = '★'.repeat(b.rating||0)+'☆'.repeat(5-(b.rating||0));
-    return `<div class="past-read"><div class="pr-title">${b.title}</div><div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div><div class="pr-stars">${stars}</div>${b.note?`<div class="pr-note">"${b.note}"</div>`:''}</div>`;
+    return `<div class="past-read"><div class="pr-title">${b.title}</div><div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div>${b.note?`<div class="pr-note">"${b.note}"</div>`:''}</div>`;
   }).join('');
 }
 
