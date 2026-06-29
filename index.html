@@ -100,7 +100,8 @@ h1,h2,h3 { font-family:'Lexend',sans-serif; }
 .nav-link.active { color:var(--ink); border-bottom-color:var(--warm); }
 
 /* PAGE */
-.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; background:var(--ink); }
+.page-bg { background:var(--ink); }
+.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; }
 .tab-content { display:none; flex-direction:column; gap:28px; }
 .tab-content.active { display:flex; }
 
@@ -252,7 +253,8 @@ select.input {
 .rsvp-input:focus { border-color:var(--accent); }
 .rsvp-tally { display:flex; gap:24px; margin-top:18px; }
 .rsvp-tally-box { font-size:.8rem; }
-.rsvp-tally-box .count { font-family:'Lexend',sans-serif; font-size:1.3rem; font-weight:500; }
+.rsvp-tally-box .count { font-family:'Lexend',sans-serif; font-size:.95rem; font-weight:700; display:inline; }
+.rsvp-tally-box { display:flex; align-items:baseline; gap:5px; }
 .rsvp-tally-box.yes .count { color:var(--success); }
 .rsvp-tally-box.no  .count { color:var(--accent); }
 .rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
@@ -294,6 +296,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
   </nav>
 </header>
 
+<div class="page-bg">
 <div class="page">
 
   <!-- HOME -->
@@ -330,7 +333,6 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
       <div class="rsvp-block">
         <p class="section-note" style="margin-bottom:10px;">RSVP below</p>
         <input class="rsvp-input" id="rsvpName" placeholder="Your name"/>
-        <input class="rsvp-input" id="rsvpFood" placeholder="What are you bringing?"/>
         <div class="rsvp-row">
           <button class="rsvp-btn yes" id="rsvpYes">I'm in</button>
           <button class="rsvp-btn no" id="rsvpNo">Can't make it</button>
@@ -340,7 +342,6 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
           <div class="rsvp-tally-box yes"><div class="count" id="yesCount">0</div><div>going</div><div class="rsvp-names" id="yesNames"></div></div>
           <div class="rsvp-tally-box no"><div class="count" id="noCount">0</div><div>can't make it</div><div class="rsvp-names" id="noNames"></div></div>
         </div>
-        <div id="foodList" style="display:none;margin-top:14px;"></div>
       </div>
     </div>
 
@@ -510,6 +511,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
     </div>
   </div>
 
+</div>
 </div>
 
 <footer>Triple B Book Club — Est. 2026</footer>
@@ -869,7 +871,6 @@ async function loadRsvp() {
   if (!month) return;
   const { data } = await sb.from('rsvps').select('*').eq('month',month);
   document.getElementById('rsvpTally').style.display='none';
-  document.getElementById('foodList').style.display='none';
   if (!data||data.length===0) return;
   const yes = data.filter(r=>r.status==='yes');
   const no  = data.filter(r=>r.status==='no');
@@ -878,27 +879,17 @@ async function loadRsvp() {
   document.getElementById('yesNames').textContent = yes.map(r=>r.name).join(', ');
   document.getElementById('noNames').textContent  = no.map(r=>r.name).join(', ');
   document.getElementById('rsvpTally').style.display='flex';
-  const bringing = yes.filter(r=>r.food);
-  if (bringing.length > 0) {
-    document.getElementById('foodList').style.display='block';
-    document.getElementById('foodList').innerHTML = `
-      <div style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Who's bringing what</div>
-      ${bringing.map(r=>`<div class="entry" style="padding:8px 0;"><div class="entry-marker active"></div><div class="entry-body"><div class="entry-title">${r.name}</div><div class="entry-meta">${r.food}</div></div></div>`).join('')}
-    `;
-  }
 }
 
 async function submitRsvp(status) {
   const name = document.getElementById('rsvpName').value.trim();
-  const food = document.getElementById('rsvpFood').value.trim();
   const month = window.currentMeetingMonth;
   if (!month) { alert('No upcoming meeting to RSVP to yet!'); return; }
   if (!name) { alert('Enter your name first!'); return; }
-  const { error } = await sb.from('rsvps').upsert({month,name,status,food},{onConflict:'month,name'});
+  const { error } = await sb.from('rsvps').upsert({month,name,status},{onConflict:'month,name'});
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('rsvpSuccess').style.display='block';
   document.getElementById('rsvpName').value='';
-  document.getElementById('rsvpFood').value='';
   setTimeout(()=>document.getElementById('rsvpSuccess').style.display='none',3000);
   loadRsvp();
 }
