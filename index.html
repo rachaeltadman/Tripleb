@@ -1,34 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Triple B Book Club</title>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #ede0ff;
-  --surface: #f8f2ff;
-  --border: #c4a0e8;
-  --purple: #5b21b6;
-  --lavender: #8b5cf6;
-  --text: #2e1065;
-  --muted: #6d28d9;
-  --success: #059669;
+  --bg:      #fdf8fb;
+  --surface: #ffffff;
+  --border:  #f0d9ec;
+  --ink:     #1c1a17;
+  --muted:   #7a7570;
+  --accent:  #e2a9f1;
+  --accent-soft: #f6ecfb;
+  --warm:    #ff66c4;
+  --warm-soft: #ffe6f5;
+  --success: #3d7a5c;
+  --success-soft: #eaf3ee;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family:'Lexend',sans-serif;
   font-weight:400;
   background:var(--bg);
-  color:var(--text);
+  color:var(--ink);
   min-height:100vh;
-  background-image:
-    radial-gradient(ellipse at 0% 0%, #ddd6fe 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, #ede9fe 0%, transparent 50%);
+  background-image: radial-gradient(circle at 1px 1px, #ff66c40a 1px, transparent 0);
+  background-size: 22px 22px;
 }
+h1,h2,h3 { font-family:'Lexend',sans-serif; }
 
 /* PASSWORD */
 #pwScreen {
@@ -36,256 +38,297 @@ body {
   display:flex; flex-direction:column; align-items:center;
   justify-content:center; padding:24px; text-align:center;
 }
-.pw-logo { font-size:3rem; margin-bottom:8px; display:block; animation:bounce 2s ease-in-out infinite; }
-.pw-title { font-family:'Lexend',sans-serif; font-weight:900; font-size:2rem; color:var(--purple); margin-bottom:4px; }
-.pw-sub { font-size:.8rem; color:var(--muted); font-style:italic; margin-bottom:24px; }
+.pw-logo { font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+.pw-title { font-family:'Lexend',sans-serif; font-weight:500; font-size:2rem; color:var(--ink); margin-bottom:6px; }
+.pw-sub { font-size:.82rem; color:var(--muted); margin-bottom:28px; }
 .pw-input {
-  width:100%; max-width:280px; padding:12px 16px; border-radius:12px;
-  border:1.5px solid var(--border); background:white; font-family:'Lexend',sans-serif;
-  font-size:1rem; color:var(--text); text-align:center; outline:none; margin-bottom:10px;
+  width:100%; max-width:280px; padding:12px 16px; border-radius:4px;
+  border:1px solid var(--border); background:white; font-family:'Lexend',sans-serif;
+  font-size:.95rem; color:var(--ink); text-align:center; outline:none; margin-bottom:10px;
 }
-.pw-input:focus { border-color:var(--purple); }
+.pw-input:focus { border-color:var(--accent); }
 .pw-btn {
-  width:100%; max-width:280px; padding:12px; border-radius:12px; border:none;
-  background:var(--purple); color:white; font-family:'Lexend',sans-serif;
-  font-weight:600; font-size:.95rem; cursor:pointer;
+  width:100%; max-width:280px; padding:12px; border-radius:4px; border:none;
+  background:var(--ink); color:white; font-family:'Lexend',sans-serif;
+  font-weight:600; font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
 }
-.pw-error { color:var(--purple); font-size:.8rem; margin-top:8px; display:none; font-style:italic; }
+.pw-btn:hover { background:var(--accent); }
+.pw-error { color:#a04545; font-size:.8rem; margin-top:10px; display:none; }
 
 /* ANIMATIONS */
-@keyframes bounce { 0%,100% { transform:translateY(0) rotate(-3deg); } 50% { transform:translateY(-8px) rotate(3deg); } }
 @keyframes rise { to { opacity:1; transform:translateY(0); } }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
 
-/* HERO */
-.hero { text-align:center; padding:48px 24px 20px; }
-.hero-sticker { font-size:2.8rem; display:block; margin-bottom:8px; animation:bounce 2s ease-in-out infinite; }
-.hero-title { font-family:'Lexend',sans-serif; font-weight:900; font-size:clamp(3.5rem,12vw,6rem); color:var(--purple); line-height:1; letter-spacing:-.02em; }
-.hero-divider { display:flex; align-items:center; justify-content:center; gap:10px; margin:8px auto; max-width:300px; }
-.hero-divider-line { flex:1; height:1px; background:var(--border); }
-.hero-divider-dot { width:5px; height:5px; border-radius:50%; background:var(--lavender); }
-.hero-sub { font-family:'Lexend',sans-serif; font-weight:700; font-size:clamp(1rem,3.5vw,1.4rem); color:var(--lavender); letter-spacing:.6em; text-transform:uppercase; }
-.hero-tagline { font-size:.78rem; color:var(--muted); margin-top:8px; }
-.hero-est { font-size:.68rem; color:var(--muted); margin-top:4px; opacity:.5; letter-spacing:.15em; text-transform:uppercase; }
+/* HEADER */
+.site-header {
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.site-header-inner {
+  max-width:760px; margin:0 auto; padding:28px 24px 0;
+  text-align:center;
+}
+.site-title {
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:clamp(2.6rem,8vw,4rem);
+  color:var(--ink); letter-spacing:-.01em; line-height:1;
+}
+.site-title em {
+  font-style:italic; font-weight:500; color:var(--warm);
+}
+.site-subtitle {
+  font-size:.74rem; color:var(--accent); letter-spacing:.22em; text-transform:uppercase;
+  margin-top:10px; font-weight:600;
+}
+.site-tagline { font-size:.82rem; color:var(--muted); margin-top:10px; font-style:italic; }
+.site-logo { width:220px; max-width:70%; height:auto; display:block; margin:0 auto; }
 
-/* TABS */
-.tabs {
-  display:flex; gap:6px; max-width:640px; margin:14px auto 0;
-  padding:0 16px; overflow-x:auto; scrollbar-width:none;
+/* NAV */
+.nav {
+  display:flex; gap:0; max-width:760px; margin:22px auto 0;
+  padding:0 24px; overflow-x:auto; scrollbar-width:none; border-top:1px solid var(--border);
 }
-.tabs::-webkit-scrollbar { display:none; }
-.tab {
-  flex-shrink:0; padding:7px 14px; border-radius:99px;
-  border:1.5px solid var(--border); background:white;
-  font-family:'Lexend',sans-serif; font-weight:600; font-size:.75rem;
-  color:var(--muted); cursor:pointer; transition:all .15s;
+.nav::-webkit-scrollbar { display:none; }
+.nav-link {
+  flex-shrink:0; padding:13px 16px; background:none; border:none;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.78rem;
+  color:var(--ink); cursor:pointer; transition:color .15s, border-color .15s;
+  letter-spacing:.06em; text-transform:uppercase;
 }
-.tab:hover { border-color:var(--lavender); color:var(--purple); }
-.tab.active { background:var(--purple); border-color:var(--purple); color:white; }
+.nav-link:hover { color:var(--warm); }
+.nav-link.active { color:var(--ink); border-bottom-color:var(--warm); }
 
 /* PAGE */
-.page { max-width:640px; margin:0 auto; padding:12px 16px 80px; }
-.tab-content { display:none; flex-direction:column; gap:12px; }
+.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; }
+.tab-content { display:none; flex-direction:column; gap:28px; }
 .tab-content.active { display:flex; }
 
-/* CARDS */
-.card {
-  background:var(--surface); border:1.5px solid var(--border);
-  border-radius:20px; padding:20px 22px;
-  box-shadow:0 2px 16px rgba(91,33,182,.06);
-  opacity:0; transform:translateY(10px); animation:rise .35s ease forwards;
+/* SECTIONS — replacing cards with cleaner blocks */
+.section {
+  opacity:0; transform:translateY(8px); animation:rise .35s ease forwards;
+  padding-bottom:28px; border-bottom:1px solid var(--border);
 }
-.card:nth-child(1){ animation-delay:.05s; }
-.card:nth-child(2){ animation-delay:.12s; }
-.card:nth-child(3){ animation-delay:.19s; }
-.card:nth-child(4){ animation-delay:.26s; }
-.card:nth-child(5){ animation-delay:.33s; }
-
-.card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-.card-head h2 { font-family:'Lexend',sans-serif; font-weight:700; font-size:1.2rem; color:var(--purple); }
-
-.badge { font-size:.63rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:99px; }
-.badge.purple { background:#ede9fe; color:var(--purple); }
-.badge.muted  { background:#f0ebff; color:var(--muted); }
-.badge.green  { background:#d1fae5; color:var(--success); }
-
-/* ROWS */
-.row {
-  display:flex; align-items:center; gap:12px; padding:10px 12px;
-  border-radius:12px; background:var(--bg); border:1.5px solid transparent;
-  margin-bottom:7px; transition:border-color .15s, transform .15s;
+.section:last-child { border-bottom:none; padding-bottom:0; }
+.section.boxed {
+  border:1px solid var(--border); border-radius:14px; padding:24px;
+  background:var(--surface);
 }
-.row:last-child { margin-bottom:0; }
-.row:hover { border-color:var(--border); transform:scale(1.008); }
-.dot { width:7px; height:7px; border-radius:50%; background:var(--border); flex-shrink:0; }
-.dot.hot { background:var(--purple); box-shadow:0 0 6px rgba(91,33,182,.4); }
-.row-text .name { font-weight:600; font-size:.88rem; color:var(--text); }
-.row-text .sub  { font-size:.73rem; color:var(--muted); margin-top:2px; }
-.pill { margin-left:auto; font-size:.62rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; border-radius:99px; padding:3px 9px; white-space:nowrap; flex-shrink:0; background:#f0ebff; color:var(--muted); }
-.pill.hot { background:#ede9fe; color:var(--purple); }
+.section.boxed.tint-pink   { background:var(--warm-soft); border-color:#ffd1ea; }
+.section.boxed.tint-lav    { background:var(--accent-soft); border-color:#e9cdf3; }
+.section.boxed.tint-ink    { background:#f3f1ef; border-color:#d8d4cf; }
 
-/* RULES */
-.rule { display:flex; gap:10px; padding:9px 0; border-bottom:1.5px dashed var(--border); font-size:.86rem; color:var(--muted); line-height:1.5; }
-.rule:last-child { border-bottom:none; }
+.section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+.section-head h2 { font-weight:500; font-size:1.3rem; color:var(--ink); }
+.section-eyebrow { font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; display:block; }
+.section-note { font-size:.82rem; color:var(--muted); margin-bottom:16px; line-height:1.5; }
 
-/* INPUTS */
-.input { width:100%; padding:11px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--text); margin-bottom:8px; outline:none; transition:border-color .15s; }
-.input:focus { border-color:var(--lavender); }
-.input::placeholder { color:var(--muted); }
-.label { font-size:.68rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:7px; display:block; }
-.two-col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.badge { font-size:.68rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; padding:4px 10px; border-radius:3px; }
+.badge.accent { background:var(--accent-soft); color:var(--accent); }
+.badge.warm   { background:var(--warm-soft); color:var(--warm); }
+.badge.muted  { background:var(--bg); color:var(--muted); border:1px solid var(--border); }
+.badge.success { background:var(--success-soft); color:var(--success); }
+
+/* ENTRY ROWS — flatter list style instead of nested cards */
+.entry {
+  display:flex; align-items:flex-start; gap:14px; padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.entry:last-child { border-bottom:none; }
+.entry-marker { width:6px; height:6px; border-radius:50%; background:var(--border); flex-shrink:0; margin-top:7px; }
+.entry-marker.active { background:var(--accent); }
+.entry-body .entry-title { font-weight:600; font-size:.92rem; color:var(--ink); }
+.entry-body .entry-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; line-height:1.5; }
+.entry-tag {
+  margin-left:auto; font-size:.66rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
+  padding:3px 9px; border-radius:3px; white-space:nowrap; flex-shrink:0;
+  background:var(--bg); color:var(--muted); border:1px solid var(--border);
+}
+.entry-tag.active { background:var(--accent-soft); color:var(--accent); border-color:transparent; }
+
+/* RULES LIST */
+.rule-list { list-style:none; }
+.rule-item { display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); font-size:.88rem; color:var(--ink); line-height:1.55; }
+.rule-item:last-child { border-bottom:none; }
+.rule-item .marker { color:var(--accent); font-weight:600; flex-shrink:0; }
+
+/* FORMS */
+.field-label { font-size:.72rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:block; }
+.input {
+  width:100%; padding:11px 14px; border-radius:4px; border:1px solid var(--border);
+  background:var(--surface); font-family:'Lexend',sans-serif; font-size:.9rem;
+  color:var(--ink); margin-bottom:10px; outline:none; transition:border-color .15s;
+}
+.input:focus { border-color:var(--accent); }
+.input::placeholder { color:#a8a39c; }
+select.input {
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6660' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center; padding-right:34px;
+  cursor:pointer;
+}
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .two-col .input { margin-bottom:0; }
 
-/* BUTTONS */
-.btn { width:100%; padding:12px; border-radius:12px; border:none; font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:opacity .15s, transform .1s; margin-top:4px; }
-.btn:hover { opacity:.88; }
-.btn:active { transform:scale(.98); }
-.btn-purple  { background:var(--purple); color:white; }
-.btn-outline { background:var(--surface); color:var(--purple); border:1.5px solid var(--border); }
+.btn {
+  padding:11px 22px; border-radius:4px; border:1px solid var(--ink);
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem;
+  letter-spacing:.03em; cursor:pointer; transition:all .15s; margin-top:6px;
+  background:var(--ink); color:white;
+}
+.btn:hover { background:var(--warm); border-color:var(--warm); }
+.btn-secondary { background:transparent; color:var(--ink); border:1px solid var(--border); }
+.btn-secondary:hover { border-color:var(--ink); background:transparent; color:var(--ink); }
+.btn-full { width:100%; }
 
-.success-msg { text-align:center; background:#d1fae5; border:1.5px solid #6ee7b7; color:var(--success); border-radius:12px; padding:10px; font-size:.82rem; font-weight:600; margin-top:8px; display:none; }
-.no-content { text-align:center; color:var(--muted); font-size:.84rem; padding:20px 0; font-style:italic; }
+.success-msg {
+  font-size:.82rem; color:var(--success); background:var(--success-soft);
+  border-radius:4px; padding:10px 14px; margin-top:10px; display:none;
+}
+.no-content { color:var(--muted); font-size:.86rem; padding:8px 0; font-style:italic; }
 
 /* VOTING */
-.book-option { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:var(--bg); border:1.5px solid transparent; margin-bottom:8px; cursor:pointer; transition:all .15s; }
-.book-option:hover { border-color:var(--border); }
-.book-option.selected { border-color:var(--purple); background:#ede9fe; }
-.book-option .book-name { font-weight:600; font-size:.88rem; color:var(--text); }
-.vote-bar { height:4px; border-radius:99px; background:var(--border); margin-top:5px; width:110px; overflow:hidden; }
-.vote-bar-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--purple),var(--lavender)); transition:width .4s ease; }
-.vote-count { font-size:.7rem; color:var(--muted); margin-left:10px; flex-shrink:0; font-weight:600; }
-.book-option.selected .vote-count { color:var(--purple); }
+.book-option {
+  display:flex; align-items:center; justify-content:space-between; padding:14px 16px;
+  border:1px solid var(--border); border-radius:4px; margin-bottom:10px; cursor:pointer;
+  transition:border-color .15s, background .15s;
+}
+.book-option:hover { border-color:var(--accent); }
+.book-option.selected { border-color:var(--accent); background:var(--accent-soft); }
+.book-option .book-name { font-weight:600; font-size:.9rem; color:var(--ink); }
+.vote-bar { height:3px; border-radius:2px; background:var(--border); margin-top:7px; width:140px; overflow:hidden; }
+.vote-bar-fill { height:100%; background:var(--accent); transition:width .4s ease; }
+.vote-count { font-size:.74rem; color:var(--muted); margin-left:12px; flex-shrink:0; }
+.book-option.selected .vote-count { color:var(--accent); font-weight:600; }
 
 /* SHELF */
-.shelf-item { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:12px; background:var(--bg); margin-bottom:7px; }
-.shelf-item:last-child { margin-bottom:0; }
-.shelf-item .title  { font-weight:600; font-size:.88rem; color:var(--text); }
-.shelf-item .author { font-size:.73rem; color:var(--muted); margin-top:2px; }
-.shelf-item .nom    { margin-left:auto; font-size:.65rem; color:var(--purple); font-weight:600; white-space:nowrap; flex-shrink:0; }
+.shelf-item { display:flex; align-items:baseline; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.shelf-item:last-child { border-bottom:none; }
+.shelf-item .title  { font-weight:600; font-size:.9rem; color:var(--ink); }
+.shelf-item .author { font-size:.8rem; color:var(--muted); margin-left:6px; }
+.shelf-item .nom    { margin-left:auto; font-size:.72rem; color:var(--accent); white-space:nowrap; flex-shrink:0; }
 
 /* PAST READS */
-.past-read { padding:12px 14px; border-radius:12px; background:var(--bg); margin-bottom:8px; }
-.past-read:last-child { margin-bottom:0; }
-.past-read .pr-title { font-weight:700; font-size:.9rem; color:var(--text); }
-.past-read .pr-meta  { font-size:.73rem; color:var(--muted); margin-top:3px; }
-.past-read .pr-stars { color:var(--purple); font-size:.85rem; margin-top:4px; }
-.past-read .pr-note  { font-size:.75rem; color:var(--muted); font-style:italic; margin-top:4px; }
+.past-read { padding:14px 0; border-bottom:1px solid var(--border); }
+.past-read:last-child { border-bottom:none; }
+.past-read .pr-title { font-weight:600; font-size:.92rem; color:var(--ink); }
+.past-read .pr-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; }
+.past-read .pr-stars { color:var(--accent); font-size:.85rem; margin-top:5px; letter-spacing:.05em; }
+.past-read .pr-note  { font-size:.8rem; color:var(--muted); font-style:italic; margin-top:5px; }
 
 /* COUNTDOWN */
-.countdown { display:flex; gap:10px; justify-content:center; margin:14px 0 4px; }
-.countdown-box { background:var(--purple); border-radius:12px; padding:10px 14px; text-align:center; min-width:56px; color:white; }
-.countdown-box .num { font-family:'Lexend',sans-serif; font-size:1.8rem; font-weight:900; line-height:1; }
-.countdown-box .lbl { font-size:.6rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; opacity:.85; margin-top:2px; }
-.countdown-today { text-align:center; color:var(--purple); font-weight:700; font-size:.9rem; margin:8px 0; }
+.countdown { display:flex; gap:24px; margin:18px 0 6px; }
+.countdown-box { text-align:center; }
+.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.2rem; font-weight:600; line-height:1; color:var(--warm); }
+.countdown-box .lbl { font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
+.countdown-today { color:var(--accent); font-weight:600; font-size:.92rem; margin:10px 0; }
 
 /* RSVP */
-.rsvp-row { display:flex; gap:8px; margin-top:12px; }
-.rsvp-btn { flex:1; padding:10px; border-radius:12px; border:1.5px solid var(--border); font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; cursor:pointer; transition:all .15s; background:white; color:var(--muted); }
-.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:#d1fae5; border-color:#6ee7b7; color:var(--success); }
-.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:#ede9fe; border-color:var(--border); color:var(--purple); }
-.rsvp-input { width:100%; padding:10px 14px; border-radius:12px; border:1.5px solid var(--border); background:var(--bg); font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--text); outline:none; margin-bottom:8px; }
-.rsvp-input:focus { border-color:var(--lavender); }
-.rsvp-tally { display:flex; gap:10px; margin-top:10px; }
-.rsvp-tally-box { flex:1; padding:8px 12px; border-radius:10px; text-align:center; font-size:.78rem; font-weight:600; }
-.rsvp-tally-box.yes { background:#d1fae5; color:var(--success); }
-.rsvp-tally-box.no  { background:#ede9fe; color:var(--purple); }
-.rsvp-names { font-size:.72rem; color:var(--muted); margin-top:3px; }
+.rsvp-row { display:flex; gap:10px; margin-top:14px; }
+.rsvp-btn {
+  flex:1; padding:11px; border-radius:4px; border:1px solid var(--border);
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; cursor:pointer;
+  transition:all .15s; background:var(--surface); color:var(--muted);
+}
+.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:var(--success-soft); border-color:var(--success); color:var(--success); }
+.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+.rsvp-input { width:100%; padding:11px 14px; border-radius:4px; border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif; font-size:.9rem; color:var(--ink); outline:none; margin-bottom:10px; }
+.rsvp-input:focus { border-color:var(--accent); }
+.rsvp-tally { display:flex; gap:24px; margin-top:18px; }
+.rsvp-tally-box { font-size:.8rem; }
+.rsvp-tally-box .count { font-family:'Lexend',sans-serif; font-size:1.3rem; font-weight:500; }
+.rsvp-tally-box.yes .count { color:var(--success); }
+.rsvp-tally-box.no  .count { color:var(--accent); }
+.rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
 
-footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; }
+footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(--muted); letter-spacing:.04em; border-top:1px solid var(--border); margin-top:20px; }
 </style>
 </head>
 <body>
 
 <!-- PASSWORD -->
 <div id="pwScreen">
-  <span class="pw-logo">📚🍑🌿</span>
-  <div class="pw-title">Triple B Book Club</div>
-  <p class="pw-sub">members only 💜</p>
-  <input class="pw-input" id="pwInput" type="password" placeholder="password..."/>
+  <img src="logo.png" alt="Triple B Book Club" style="width:200px;max-width:70%;height:auto;margin-bottom:20px;"/>
+  <span class="pw-logo" style="margin-bottom:6px;">Members Only</span>
+  <p class="pw-sub">enter the password to continue</p>
+  <input class="pw-input" id="pwInput" type="password" placeholder="password"/>
   <button class="pw-btn" id="pwBtn">Enter</button>
-  <p class="pw-error" id="pwError">wrong password, babe 🌿</p>
+  <p class="pw-error" id="pwError">Incorrect password</p>
 </div>
 
 <!-- MAIN -->
 <div id="mainContent" style="display:none;">
 
-<div class="hero">
-  <span class="hero-sticker">📚🍑✨</span>
-  <h1 class="hero-title">Triple B</h1>
-  <div class="hero-divider">
-    <div class="hero-divider-line"></div>
-    <div class="hero-divider-dot"></div>
-    <h2 class="hero-sub">Book Club</h2>
-    <div class="hero-divider-dot"></div>
-    <div class="hero-divider-line"></div>
+<header class="site-header">
+  <div class="site-header-inner">
+    <img src="logo.png" alt="Triple B Book Club" class="site-logo"/>
+    <p class="site-tagline">Est. 2026</p>
   </div>
-  <p class="hero-tagline">Books · Boobs · Butts · <em>(Bush: debatable 🌿)</em></p>
-  <p class="hero-est">Est. 2026</p>
-</div>
-
-<div class="tabs" id="tabBar">
-  <button class="tab active" data-tab="home">🏠 Home</button>
-  <button class="tab" data-tab="meetings">🗓 Meetings</button>
-  <button class="tab" data-tab="vote">🗳 Vote</button>
-  <button class="tab" data-tab="host">👑 Host</button>
-  <button class="tab" data-tab="shelf">📚 Shelf</button>
-  <button class="tab" data-tab="vibes">💖 Vibes</button>
-</div>
+  <nav class="nav" id="tabBar">
+    <button class="nav-link active" data-tab="home">Home</button>
+    <button class="nav-link" data-tab="meetings">Meetings</button>
+    <button class="nav-link" data-tab="vote">Vote</button>
+    <button class="nav-link" data-tab="host">Host</button>
+    <button class="nav-link" data-tab="shelf">Shelf</button>
+    <button class="nav-link" data-tab="vibes">Vibes</button>
+  </nav>
+</header>
 
 <div class="page">
 
   <!-- HOME -->
   <div class="tab-content active" id="tab-home">
 
-    <div class="card" style="border-color:var(--lavender);background:linear-gradient(135deg,#fff 60%,#ede9fe 100%);">
-      <div class="card-head">
+    <div class="section boxed tint-pink">
+      <div class="section-head">
         <h2>Currently Reading</h2>
-        <span class="badge purple" style="background:var(--purple);color:white;animation:pulse 2s ease-in-out infinite;">● Reading Now</span>
+        <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
       </div>
-      <div class="row" style="border:1.5px solid var(--border);background:#ede9fe;">
-        <div class="dot hot"></div>
-        <div class="row-text">
-          <div class="name">The Book Club for Troublesome Women</div>
-          <div class="sub">June · Rachael 🏖️ · picked with Sasha ✨</div>
+      <div class="entry">
+        <div class="entry-marker active"></div>
+        <div class="entry-body">
+          <div class="entry-title" id="currentBook">Waiting on this month's winner</div>
+          <div class="entry-meta" id="currentBookMeta"></div>
         </div>
-      </div>
-      <div id="winnerBanner" style="display:none;margin-top:10px;background:#ede9fe;border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--purple);font-weight:600;">
-        🏆 This month's winner: <span id="winnerBook"></span>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>Next Meeting</h2><span class="badge purple">June 24</span></div>
+    <div class="section boxed tint-lav" id="nextMeetingCard" style="display:none;">
+      <div class="section-head"><h2>Next Meeting</h2><span class="badge muted" id="nextMeetingBadge"></span></div>
       <div class="countdown" id="countdown"></div>
-      <div class="row" style="margin-top:10px;">
-        <div class="dot hot"></div>
-        <div class="row-text" style="width:100%">
-          <div class="name">Host: Rachael 🏖️</div>
-          <div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div>
-          <div class="sub" style="margin-top:2px;" id="nextDateTime">⌚ 6:30pm</div>
-          <div class="sub" style="margin-top:2px;" id="nextLocation">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div>
-          <div class="sub" style="margin-top:2px;" id="nextFood">🍽️ Potluck — Appetizers</div>
-          <div class="sub" style="margin-top:2px;" id="nextTheme"></div>
+      <div class="entry" style="margin-top:6px;">
+        <div class="entry-marker active"></div>
+        <div class="entry-body" style="width:100%">
+          <div class="entry-title" id="nextHost"></div>
+          <div class="entry-meta" id="nextBook"></div>
+          <div class="entry-meta" id="nextDateTime"></div>
+          <div class="entry-meta" id="nextLocation"></div>
+          <div class="entry-meta" id="nextFood"></div>
+          <div class="entry-meta" id="nextTheme"></div>
         </div>
       </div>
-      <div style="margin-top:14px;">
-        <input class="rsvp-input" id="rsvpName" placeholder="Your name..."/>
+      <div style="margin-top:18px;">
+        <input class="rsvp-input" id="rsvpName" placeholder="Your name"/>
         <input class="rsvp-input" id="rsvpFood" placeholder="What are you bringing?"/>
         <div class="rsvp-row">
-          <button class="rsvp-btn yes" id="rsvpYes">✅ I'm in!</button>
-          <button class="rsvp-btn no" id="rsvpNo">❌ Can't make it</button>
+          <button class="rsvp-btn yes" id="rsvpYes">I'm in</button>
+          <button class="rsvp-btn no" id="rsvpNo">Can't make it</button>
         </div>
-        <div class="success-msg" id="rsvpSuccess">💜 RSVP saved!</div>
+        <div class="success-msg" id="rsvpSuccess">RSVP saved.</div>
         <div class="rsvp-tally" id="rsvpTally" style="display:none;">
-          <div class="rsvp-tally-box yes"><div id="yesCount">0</div><div>going</div><div class="rsvp-names" id="yesNames"></div></div>
-          <div class="rsvp-tally-box no"><div id="noCount">0</div><div>can't make it</div><div class="rsvp-names" id="noNames"></div></div>
+          <div class="rsvp-tally-box yes"><div class="count" id="yesCount">0</div><div>going</div><div class="rsvp-names" id="yesNames"></div></div>
+          <div class="rsvp-tally-box no"><div class="count" id="noCount">0</div><div>can't make it</div><div class="rsvp-names" id="noNames"></div></div>
         </div>
-        <div id="foodList" style="display:none;margin-top:10px;"></div>
+        <div id="foodList" style="display:none;margin-top:14px;"></div>
       </div>
     </div>
 
-    <div class="card" id="discussionCard" style="display:none;">
-      <div class="card-head"><h2>Discussion Questions 💬</h2></div>
+    <div class="section boxed" id="noMeetingCard">
+      <div class="section-head"><h2>Next Meeting</h2></div>
+      <p class="no-content">No upcoming meeting scheduled yet — check the Host tab.</p>
+    </div>
+
+    <div class="section boxed tint-ink" id="discussionCard" style="display:none;">
+      <div class="section-head"><h2>Discussion Questions</h2></div>
       <div id="discussionList"></div>
     </div>
 
@@ -293,128 +336,159 @@ footer { text-align:center; padding:0 24px 36px; font-size:.7rem; color:var(--mu
 
   <!-- MEETINGS -->
   <div class="tab-content" id="tab-meetings">
-    <div class="card">
-      <div class="card-head"><h2>2026 Schedule</h2></div>
-      <div class="row"><div class="dot hot"></div><div class="row-text" style="width:100%"><div class="name">June 24 — Rachael 🏖️</div><div class="sub" style="margin-top:2px;">📖 The Book Club for Troublesome Women</div><div class="sub" style="margin-top:2px;">⌚ 6:30pm</div><div class="sub" style="margin-top:2px;">📍 Rachael's Place · 3834 175th Ave NE H6, Redmond WA 98052</div><div class="sub" style="margin-top:2px;">🍽️ Potluck — Appetizers</div></div><span class="pill hot">Next</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">July 9 — Sasha</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">August 13 — Val</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">September 10 — Simone</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">October 8 — Emily</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">November 12 — Christa</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">December 10 — Katie & Betsy 🎄</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
-      <div class="row"><div class="dot"></div><div class="row-text" style="width:100%"><div class="name">January 14 — Carly</div><div class="sub" style="margin-top:2px;">📖 TBD</div><div class="sub" style="margin-top:2px;">⌚ TBD</div><div class="sub" style="margin-top:2px;">📍 TBD</div><div class="sub" style="margin-top:2px;">🍽️ TBD</div></div><span class="pill">TBD</span></div>
+    <div class="section boxed">
+      <div class="section-head"><h2>2026 Schedule</h2></div>
+      <div id="meetingsList"></div>
     </div>
   </div>
 
   <!-- VOTE -->
   <div class="tab-content" id="tab-vote">
-    <div class="card">
-      <div class="card-head"><h2>Cast Your Vote 🗳️</h2></div>
+    <div class="section boxed tint-lav">
+      <div class="section-head"><h2>Cast Your Vote</h2></div>
       <div id="voteForm" style="display:none;">
-        <span class="label" id="voteMonthLabel"></span>
-        <input class="input" id="voterName" placeholder="Your name..."/>
+        <span class="section-eyebrow" id="voteMonthLabel"></span>
+        <input class="input" id="voterName" placeholder="Your name"/>
         <div id="bookOptions"></div>
-        <button class="btn btn-purple" id="voteBtn">Cast My Vote 💜</button>
-        <div class="success-msg" id="voteSuccess">💜 Vote cast! Thanks!</div>
+        <button class="btn btn-full" id="voteBtn">Cast My Vote</button>
+        <div class="success-msg" id="voteSuccess">Vote cast — thanks!</div>
       </div>
-      <div id="noVoteYet" class="no-content">The host hasn't posted their picks yet — check back soon! 📚</div>
+      <div id="noVoteYet" class="no-content">The host hasn't posted their picks yet — check back soon.</div>
     </div>
   </div>
 
   <!-- HOST -->
   <div class="tab-content" id="tab-host">
 
-    <div class="card">
-      <div class="card-head"><h2>👑 Host Controls</h2><span class="badge muted">Host Only</span></div>
-      <p style="font-size:.8rem;color:var(--muted);">Follow these steps each month to set up your meeting!</p>
+    <div class="section">
+      <div class="section-head"><h2>Host Controls</h2><span class="badge muted">Host Only</span></div>
+      <p class="section-note">Follow these three steps each month to set up your meeting.</p>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>Step 1 — Post Your 3 Books</h2></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Post your picks so members can vote in the Vote tab!</p>
-      <span class="label">Your name & month</span>
-      <div class="two-col">
-        <input class="input" id="hostName" placeholder="Your name..."/>
-        <input class="input" id="hostMonth" placeholder="Month (e.g. July)..."/>
+    <div class="section boxed tint-pink">
+      <span class="section-eyebrow">Step 1</span>
+      <div class="section-head"><h2>Post Your Three Books</h2></div>
+      <p class="section-note">Post your picks so members can vote in the Vote tab.</p>
+      <span class="field-label">Your name & month</span>
+      <div class="two-col" style="margin-bottom:10px;">
+        <select class="input" id="hostName" style="margin-bottom:0;">
+          <option value="" disabled selected>Host Name</option>
+          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+          <option>Tricia</option><option>Val</option>
+        </select>
+        <select class="input" id="hostMonth" style="margin-bottom:0;">
+          <option value="" disabled selected>Month</option>
+          <option>January</option><option>February</option><option>March</option><option>April</option>
+          <option>May</option><option>June</option><option>July</option><option>August</option>
+          <option>September</option><option>October</option><option>November</option><option>December</option>
+        </select>
       </div>
-      <span class="label" style="margin-top:8px;">Your 3 book picks</span>
-      <input class="input" id="book1" placeholder="Book option 1..."/>
-      <input class="input" id="book2" placeholder="Book option 2..."/>
-      <input class="input" id="book3" placeholder="Book option 3..."/>
-      <button class="btn btn-outline" id="submitBooksBtn">Post for Voting 📚</button>
-      <div class="success-msg" id="hostSuccess">✓ Posted! Members can now vote.</div>
+      <span class="field-label" style="margin-top:6px;">Your three book picks</span>
+      <input class="input" id="book1" placeholder="Book option 1"/>
+      <input class="input" id="book2" placeholder="Book option 2"/>
+      <input class="input" id="book3" placeholder="Book option 3"/>
+      <button class="btn btn-secondary" id="submitBooksBtn">Post for Voting</button>
+      <div class="success-msg" id="hostSuccess">Posted — members can now vote.</div>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>Step 2 — Announce Winning Book 🏆</h2></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">After voting closes, announce the book you'll be reading!</p>
-      <input class="input" id="winnerInput" placeholder="Winning book title..."/>
-      <button class="btn btn-outline" id="announceWinnerBtn">Announce Winner 🏆</button>
-      <div class="success-msg" id="winnerSuccess">✓ Winner announced!</div>
+    <div class="section boxed tint-lav">
+      <span class="section-eyebrow">Step 2</span>
+      <div class="section-head"><h2>Announce Winning Book</h2></div>
+      <p class="section-note">After voting closes, announce the book you'll be reading.</p>
+      <select class="input" id="winnerMonth">
+        <option value="" disabled selected>Month</option>
+        <option>January</option><option>February</option><option>March</option><option>April</option>
+        <option>May</option><option>June</option><option>July</option><option>August</option>
+        <option>September</option><option>October</option><option>November</option><option>December</option>
+      </select>
+      <input class="input" id="winnerInput" placeholder="Winning book title"/>
+      <button class="btn btn-secondary" id="announceWinnerBtn">Announce Winner</button>
+      <div class="success-msg" id="winnerSuccess">Winner announced.</div>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>Step 3 — Meeting Details 📍</h2></div>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">Set up the meeting so everyone knows where to be!</p>
-      <input class="input" id="meetingHost" placeholder="Host name..."/>
-      <input class="input" id="meetingLocation" placeholder="Location name & address..."/>
-      <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers, Dessert Night...)"/>
-      <input class="input" id="meetingTheme" placeholder="Theme or things to know (e.g. wear PJs, bring a gift, outdoor vibes...)"/>
+    <div class="section boxed tint-ink">
+      <span class="section-eyebrow">Step 3</span>
+      <div class="section-head"><h2>Meeting Details</h2></div>
+      <p class="section-note">Set up the meeting so everyone knows where to be.</p>
+      <select class="input" id="meetingMonth">
+        <option value="" disabled selected>Month</option>
+        <option>January</option><option>February</option><option>March</option><option>April</option>
+        <option>May</option><option>June</option><option>July</option><option>August</option>
+        <option>September</option><option>October</option><option>November</option><option>December</option>
+      </select>
+      <select class="input" id="meetingHost">
+        <option value="" disabled selected>Host Name</option>
+        <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+        <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+        <option>Tricia</option><option>Val</option>
+      </select>
+      <input class="input" id="meetingLocation" placeholder="Location name & address"/>
+      <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers)"/>
+      <input class="input" id="meetingTheme" placeholder="Theme or things to know"/>
       <div class="two-col">
-        <input class="input" id="meetingDate" placeholder="Date (e.g. July 9)..."/>
-        <input class="input" id="meetingTime" placeholder="Time (e.g. 7:00pm)..."/>
+        <input class="input" id="meetingDate" type="date"/>
+        <select class="input" id="meetingTime">
+          <option value="" disabled selected>Time</option>
+          <option>5:00pm</option><option>5:30pm</option><option>6:00pm</option><option>6:30pm</option>
+          <option>7:00pm</option><option>7:30pm</option><option>8:00pm</option><option>8:30pm</option>
+        </select>
       </div>
-      <button class="btn btn-outline" id="submitBooksBtn2">Save Meeting Details 📍</button>
-      <div class="success-msg" id="hostSuccess2">✓ Meeting details saved!</div>
+      <button class="btn btn-secondary" id="submitBooksBtn2">Save Meeting Details</button>
+      <div class="success-msg" id="hostSuccess2">Meeting details saved.</div>
     </div>
 
   </div>
 
   <!-- SHELF -->
   <div class="tab-content" id="tab-shelf">
-    <div class="card">
-      <div class="card-head"><h2>Nominate a Book</h2></div>
-      <input class="input" id="shelfNominee" placeholder="Your name..."/>
-      <input class="input" id="shelfTitle" placeholder="Book title..."/>
-      <input class="input" id="shelfAuthor" placeholder="Author..."/>
-      <button class="btn btn-outline" id="addToShelfBtn">Add to Shelf 📖</button>
-      <div class="success-msg" id="shelfSuccess">✓ Added!</div>
+    <div class="section boxed tint-pink">
+      <div class="section-head"><h2>Nominate a Book</h2></div>
+      <input class="input" id="shelfNominee" placeholder="Your name"/>
+      <input class="input" id="shelfTitle" placeholder="Book title"/>
+      <input class="input" id="shelfAuthor" placeholder="Author"/>
+      <button class="btn btn-secondary" id="addToShelfBtn">Add to Shelf</button>
+      <div class="success-msg" id="shelfSuccess">Added to the shelf.</div>
     </div>
-    <div class="card">
-      <div class="card-head"><h2>Nominations</h2></div>
-      <div id="shelfList"><div class="no-content">No nominations yet!</div></div>
+    <div class="section boxed tint-lav">
+      <div class="section-head"><h2>Nominations</h2></div>
+      <div id="shelfList"><div class="no-content">No nominations yet.</div></div>
     </div>
-    <div class="card">
-      <div class="card-head"><h2>Past Reads ⭐</h2></div>
-      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here! 📚</div></div>
+    <div class="section boxed tint-ink">
+      <div class="section-head"><h2>Past Reads</h2></div>
+      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here.</div></div>
     </div>
   </div>
 
   <!-- VIBES -->
   <div class="tab-content" id="tab-vibes">
-    <div class="card">
-      <div class="card-head"><h2>The Vibes 💖</h2></div>
-      <div class="rule"><span>📚</span> Host picks 3 books · everyone votes · most votes wins</div>
-      <div class="rule"><span>📄</span> 400 page max — we have lives 😂</div>
-      <div class="rule"><span>🎬</span> Books being made into movies are a yes!</div>
-      <div class="rule"><span>✅</span> Memoirs welcome · autobiographies not so much</div>
-      <div class="rule"><span>❌</span> No dense old-timey language (sorry Shakespeare)</div>
-      <div class="rule"><span>🚀</span> Light space themes ok · heavy sci-fi is a hard no</div>
-      <div class="rule"><span>🍷</span> Snacks & drinks mandatory</div>
-      <div class="rule"><span>💖</span> Judgment-free zone always</div>
+    <div class="section boxed tint-pink">
+      <div class="section-head"><h2>The Vibes</h2></div>
+      <ul class="rule-list">
+        <li class="rule-item"><span class="marker">📚</span> Host picks three books, everyone votes, most votes wins</li>
+        <li class="rule-item"><span class="marker">📄</span> 400 page max</li>
+        <li class="rule-item"><span class="marker">🎬</span> Books being made into movies are welcome</li>
+        <li class="rule-item"><span class="marker">✍️</span> Memoirs welcome; autobiographies not so much</li>
+        <li class="rule-item"><span class="marker">🕰️</span> No dense old-timey language (sorry, Shakespeare)</li>
+        <li class="rule-item"><span class="marker">🚀</span> Light space themes okay; heavy sci-fi is a hard no</li>
+        <li class="rule-item"><span class="marker">🍷</span> Snacks & drinks mandatory</li>
+        <li class="rule-item"><span class="marker">💕</span> Judgment-free zone, always</li>
+      </ul>
     </div>
 
-    <div class="card">
-      <div class="card-head"><h2>🍽️ Food Heads Up</h2></div>
-      <p style="font-size:.78rem;color:var(--muted);margin-bottom:12px;font-style:italic;">Keep these in mind when bringing food to book club!</p>
-      <div class="rule"><span>⚠️</span> <div><strong>Intolerances & Allergies:</strong> pine nuts, shellfish, dairy <span style="font-size:.75rem;color:var(--muted);">(hard cheese & butter ok in small amounts)</span></div></div>
-      <div class="rule"><span>🙅</span> <div><strong>Preferences:</strong> no red meat, no cilantro</div></div>
+    <div class="section boxed tint-lav">
+      <div class="section-head"><h2>Food Heads Up 🍽️</h2></div>
+      <p class="section-note">Keep these in mind when bringing food to book club.</p>
+      <ul class="rule-list">
+        <li class="rule-item"><span class="marker">⚠️</span> <div><strong>Intolerances &amp; allergies:</strong> pine nuts, shellfish, dairy <span style="color:var(--muted);">(hard cheese & butter okay in small amounts)</span></div></li>
+        <li class="rule-item"><span class="marker">🙅</span> <div><strong>Preferences:</strong> no red meat, no cilantro</div></li>
+      </ul>
     </div>
   </div>
 
 </div>
 
-<footer>Triple B · Books, Boobs & Butts · Bush Debatable 🌿 · Est. 2026</footer>
+<footer>Triple B Book Club — Est. 2026</footer>
 
 </div>
 
@@ -448,62 +522,173 @@ if (sessionStorage.getItem('tripleB') === 'unlocked') {
 
 // TABS — using event delegation
 document.getElementById('tabBar').addEventListener('click', function(e) {
-  const btn = e.target.closest('.tab');
+  const btn = e.target.closest('.nav-link');
   if (!btn) return;
   const name = btn.dataset.tab;
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   btn.classList.add('active');
   if (name === 'vote') loadVoting();
   if (name === 'shelf') { loadShelf(); loadPastReads(); }
+  if (name === 'meetings') loadMeetingsSchedule();
 });
 
 function init() {
   loadNextMeeting();
-  loadRsvp();
-  updateCountdown();
-  setInterval(updateCountdown, 60000);
+  loadMeetingsSchedule();
+  setInterval(() => {
+    if (window.currentMeetingDate) updateCountdown(window.currentMeetingDate, window.currentMeetingTime);
+  }, 60000);
 }
 
 // COUNTDOWN
-function updateCountdown() {
-  const next = new Date('2026-06-24T18:30:00');
-  const now = new Date();
-  const diff = next - now;
+function updateCountdown(dateStr, timeStr) {
   const el = document.getElementById('countdown');
   if (!el) return;
-  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">🎉 It\'s meeting day!</div>'; return; }
+  if (!dateStr) { el.innerHTML = ''; return; }
+
+  // parse time like "6:30pm" into hours/minutes, default to noon if unparseable
+  let hours = 12, mins = 0;
+  if (timeStr) {
+    const match = timeStr.match(/(\d+):?(\d*)\s*(am|pm)?/i);
+    if (match) {
+      hours = parseInt(match[1]);
+      mins = match[2] ? parseInt(match[2]) : 0;
+      const ampm = match[3] ? match[3].toLowerCase() : null;
+      if (ampm === 'pm' && hours < 12) hours += 12;
+      if (ampm === 'am' && hours === 12) hours = 0;
+    }
+  }
+
+  const next = new Date(dateStr + 'T00:00:00');
+  next.setHours(hours, mins, 0, 0);
+  const now = new Date();
+  const diff = next - now;
+
+  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">It\'s meeting day!</div>'; return; }
   const days  = Math.floor(diff/(1000*60*60*24));
-  const hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-  const mins  = Math.floor((diff%(1000*60*60))/(1000*60));
+  const hrs   = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mns   = Math.floor((diff%(1000*60*60))/(1000*60));
   el.innerHTML = `
     <div class="countdown-box"><div class="num">${days}</div><div class="lbl">days</div></div>
-    <div class="countdown-box"><div class="num">${hours}</div><div class="lbl">hours</div></div>
-    <div class="countdown-box"><div class="num">${mins}</div><div class="lbl">mins</div></div>
+    <div class="countdown-box"><div class="num">${hrs}</div><div class="lbl">hours</div></div>
+    <div class="countdown-box"><div class="num">${mns}</div><div class="lbl">mins</div></div>
   `;
 }
 
-// NEXT MEETING
+// NEXT MEETING + CURRENTLY READING
 async function loadNextMeeting() {
-  const { data } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
-  if (!data) return;
-  if (data.location) document.getElementById('nextLocation').textContent = '📍 ' + data.location;
-  if (data.meeting_date || data.meeting_time) document.getElementById('nextDateTime').textContent = '⌚ ' + [data.meeting_date,data.meeting_time].filter(Boolean).join(' · ');
-  if (data.food_theme) {
-    const foodEl = document.getElementById('nextFood');
-    if (foodEl) foodEl.textContent = '🍽️ ' + data.food_theme;
+  const { data: allMeetings } = await sb.from('meetings').select('*');
+  if (!allMeetings || allMeetings.length === 0) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // find the soonest meeting with a date today or in the future
+  const upcoming = allMeetings
+    .filter(m => m.meeting_date)
+    .filter(m => new Date(m.meeting_date) >= today)
+    .sort((a,b) => new Date(a.meeting_date) - new Date(b.meeting_date));
+
+  const nextMeeting = upcoming[0] || null;
+
+  // auto-log any completed meetings (date passed + book announced) to Past Reads
+  const completed = allMeetings.filter(m => m.meeting_date && new Date(m.meeting_date) < today && m.winning_book);
+  if (completed.length > 0) await syncPastReads(completed);
+
+  // CURRENTLY READING — the winning book of the next upcoming meeting
+  if (nextMeeting && nextMeeting.winning_book) {
+    document.getElementById('currentBook').textContent = nextMeeting.winning_book;
+    document.getElementById('currentBookMeta').textContent =
+      [nextMeeting.month, nextMeeting.host ? 'hosted by ' + nextMeeting.host : ''].filter(Boolean).join(' · ');
+  } else {
+    document.getElementById('currentBook').textContent = 'Waiting on this month\'s winner...';
+    document.getElementById('currentBookMeta').textContent = '';
   }
-  if (data.theme) {
-    const themeEl = document.getElementById('nextTheme');
-    if (themeEl) themeEl.textContent = '✨ ' + data.theme;
+
+  // NEXT MEETING CARD
+  if (nextMeeting) {
+    document.getElementById('nextMeetingCard').style.display = 'flex';
+    document.getElementById('noMeetingCard').style.display = 'none';
+
+    document.getElementById('nextMeetingBadge').textContent = nextMeeting.month || '';
+    document.getElementById('nextHost').textContent = 'Host: ' + (nextMeeting.host || 'TBD');
+    document.getElementById('nextBook').textContent = nextMeeting.winning_book ? nextMeeting.winning_book : 'Book TBD — vote in progress';
+    document.getElementById('nextDateTime').textContent = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
+    document.getElementById('nextLocation').textContent = nextMeeting.location || '';
+    document.getElementById('nextFood').textContent = nextMeeting.food_theme || '';
+    document.getElementById('nextTheme').textContent = nextMeeting.theme || '';
+
+    window.currentMeetingMonth = nextMeeting.month;
+    window.currentMeetingDate = nextMeeting.meeting_date;
+    window.currentMeetingTime = nextMeeting.meeting_time;
+    updateCountdown(nextMeeting.meeting_date, nextMeeting.meeting_time);
+    loadRsvp();
+
+    const { data: qs } = await sb.from('discussions').select('*').eq('month',nextMeeting.month).order('created_at');
+    if (qs && qs.length > 0) {
+      document.getElementById('discussionCard').style.display = 'block';
+      document.getElementById('discussionList').innerHTML = qs.map(q=>`<div class="rule-item"><span class="marker">—</span>${q.question}</div>`).join('');
+    }
+  } else {
+    document.getElementById('nextMeetingCard').style.display = 'none';
+    document.getElementById('noMeetingCard').style.display = 'block';
   }
-  if (data.winning_book) { document.getElementById('winnerBook').textContent = data.winning_book; document.getElementById('winnerBanner').style.display='block'; }
-  const { data: qs } = await sb.from('discussions').select('*').eq('month',data.month).order('created_at');
-  if (qs && qs.length > 0) {
-    document.getElementById('discussionCard').style.display = 'block';
-    document.getElementById('discussionList').innerHTML = qs.map(q=>`<div class="rule"><span>💬</span>${q.question}</div>`).join('');
-  }
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month:'long', day:'numeric' });
+}
+
+// MEETINGS TAB — full schedule, merging known hosts with live Supabase rows
+const PLANNED_HOSTS = [
+  { month:'July',     host:'Sasha',         tentativeDate:'July 9, 2026' },
+  { month:'August',   host:'Val',           tentativeDate:'August 13, 2026' },
+  { month:'September',host:'Simone',        tentativeDate:'September 10, 2026' },
+  { month:'October',  host:'Emily',         tentativeDate:'October 8, 2026' },
+  { month:'November', host:'Christa',       tentativeDate:'November 12, 2026' },
+  { month:'December', host:'Katie & Betsy', tentativeDate:'December 10, 2026' },
+  { month:'January',  host:'Carly',         tentativeDate:'January 14, 2027' },
+  { month:'February', host:'Tricia',        tentativeDate:'February 11, 2027' },
+];
+
+async function loadMeetingsSchedule() {
+  const { data: allMeetings } = await sb.from('meetings').select('*');
+
+  const byMonth = {};
+  (allMeetings || []).forEach(m => { byMonth[m.month] = m; });
+
+  // hide months from the 2026 schedule once the host has set a real meeting date —
+  // those live on the Home tab as the active "Next Meeting" instead
+  const html = PLANNED_HOSTS
+    .filter(planned => {
+      const real = byMonth[planned.month];
+      const hasRealDate = real && real.meeting_date;
+      return !hasRealDate;
+    })
+    .map(planned => {
+      const real = byMonth[planned.month];
+
+      const title = planned.month + ' — ' + (real && real.host ? real.host : planned.host);
+      const lines = [];
+      lines.push(real && real.winning_book ? real.winning_book : 'Book TBD');
+      lines.push('Tentative: ' + planned.tentativeDate + ' (2nd Thursday)');
+      if (real && real.location) lines.push(real.location);
+      if (real && real.food_theme) lines.push(real.food_theme);
+
+      return `<div class="entry">
+        <div class="entry-marker"></div>
+        <div class="entry-body" style="width:100%">
+          <div class="entry-title">${title}</div>
+          ${lines.map(l => `<div class="entry-meta">${l}</div>`).join('')}
+        </div>
+        <span class="entry-tag">${planned.tentativeDate}</span>
+      </div>`;
+    }).join('');
+
+  document.getElementById('meetingsList').innerHTML = html || '<p class="no-content">All upcoming meetings have been scheduled — check the Home tab for what\'s next.</p>';
 }
 
 // VOTING
@@ -558,15 +743,17 @@ document.getElementById('submitBooksBtn').addEventListener('click', async functi
 });
 
 document.getElementById('submitBooksBtn2').addEventListener('click', async function() {
+  const month = document.getElementById('meetingMonth').value.trim();
   const host  = document.getElementById('meetingHost').value.trim();
   const loc   = document.getElementById('meetingLocation').value.trim();
   const food  = document.getElementById('meetingFood').value.trim();
   const theme = document.getElementById('meetingTheme').value.trim();
-  const date  = document.getElementById('meetingDate').value.trim();
+  const date  = document.getElementById('meetingDate').value;
   const time  = document.getElementById('meetingTime').value.trim();
+  if (!month) { alert('Enter which month this is for!'); return; }
   if (!loc) { alert('Enter the location!'); return; }
-  const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
-  if (!meeting) { alert('Post books first in Step 1!'); return; }
+  const { data: meeting } = await sb.from('meetings').select('*').eq('month',month).maybeSingle();
+  if (!meeting) { alert('No meeting found for that month — post books in Step 1 first!'); return; }
   const { error } = await sb.from('meetings').update({host:host||meeting.host,location:loc,food_theme:food,theme,meeting_date:date,meeting_time:time}).eq('id',meeting.id);
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('hostSuccess2').style.display='block';
@@ -574,10 +761,12 @@ document.getElementById('submitBooksBtn2').addEventListener('click', async funct
 });
 
 document.getElementById('announceWinnerBtn').addEventListener('click', async function() {
+  const month = document.getElementById('winnerMonth').value.trim();
   const winner = document.getElementById('winnerInput').value.trim();
+  if (!month) { alert('Enter which month this is for!'); return; }
   if (!winner) { alert('Enter the winning book!'); return; }
-  const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
-  if (!meeting) { alert('No meeting found!'); return; }
+  const { data: meeting } = await sb.from('meetings').select('*').eq('month',month).maybeSingle();
+  if (!meeting) { alert('No meeting found for that month — post books in Step 1 first!'); return; }
   const { error } = await sb.from('meetings').update({winning_book:winner}).eq('id',meeting.id);
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('winnerSuccess').style.display='block';
@@ -607,11 +796,29 @@ document.getElementById('addToShelfBtn').addEventListener('click', async functio
   loadShelf();
 });
 
+// AUTO-SYNC completed meetings into Past Reads
+async function syncPastReads(completedMeetings) {
+  const { data: existing } = await sb.from('past_reads').select('month');
+  const existingMonths = new Set((existing || []).map(r => r.month));
+
+  for (const m of completedMeetings) {
+    if (existingMonths.has(m.month)) continue;
+    await sb.from('past_reads').insert({
+      title: m.winning_book,
+      author: '',
+      hosted_by: m.host || '',
+      month: m.month,
+      rating: 0,
+      note: ''
+    });
+  }
+}
+
 // PAST READS
 async function loadPastReads() {
   const { data } = await sb.from('past_reads').select('*').order('created_at',{ascending:false});
   const container = document.getElementById('pastList');
-  if (!data||data.length===0) { container.innerHTML='<div class="no-content">Nothing yet — your reading history will live here! 📚</div>'; return; }
+  if (!data||data.length===0) { container.innerHTML='<div class="no-content">Nothing yet — your reading history will live here.</div>'; return; }
   container.innerHTML = data.map(b=>{
     const stars = '★'.repeat(b.rating||0)+'☆'.repeat(5-(b.rating||0));
     return `<div class="past-read"><div class="pr-title">${b.title}</div><div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div><div class="pr-stars">${stars}</div>${b.note?`<div class="pr-note">"${b.note}"</div>`:''}</div>`;
@@ -619,9 +826,12 @@ async function loadPastReads() {
 }
 
 // RSVP
-const RSVP_MONTH = 'June 2026';
 async function loadRsvp() {
-  const { data } = await sb.from('rsvps').select('*').eq('month',RSVP_MONTH);
+  const month = window.currentMeetingMonth;
+  if (!month) return;
+  const { data } = await sb.from('rsvps').select('*').eq('month',month);
+  document.getElementById('rsvpTally').style.display='none';
+  document.getElementById('foodList').style.display='none';
   if (!data||data.length===0) return;
   const yes = data.filter(r=>r.status==='yes');
   const no  = data.filter(r=>r.status==='no');
@@ -634,8 +844,8 @@ async function loadRsvp() {
   if (bringing.length > 0) {
     document.getElementById('foodList').style.display='block';
     document.getElementById('foodList').innerHTML = `
-      <div style="font-size:.75rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">🍽️ Who's bringing what</div>
-      ${bringing.map(r=>`<div class="row" style="margin-bottom:6px;"><div class="dot hot"></div><div class="row-text"><div class="name">${r.name}</div><div class="sub">${r.food}</div></div></div>`).join('')}
+      <div style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">Who's bringing what</div>
+      ${bringing.map(r=>`<div class="entry" style="padding:8px 0;"><div class="entry-marker active"></div><div class="entry-body"><div class="entry-title">${r.name}</div><div class="entry-meta">${r.food}</div></div></div>`).join('')}
     `;
   }
 }
@@ -643,8 +853,10 @@ async function loadRsvp() {
 async function submitRsvp(status) {
   const name = document.getElementById('rsvpName').value.trim();
   const food = document.getElementById('rsvpFood').value.trim();
+  const month = window.currentMeetingMonth;
+  if (!month) { alert('No upcoming meeting to RSVP to yet!'); return; }
   if (!name) { alert('Enter your name first!'); return; }
-  const { error } = await sb.from('rsvps').upsert({month:RSVP_MONTH,name,status,food},{onConflict:'month,name'});
+  const { error } = await sb.from('rsvps').upsert({month,name,status,food},{onConflict:'month,name'});
   if (error) { alert('Oops! '+error.message); return; }
   document.getElementById('rsvpSuccess').style.display='block';
   document.getElementById('rsvpName').value='';
@@ -659,4 +871,3 @@ document.getElementById('rsvpNo').addEventListener('click',  ()=>submitRsvp('no'
 
 </body>
 </html>
-
