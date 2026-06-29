@@ -287,7 +287,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       <div class="entry">
         <div class="entry-marker active"></div>
         <div class="entry-body">
-          <div class="entry-title" id="currentBook">Waiting on this month's winner</div>
+          <div class="entry-title" id="currentBook">Book Selection Loading...</div>
           <div class="entry-meta" id="currentBookMeta"></div>
         </div>
       </div>
@@ -603,7 +603,7 @@ async function loadNextMeeting() {
     document.getElementById('currentBookMeta').textContent =
       [nextMeeting.month, nextMeeting.host ? 'hosted by ' + nextMeeting.host : ''].filter(Boolean).join(' · ');
   } else {
-    document.getElementById('currentBook').textContent = 'Waiting on this month\'s winner...';
+    document.getElementById('currentBook').textContent = 'Book Selection Loading...';
     document.getElementById('currentBookMeta').textContent = '';
   }
 
@@ -614,7 +614,7 @@ async function loadNextMeeting() {
 
     document.getElementById('nextMeetingBadge').textContent = nextMeeting.month || '';
     document.getElementById('nextHost').textContent = 'Host: ' + (nextMeeting.host || 'TBD');
-    document.getElementById('nextBook').textContent = nextMeeting.winning_book ? nextMeeting.winning_book : 'Book TBD — vote in progress';
+    document.getElementById('nextBook').textContent = nextMeeting.winning_book ? nextMeeting.winning_book : 'Book Selection Loading...';
     document.getElementById('nextDateTime').textContent = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
     document.getElementById('nextLocation').textContent = nextMeeting.location || '';
     document.getElementById('nextFood').textContent = nextMeeting.food_theme || '';
