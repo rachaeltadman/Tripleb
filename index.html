@@ -100,14 +100,14 @@ h1,h2,h3 { font-family:'Lexend',sans-serif; }
 .nav-link.active { color:var(--ink); border-bottom-color:var(--warm); }
 
 /* PAGE */
-.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; }
+.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; background:var(--ink); }
 .tab-content { display:none; flex-direction:column; gap:28px; }
 .tab-content.active { display:flex; }
 
-/* SECTIONS — replacing cards with cleaner blocks */
+/* SECTIONS — light cards floating on the dark page background */
 .section {
   opacity:0; transform:translateY(8px); animation:rise .35s ease forwards;
-  padding-bottom:28px; border-bottom:1px solid var(--border);
+  padding-bottom:28px; border-bottom:1px solid #3a3733;
 }
 .section:last-child { border-bottom:none; padding-bottom:0; }
 .section.boxed {
@@ -116,7 +116,12 @@ h1,h2,h3 { font-family:'Lexend',sans-serif; }
 }
 .section.boxed.tint-pink   { background:var(--warm-soft); border-color:#ffd1ea; }
 .section.boxed.tint-lav    { background:var(--accent-soft); border-color:#e9cdf3; }
-.section.boxed.tint-ink    { background:#f3f1ef; border-color:#d8d4cf; }
+.section.boxed.tint-ink    { background:#ffffff; border-color:#e4e0da; }
+
+/* plain (non-boxed) sections sit directly on black, so their text needs to be light */
+.section:not(.boxed) .section-head h2 { color:#fdf8fb; }
+.section:not(.boxed) .section-note { color:#c9c4be; }
+.section:not(.boxed) .badge.muted { background:#2a2826; color:#c9c4be; border-color:#3a3733; }
 
 .section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
 .section-head h2 { font-weight:500; font-size:1.3rem; color:var(--ink); }
@@ -241,7 +246,11 @@ select.input {
 .rsvp-tally-box.no  .count { color:var(--accent); }
 .rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
 
-footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(--muted); letter-spacing:.04em; border-top:1px solid var(--border); margin-top:20px; }
+footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a857e; letter-spacing:.04em; background:var(--ink); margin-top:0; }
+
+@media (max-width: 560px) {
+  .nom-form-grid { grid-template-columns:1fr !important; }
+}
 </style>
 </head>
 <body>
@@ -446,12 +455,14 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     <div class="section boxed tint-lav">
       <div class="section-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet.</div></div>
-      <div style="margin-top:18px;border-top:1px solid var(--border);padding-top:18px;">
-        <p class="section-note" style="margin-bottom:10px;">Have a book to suggest? Add it below.</p>
-        <input class="input" id="shelfNominee" placeholder="Your name"/>
-        <input class="input" id="shelfTitle" placeholder="Book title"/>
-        <input class="input" id="shelfAuthor" placeholder="Author"/>
-        <button class="btn btn-secondary" id="addToShelfBtn">Submit Nomination</button>
+      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+        <p class="section-note" style="margin-bottom:8px;font-size:.74rem;">Have a book to suggest?</p>
+        <div class="nom-form-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+          <input class="input" id="shelfNominee" placeholder="Your name" style="margin-bottom:0;font-size:.8rem;padding:8px 10px;"/>
+          <input class="input" id="shelfTitle" placeholder="Book title" style="margin-bottom:0;font-size:.8rem;padding:8px 10px;"/>
+          <input class="input" id="shelfAuthor" placeholder="Author" style="margin-bottom:0;font-size:.8rem;padding:8px 10px;"/>
+        </div>
+        <button class="btn btn-secondary" id="addToShelfBtn" style="padding:8px 16px;font-size:.76rem;">Submit Nomination</button>
         <div class="success-msg" id="shelfSuccess">Added to the nominations list.</div>
       </div>
     </div>
@@ -676,7 +687,7 @@ async function loadMeetingsSchedule() {
       return `<div class="entry">
         <div class="entry-marker"></div>
         <div class="entry-body" style="width:100%">
-          <div class="entry-title">${person} — ${planned.month}</div>
+          <div class="entry-title">${person}</div>
         </div>
         <span class="entry-tag">${planned.tentativeDate}</span>
       </div>`;
