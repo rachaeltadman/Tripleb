@@ -259,6 +259,51 @@ select.input {
 .rsvp-tally-box.no  .count { color:var(--accent); }
 .rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
 
+/* EVENTS CALENDAR */
+.cal-month { display:flex; align-items:flex-start; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+.cal-month:last-child { border-bottom:none; }
+.cal-month-current .cal-month-label { color:var(--warm); }
+.cal-month-label { flex-shrink:0; width:88px; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding-top:2px; }
+.cal-events-col { flex:1; display:flex; flex-direction:column; gap:4px; }
+.cal-empty { font-size:.78rem; color:var(--border); }
+.cal-event { display:flex; align-items:baseline; gap:6px; }
+.cal-icon { font-size:.78rem; flex-shrink:0; }
+.cal-day { flex-shrink:0; font-size:.72rem; font-weight:700; color:var(--accent); min-width:18px; }
+.cal-title { font-size:.84rem; color:var(--ink); font-weight:500; }
+.cal-note { font-size:.72rem; color:var(--muted); margin-left:4px; }
+
+/* EVENTS HOME */
+.event-item { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--border); }
+.event-item:last-child { border-bottom:none; }
+.event-day { flex-shrink:0; min-width:52px; background:var(--accent-soft); color:var(--accent); font-weight:700; font-size:.76rem; text-align:center; padding:5px 8px; border-radius:6px; line-height:1.3; }
+.event-body .event-title { font-weight:600; font-size:.9rem; color:var(--ink); }
+.event-body .event-note  { font-size:.76rem; color:var(--muted); margin-top:2px; }
+
+/* TODAY BANNERS */
+.today-banner {
+  width:100%; padding:11px 20px; text-align:center;
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem;
+  letter-spacing:.02em; position:relative; overflow:hidden;
+}
+.today-banner.banner-bookclub {
+  background:linear-gradient(90deg, var(--warm) 0%, #c45ab3 100%);
+  color:white;
+}
+.today-banner.banner-birthday {
+  background:linear-gradient(90deg, var(--accent) 0%, #a78bfa 100%);
+  color:white;
+}
+.today-banner.banner-event {
+  background:linear-gradient(90deg, #f9a8d4 0%, var(--accent) 100%);
+  color:white;
+}
+.today-banner .banner-close {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  background:none; border:none; color:white; font-size:1rem;
+  cursor:pointer; opacity:.8; line-height:1;
+}
+.today-banner .banner-close:hover { opacity:1; }
+
 footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a857e; letter-spacing:.04em; background:var(--ink); margin-top:0; }
 
 @media (max-width: 560px) {
@@ -281,6 +326,8 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
 <!-- MAIN -->
 <div id="mainContent" style="display:none;">
 
+<div id="todayBanners"></div>
+
 <header class="site-header">
   <div class="site-header-inner">
     <img src="logo.png" alt="Triple B Book Club" class="site-logo"/>
@@ -288,7 +335,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
   </div>
   <nav class="nav" id="tabBar">
     <button class="nav-link active" data-tab="home">Home</button>
-    <button class="nav-link" data-tab="meetings">Meetings</button>
+    <button class="nav-link" data-tab="calendar">Calendar</button>
     <button class="nav-link" data-tab="vote">Vote</button>
     <button class="nav-link" data-tab="host">Host</button>
     <button class="nav-link" data-tab="shelf">Shelf</button>
@@ -355,13 +402,28 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
       <div id="discussionList"></div>
     </div>
 
+    <div class="section boxed tint-pink" id="comingUpCard">
+      <div class="section-head"><h2>Coming Up 🎉</h2></div>
+      <div id="comingUpList"><div class="no-content">Nothing coming up in the next 30 days.</div></div>
+    </div>
+
   </div>
 
-  <!-- MEETINGS -->
-  <div class="tab-content" id="tab-meetings">
-    <div class="section boxed">
-      <div class="section-head"><h2>2026 Schedule</h2></div>
-      <div id="meetingsList"></div>
+  <!-- CALENDAR -->
+  <div class="tab-content" id="tab-calendar">
+    <div class="section boxed tint-lav">
+      <div class="section-head"><h2>Calendar</h2></div>
+      <div id="eventsCalendar"></div>
+    </div>
+    <div class="section boxed tint-pink">
+      <div class="section-head"><h2>Add an Event</h2></div>
+      <input class="input" id="eventTitle" placeholder="Event name (e.g. Girls trip! 🌴)"/>
+      <div class="two-col">
+        <input class="input" id="eventDate" type="date"/>
+        <input class="input" id="eventNote" placeholder="Note (optional)"/>
+      </div>
+      <button class="btn btn-secondary" id="addEventBtn">Add Event</button>
+      <div class="success-msg" id="eventSuccess">Event added!</div>
     </div>
   </div>
 
@@ -557,12 +619,12 @@ document.getElementById('tabBar').addEventListener('click', function(e) {
   btn.classList.add('active');
   if (name === 'vote') loadVoting();
   if (name === 'shelf') { loadShelf(); loadPastReads(); }
-  if (name === 'meetings') loadMeetingsSchedule();
+  if (name === 'calendar') loadEvents();
 });
 
 function init() {
   loadNextMeeting();
-  loadMeetingsSchedule();
+  loadEvents();
   setInterval(() => {
     if (window.currentMeetingDate) updateCountdown(window.currentMeetingDate, window.currentMeetingTime);
   }, 60000);
@@ -688,36 +750,6 @@ const PLANNED_HOSTS = [
   { month:'January',  host:'Carly',         tentativeDate:'January 14, 2027' },
   { month:'February', host:'Tricia',        tentativeDate:'February 11, 2027' },
 ];
-
-async function loadMeetingsSchedule() {
-  const { data: allMeetings } = await sb.from('meetings').select('*');
-
-  const byMonth = {};
-  (allMeetings || []).forEach(m => { byMonth[m.month] = m; });
-
-  // hide months from the 2026 schedule once the host has set a real meeting date —
-  // those live on the Home tab as the active "Next Meeting" instead
-  const html = PLANNED_HOSTS
-    .filter(planned => {
-      const real = byMonth[planned.month];
-      const hasRealDate = real && real.meeting_date;
-      return !hasRealDate;
-    })
-    .map(planned => {
-      const real = byMonth[planned.month];
-      const person = real && real.host ? real.host : planned.host;
-
-      return `<div class="entry">
-        <div class="entry-marker"></div>
-        <div class="entry-body" style="width:100%">
-          <div class="entry-title">${person}</div>
-        </div>
-        <span class="entry-tag">${planned.tentativeDate}</span>
-      </div>`;
-    }).join('');
-
-  document.getElementById('meetingsList').innerHTML = html || '<p class="no-content">All upcoming meetings have been scheduled — check the Home tab for what\'s next.</p>';
-}
 
 // VOTING
 let selectedBook = null, currentMonth = '';
@@ -896,6 +928,199 @@ async function submitRsvp(status) {
 
 document.getElementById('rsvpYes').addEventListener('click', ()=>submitRsvp('yes'));
 document.getElementById('rsvpNo').addEventListener('click',  ()=>submitRsvp('no'));
+
+// EVENTS & BIRTHDAYS
+const BIRTHDAYS = [
+  { title: "Rachael's Birthday 🎂", month: 1,  day: 5  },
+  { title: "Christa's Birthday 🎂",  month: 5,  day: 1  },
+  { title: "Val's Birthday 🎂",     month: 8,  day: 25 },
+  { title: "Tricia's Birthday 🎂",  month: 8,  day: 31 },
+  { title: "Carly's Birthday 🎂",   month: 10, day: 2  },
+  { title: "Katie's Birthday 🎂",   month: 10, day: 3  },
+  { title: "Emily's Birthday 🎂",   month: 11, day: 9  },
+  { title: "Simone's Birthday 🎂",  month: 12, day: 8  },
+  { title: "Betsy's Birthday 🎂",   month: 7,  day: 13 },
+];
+
+const MONTH_NAMES = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function formatEventDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month:'long', day:'numeric' });
+}
+
+async function loadEvents() {
+  const [{ data: customEvents }, { data: allMeetings }] = await Promise.all([
+    sb.from('events').select('*').order('date', { ascending: true }),
+    sb.from('meetings').select('*')
+  ]);
+
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+
+  const allEvents = {};
+  for (let m = 1; m <= 12; m++) allEvents[m] = [];
+
+  // add birthdays
+  BIRTHDAYS.forEach(b => {
+    allEvents[b.month].push({ title: b.title, day: b.day, note: '', icon: '🎂' });
+  });
+
+  // add custom events from Supabase
+  (customEvents || []).forEach(e => {
+    const d = new Date(e.date + 'T00:00:00');
+    const m = d.getMonth() + 1;
+    allEvents[m].push({ title: e.title, day: d.getDate(), note: e.note || '', icon: '📅' });
+  });
+
+  // add meetings — map by month name to month number
+  const meetingsByMonth = {};
+  (allMeetings || []).forEach(m => { meetingsByMonth[m.month] = m; });
+
+  PLANNED_HOSTS.forEach(planned => {
+    const real = meetingsByMonth[planned.month];
+    const monthNum = MONTH_NAMES.indexOf(planned.month);
+    if (monthNum < 1) return;
+    let day, label, note;
+    if (real && real.meeting_date) {
+      const d = new Date(real.meeting_date + 'T00:00:00');
+      day = d.getDate();
+      label = 'Book Club — ' + (real.host || planned.host);
+      note = real.winning_book || '';
+    } else {
+      // parse day from tentativeDate like "July 9, 2026"
+      const parts = planned.tentativeDate.split(' ');
+      day = parseInt(parts[1]);
+      label = 'Book Club — ' + planned.host + ' (tentative)';
+      note = '';
+    }
+    allEvents[monthNum].push({ title: label, day, note, icon: '📚' });
+  });
+
+  // sort each month by day
+  for (let m = 1; m <= 12; m++) allEvents[m].sort((a,b) => a.day - b.day);
+
+  // build month order — current month first, then rest in order
+  const monthOrder = [];
+  for (let i = 0; i < 12; i++) monthOrder.push(((currentMonth - 1 + i) % 12) + 1);
+
+  // render calendar
+  let calendarHtml = '';
+  monthOrder.forEach(m => {
+    const monthEvents = allEvents[m];
+    const isCurrentMonth = (m === currentMonth);
+    calendarHtml += `
+      <div class="cal-month${isCurrentMonth ? ' cal-month-current' : ''}">
+        <div class="cal-month-label">${MONTH_NAMES[m]}</div>
+        <div class="cal-events-col">
+        ${monthEvents.length === 0
+          ? '<div class="cal-empty">—</div>'
+          : monthEvents.map(e => `
+              <div class="cal-event">
+                <span class="cal-icon">${e.icon}</span>
+                <span class="cal-day">${e.day}</span>
+                <span class="cal-title">${e.title}${e.note ? ` <span class="cal-note">${e.note}</span>` : ''}</span>
+              </div>`).join('')
+        }
+        </div>
+      </div>`;
+  });
+
+  const calEl = document.getElementById('eventsCalendar');
+  if (calEl) calEl.innerHTML = calendarHtml;
+
+  // populate Coming Up on Home tab (next 30 days)
+  loadComingUp(allEvents, now);
+
+  // show today banners
+  loadTodayBanners(allEvents, allMeetings || [], now);
+}
+
+function loadTodayBanners(allEvents, allMeetings, now) {
+  const todayMonth = now.getMonth() + 1;
+  const todayDay   = now.getDate();
+  const banners = [];
+
+  // check book club meetings
+  allMeetings.forEach(m => {
+    if (!m.meeting_date) return;
+    const d = new Date(m.meeting_date + 'T00:00:00');
+    if (d.getMonth() + 1 === todayMonth && d.getDate() === todayDay) {
+      banners.push({ type:'bookclub', text:`📚 It's book club night! Tonight — ${m.host ? m.host + ' is hosting' : 'see you there'} 🎉` });
+    }
+  });
+
+  // check birthdays & events for today
+  (allEvents[todayMonth] || []).forEach(e => {
+    if (e.day !== todayDay) return;
+    if (e.icon === '🎂') {
+      banners.push({ type:'birthday', text:`🎂 Happy Birthday ${e.title.replace(/\'s Birthday 🎂/,'')}! 🎉` });
+    } else {
+      banners.push({ type:'event', text:`🎉 Today: ${e.title}${e.note ? ' — ' + e.note : ''}` });
+    }
+  });
+
+  const container = document.getElementById('todayBanners');
+  if (!container) return;
+  container.innerHTML = banners.map((b, i) => `
+    <div class="today-banner banner-${b.type}" id="todayBanner${i}">
+      ${b.text}
+      <button class="banner-close" onclick="document.getElementById('todayBanner${i}').style.display='none'">✕</button>
+    </div>
+  `).join('');
+}
+
+function loadComingUp(allEvents, now) {
+  const soon = new Date(now); soon.setDate(soon.getDate() + 30);
+  const items = [];
+
+  for (let m = 1; m <= 12; m++) {
+    allEvents[m].forEach(e => {
+      // try this year first, then next year for birthdays
+      let year = now.getFullYear();
+      let candidate = new Date(year, m - 1, e.day);
+      if (candidate < now) candidate = new Date(year + 1, m - 1, e.day);
+      if (candidate >= now && candidate <= soon) {
+        items.push({ ...e, dateObj: candidate, month: m });
+      }
+    });
+  }
+
+  items.sort((a,b) => a.dateObj - b.dateObj);
+
+  const container = document.getElementById('comingUpList');
+  if (!container) return;
+  if (items.length === 0) {
+    container.innerHTML = '<div class="no-content">Nothing coming up in the next 30 days.</div>';
+  } else {
+    container.innerHTML = items.map(e => `
+      <div class="event-item">
+        <div class="event-day" style="background:var(--warm);color:white;">${e.dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        <div class="event-body">
+          <div class="event-title">${e.title}</div>
+          ${e.note ? `<div class="event-note">${e.note}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+document.getElementById('addEventBtn').addEventListener('click', async function() {
+  const title = document.getElementById('eventTitle').value.trim();
+  const date  = document.getElementById('eventDate').value;
+  const note  = document.getElementById('eventNote').value.trim();
+  if (!title) { alert('Enter an event name!'); return; }
+  if (!date)  { alert('Pick a date!'); return; }
+  const { error } = await sb.from('events').insert({ title, date, note });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('eventSuccess').style.display = 'block';
+  document.getElementById('eventTitle').value = '';
+  document.getElementById('eventDate').value  = '';
+  document.getElementById('eventNote').value  = '';
+  setTimeout(() => document.getElementById('eventSuccess').style.display = 'none', 3000);
+  loadEvents();
+});
 </script>
 
 </body>
