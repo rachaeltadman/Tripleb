@@ -13,7 +13,7 @@
         document.getElementById('pwScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
         sessionStorage.setItem('tripleB','unlocked');
-        if (typeof init === 'function') init();
+        if (typeof init === 'function') init(); else window._needsInit = true;
       } else {
         document.getElementById('pwError').style.display = 'block';
         document.getElementById('pwInput').value = '';
@@ -23,7 +23,6 @@
       if (sessionStorage.getItem('tripleB') === 'unlocked') {
         document.getElementById('pwScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
-        if (typeof init === 'function') init();
       }
     });
   </script>
@@ -1240,6 +1239,11 @@ document.getElementById('addEventBtn').addEventListener('click', async function(
   setTimeout(() => document.getElementById('eventSuccess').style.display = 'none', 3000);
   loadEvents();
 });
+
+// auto-init if already logged in
+if (sessionStorage.getItem('tripleB') === 'unlocked' || window._needsInit) {
+  init();
+}
 </script>
 
 </body>
