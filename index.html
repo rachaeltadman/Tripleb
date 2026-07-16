@@ -957,7 +957,7 @@ async function loadDiscussionQuestions() {
   const { data: allMeetings } = await sb.from('meetings').select('*');
   const today = new Date(); today.setHours(0,0,0,0);
   const upcoming = (allMeetings || [])
-    .filter(m => m.meeting_date && new Date(m.meeting_date) >= today)
+    .filter(m => m.meeting_date && new Date(m.meeting_date + 'T23:59:59') >= today)
     .sort((a,b) => new Date(a.meeting_date) - new Date(b.meeting_date));
   const nextMeeting = upcoming[0];
 
