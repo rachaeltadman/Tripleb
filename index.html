@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Triple B Book Club</title>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     function checkPw() {
@@ -28,17 +28,19 @@
   </script>
 <style>
 :root {
-  --bg:      #fdf8fb;
-  --surface: #ffffff;
-  --border:  #f0d9ec;
-  --ink:     #1c1a17;
-  --muted:   #7a7570;
-  --accent:  #e2a9f1;
-  --accent-soft: #f6ecfb;
-  --warm:    #ff66c4;
-  --warm-soft: #ffe6f5;
-  --success: #3d7a5c;
-  --success-soft: #eaf3ee;
+  --bg:          #1a1d23;
+  --surface:     #22262f;
+  --surface-2:   #2a2f3a;
+  --border:      #2e3340;
+  --ink:         #e8eaf0;
+  --muted:       #8892a4;
+  --accent:      #0047AB;
+  --accent-soft: #0d1f3c;
+  --accent-2:    #4169E1;
+  --warm:        #3a7bd5;
+  --warm-soft:   #0f1e35;
+  --success:     #2d8a5e;
+  --success-soft:#0d2419;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -47,10 +49,10 @@ body {
   background:var(--bg);
   color:var(--ink);
   min-height:100vh;
-  background-image: radial-gradient(circle at 1px 1px, #ff66c40a 1px, transparent 0);
-  background-size: 22px 22px;
+  background-image: radial-gradient(circle at 1px 1px, #4169E115 1px, transparent 0);
+  background-size: 24px 24px;
 }
-h1,h2,h3 { font-family:'Lexend',sans-serif; }
+h1,h2,h3 { font-family:'Playfair Display',serif; }
 
 /* PASSWORD */
 #pwScreen {
@@ -62,115 +64,115 @@ h1,h2,h3 { font-family:'Lexend',sans-serif; }
 .pw-title { font-family:'Lexend',sans-serif; font-weight:500; font-size:2rem; color:var(--ink); margin-bottom:6px; }
 .pw-sub { font-size:.82rem; color:var(--muted); margin-bottom:28px; }
 .pw-input {
-  width:100%; max-width:280px; padding:12px 16px; border-radius:4px;
-  border:1px solid var(--border); background:white; font-family:'Lexend',sans-serif;
+  width:100%; max-width:280px; padding:12px 16px; border-radius:8px;
+  border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif;
   font-size:.95rem; color:var(--ink); text-align:center; outline:none; margin-bottom:10px;
 }
-.pw-input:focus { border-color:var(--accent); }
+.pw-input:focus { border-color:var(--accent-2); }
 .pw-btn {
-  width:100%; max-width:280px; padding:12px; border-radius:4px; border:none;
-  background:var(--ink); color:white; font-family:'Lexend',sans-serif;
+  width:100%; max-width:280px; padding:12px; border-radius:8px; border:none;
+  background:var(--accent); color:white; font-family:'Lexend',sans-serif;
   font-weight:600; font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
 }
-.pw-btn:hover { background:var(--accent); }
-.pw-error { color:#a04545; font-size:.8rem; margin-top:10px; display:none; }
+.pw-btn:hover { background:var(--accent-2); }
+.pw-error { color:#e05555; font-size:.8rem; margin-top:10px; display:none; }
 
 /* ANIMATIONS */
 @keyframes rise { to { opacity:1; transform:translateY(0); } }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
 
 /* HEADER */
 .site-header {
   border-bottom:1px solid var(--border);
   background:var(--surface);
-}
-.site-header-inner {
-  max-width:760px; margin:0 auto; padding:28px 24px 0;
+  padding:28px 24px 0;
   text-align:center;
 }
-.site-title {
-  font-family:'Lexend',sans-serif; font-weight:600; font-size:clamp(2.6rem,8vw,4rem);
-  color:var(--ink); letter-spacing:-.01em; line-height:1;
+.site-header-inner {
+  max-width:760px; margin:0 auto;
 }
-.site-title em {
-  font-style:italic; font-weight:500; color:var(--warm);
+.site-wordmark {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,6vw,2.4rem);
+  font-weight:700;
+  color:var(--ink);
+  letter-spacing:.04em;
+  line-height:1;
+  margin-bottom:6px;
 }
-.site-subtitle {
-  font-size:.74rem; color:var(--accent); letter-spacing:.22em; text-transform:uppercase;
-  margin-top:10px; font-weight:600;
-}
-.site-tagline { font-size:.82rem; color:var(--muted); margin-top:10px; font-style:italic; }
-.site-logo { width:300px; max-width:80%; height:auto; display:block; margin:0 auto; }
+.site-tagline { font-size:.72rem; color:var(--muted); letter-spacing:.18em; text-transform:uppercase; margin-bottom:0; }
 
 /* NAV */
 .nav {
-  display:flex; gap:0; max-width:760px; margin:22px auto 0;
-  padding:0 24px; overflow-x:auto; scrollbar-width:none; border-top:1px solid var(--border);
-  justify-content:center;
+  display:flex; gap:0; max-width:760px; margin:0 auto;
+  padding:0 16px; overflow-x:auto; scrollbar-width:none;
+  border-top:1px solid var(--border);
+  justify-content:center; background:var(--surface);
 }
 .nav::-webkit-scrollbar { display:none; }
 .nav-link {
-  flex-shrink:0; padding:13px 18px; background:none; border:none;
+  flex-shrink:0; padding:13px 16px; background:none; border:none;
   border-bottom:2px solid transparent; margin-bottom:-1px;
-  font-family:'Lexend',sans-serif; font-weight:700; font-size:.92rem;
-  color:var(--ink); cursor:pointer; transition:color .15s, border-color .15s;
-  letter-spacing:.06em; text-transform:uppercase;
+  font-family:'Lexend',sans-serif; font-weight:700; font-size:.78rem;
+  color:var(--muted); cursor:pointer; transition:color .15s, border-color .15s;
+  letter-spacing:.08em; text-transform:uppercase;
 }
-.nav-link:hover { color:var(--warm); }
-.nav-link.active { color:var(--ink); border-bottom-color:var(--warm); }
+.nav-link:hover { color:var(--ink); }
+.nav-link.active { color:var(--accent-2); border-bottom-color:var(--accent-2); }
 
 /* PAGE */
-.page-bg { background:var(--ink); }
+.page-bg { background:var(--bg); }
 .page { max-width:760px; margin:0 auto; padding:32px 24px 80px; }
-.tab-content { display:none; flex-direction:column; gap:28px; }
+.tab-content { display:none; flex-direction:column; gap:20px; }
 .tab-content.active { display:flex; }
 
-/* SECTIONS — light cards floating on the dark page background */
+/* SECTIONS */
 .section {
   opacity:0; transform:translateY(8px); animation:rise .35s ease forwards;
-  padding-bottom:28px; border-bottom:1px solid #3a3733;
+  padding-bottom:28px; border-bottom:1px solid var(--border);
 }
 .section:last-child { border-bottom:none; padding-bottom:0; }
 .section.boxed {
   border:1px solid var(--border); border-radius:14px; padding:24px;
   background:var(--surface);
 }
-.section.boxed.tint-pink   { background:var(--warm-soft); border-color:#ffd1ea; }
-.section.boxed.tint-lav    { background:var(--accent-soft); border-color:#e9cdf3; }
-.section.boxed.tint-ink    { background:#ffffff; border-color:#e4e0da; }
+.section.boxed.tint-blue  { background:var(--warm-soft); border-color:#1a3a6b; }
+.section.boxed.tint-mid   { background:var(--accent-soft); border-color:#1a2d52; }
+.section.boxed.tint-dark  { background:var(--surface-2); border-color:var(--border); }
 
-/* plain (non-boxed) sections sit directly on black, so their text needs to be light */
-.section:not(.boxed) .section-head h2 { color:#fdf8fb; }
-.section:not(.boxed) .section-note { color:#c9c4be; }
-.section:not(.boxed) .badge.muted { background:#2a2826; color:#c9c4be; border-color:#3a3733; }
+.section:not(.boxed) .section-head h2 { color:var(--ink); }
+.section:not(.boxed) .section-note { color:var(--muted); }
+.section:not(.boxed) .badge.muted { background:var(--surface); color:var(--muted); border-color:var(--border); }
 
 .section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
-.section-head h2 { font-weight:500; font-size:1.3rem; color:var(--ink); }
-.section-eyebrow { font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; display:block; }
+.section-head h2 { font-weight:600; font-size:1.2rem; color:var(--ink); letter-spacing:.01em; font-family:'Playfair Display',serif; }
+.section-eyebrow { font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin-bottom:6px; display:block; font-weight:700; }
 .section-note { font-size:.82rem; color:var(--muted); margin-bottom:16px; line-height:1.5; }
 
-.badge { font-size:.68rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; padding:4px 10px; border-radius:3px; }
-.badge.accent { background:var(--accent-soft); color:var(--accent); }
-.badge.warm   { background:var(--warm-soft); color:var(--warm); }
-.badge.muted  { background:var(--bg); color:var(--muted); border:1px solid var(--border); }
-.badge.success { background:var(--success-soft); color:var(--success); }
+.badge { font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; }
+.badge.accent  { background:var(--accent-soft); color:var(--accent-2); border:1px solid #1a3a6b; }
+.badge.warm    { background:var(--warm-soft); color:var(--warm); border:1px solid #1a3560; }
+.badge.muted   { background:var(--surface-2); color:var(--muted); border:1px solid var(--border); }
+.badge.success { background:var(--success-soft); color:#4ade80; border:1px solid #1a3a2a; }
 
-/* ENTRY ROWS — flatter list style instead of nested cards */
-.entry {
-  display:flex; align-items:flex-start; gap:14px; padding:14px 0;
-  border-bottom:1px solid var(--border);
-}
+/* ENTRY ROWS */
+.entry { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
 .entry:last-child { border-bottom:none; }
 .entry-marker { width:6px; height:6px; border-radius:50%; background:var(--border); flex-shrink:0; margin-top:7px; }
-.entry-marker.active { background:var(--accent); }
+.entry-marker.active { background:var(--accent-2); box-shadow:0 0 6px var(--accent-2); }
 .entry-body .entry-title { font-weight:600; font-size:.92rem; color:var(--ink); }
 .entry-body .entry-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; line-height:1.5; }
 .entry-tag {
-  margin-left:auto; font-size:.66rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase;
-  padding:3px 9px; border-radius:3px; white-space:nowrap; flex-shrink:0;
-  background:var(--bg); color:var(--muted); border:1px solid var(--border);
+  margin-left:auto; font-size:.64rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  padding:3px 9px; border-radius:4px; white-space:nowrap; flex-shrink:0;
+  background:var(--surface-2); color:var(--muted); border:1px solid var(--border);
 }
-.entry-tag.active { background:var(--accent-soft); color:var(--accent); border-color:transparent; }
+.entry-tag.active { background:var(--accent-soft); color:var(--accent-2); border-color:#1a3a6b; }
+
+/* CURRENTLY READING HOME CARD */
+.currently-reading-home { padding:4px 0; }
+.cr-book { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--ink); line-height:1.3; margin-bottom:4px; }
+.cr-meta { font-size:.8rem; color:var(--muted); }
 
 /* RULES LIST */
 .rule-list { list-style:none; }
@@ -181,15 +183,15 @@ h1,h2,h3 { font-family:'Lexend',sans-serif; }
 /* FORMS */
 .field-label { font-size:.72rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:block; }
 .input {
-  width:100%; padding:11px 14px; border-radius:4px; border:1px solid var(--border);
-  background:var(--surface); font-family:'Lexend',sans-serif; font-size:.9rem;
+  width:100%; padding:11px 14px; border-radius:8px; border:1px solid var(--border);
+  background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.9rem;
   color:var(--ink); margin-bottom:10px; outline:none; transition:border-color .15s;
 }
-.input:focus { border-color:var(--accent); }
-.input::placeholder { color:#a8a39c; }
+.input:focus { border-color:var(--accent-2); }
+.input::placeholder { color:var(--muted); }
 select.input {
   appearance:none; -webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6660' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position:right 14px center; padding-right:34px;
   cursor:pointer;
 }
@@ -197,137 +199,214 @@ select.input {
 .two-col .input { margin-bottom:0; }
 
 .btn {
-  padding:11px 22px; border-radius:4px; border:1px solid var(--ink);
+  padding:11px 22px; border-radius:8px; border:none;
   font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem;
   letter-spacing:.03em; cursor:pointer; transition:all .15s; margin-top:6px;
-  background:var(--ink); color:white;
+  background:var(--accent); color:white;
 }
-.btn:hover { background:var(--warm); border-color:var(--warm); }
-.btn-secondary { background:transparent; color:var(--ink); border:1px solid var(--border); }
-.btn-secondary:hover { border-color:var(--ink); background:transparent; color:var(--ink); }
+.btn:hover { background:var(--accent-2); }
+.btn-secondary { background:var(--surface-2); color:var(--ink); border:1px solid var(--border); }
+.btn-secondary:hover { border-color:var(--accent-2); color:var(--accent-2); background:var(--accent-soft); }
 .btn-full { width:100%; }
 
 .success-msg {
-  font-size:.82rem; color:var(--success); background:var(--success-soft);
-  border-radius:4px; padding:10px 14px; margin-top:10px; display:none;
+  font-size:.82rem; color:#4ade80; background:var(--success-soft);
+  border-radius:8px; padding:10px 14px; margin-top:10px; display:none;
+  border:1px solid #1a3a2a;
 }
 .no-content { color:var(--muted); font-size:.86rem; padding:8px 0; font-style:italic; }
 
 /* VOTING */
 .book-option {
   display:flex; align-items:center; justify-content:space-between; padding:14px 16px;
-  border:1px solid var(--border); border-radius:4px; margin-bottom:10px; cursor:pointer;
-  transition:border-color .15s, background .15s;
+  border:1px solid var(--border); border-radius:10px; margin-bottom:10px; cursor:pointer;
+  transition:border-color .15s, background .15s; background:var(--surface);
 }
-.book-option:hover { border-color:var(--accent); }
-.book-option.selected { border-color:var(--accent); background:var(--accent-soft); }
+.book-option:hover { border-color:var(--accent-2); }
+.book-option.selected { border-color:var(--accent-2); background:var(--accent-soft); }
 .book-option .book-name { font-weight:600; font-size:.9rem; color:var(--ink); }
-.vote-bar { height:3px; border-radius:2px; background:var(--border); margin-top:7px; width:140px; overflow:hidden; }
-.vote-bar-fill { height:100%; background:var(--accent); transition:width .4s ease; }
-.vote-count { font-size:.74rem; color:var(--muted); margin-left:12px; flex-shrink:0; }
-.book-option.selected .vote-count { color:var(--accent); font-weight:600; }
+.vote-bar { height:3px; border-radius:2px; background:var(--border); margin-top:7px; overflow:hidden; }
+.vote-bar-fill { height:100%; background:var(--accent-2); transition:width .4s ease; }
+.vote-count { font-size:.74rem; color:var(--muted); flex-shrink:0; }
+.book-option.selected .vote-count { color:var(--accent-2); font-weight:600; }
+
+.book-option-card {
+  border:1px solid var(--border); border-radius:12px; margin-bottom:14px; cursor:pointer;
+  transition:border-color .15s, background .15s; overflow:hidden; background:var(--surface);
+}
+.book-option-card:hover { border-color:var(--accent-2); }
+.book-option-card.selected { border-color:var(--accent-2); background:var(--accent-soft); }
+.boc-inner { display:flex; gap:14px; padding:14px; align-items:flex-start; }
+.boc-cover { width:64px; height:96px; object-fit:cover; border-radius:6px; flex-shrink:0; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+.boc-cover-placeholder { width:64px; height:96px; background:var(--accent-soft); border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+.boc-info { flex:1; min-width:0; }
+.boc-title { font-weight:700; font-size:.94rem; color:var(--ink); margin-bottom:2px; }
+.boc-author { font-size:.78rem; color:var(--muted); margin-bottom:6px; }
+.boc-desc { font-size:.8rem; color:var(--muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:6px; }
+.boc-footer { margin-top:4px; }
 
 /* SHELF */
 .shelf-item { display:flex; align-items:baseline; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
 .shelf-item:last-child { border-bottom:none; }
 .shelf-item .title  { font-weight:600; font-size:.9rem; color:var(--ink); }
 .shelf-item .author { font-size:.8rem; color:var(--muted); margin-left:6px; }
-.shelf-item .nom    { margin-left:auto; font-size:.72rem; color:var(--accent); white-space:nowrap; flex-shrink:0; }
+.shelf-item .nom    { margin-left:auto; font-size:.72rem; color:var(--accent-2); white-space:nowrap; flex-shrink:0; }
 
 /* PAST READS */
 .past-read { padding:14px 0; border-bottom:1px solid var(--border); }
 .past-read:last-child { border-bottom:none; }
 .past-read .pr-title { font-weight:600; font-size:.92rem; color:var(--ink); }
 .past-read .pr-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; }
-.past-read .pr-stars { color:var(--accent); font-size:.85rem; margin-top:5px; letter-spacing:.05em; }
+.past-read .pr-stars { color:#f59e0b; font-size:.85rem; margin-top:5px; letter-spacing:.05em; }
 .past-read .pr-note  { font-size:.8rem; color:var(--muted); font-style:italic; margin-top:5px; }
 
 /* COUNTDOWN */
-.countdown { display:flex; gap:28px; justify-content:center; margin:18px 0 22px; padding-bottom:18px; border-bottom:1px solid rgba(0,0,0,.08); }
+.countdown { display:flex; gap:28px; justify-content:center; margin:18px 0 22px; padding-bottom:18px; border-bottom:1px solid var(--border); }
 .countdown-box { text-align:center; }
-.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.4rem; font-weight:700; line-height:1; color:var(--warm); }
+.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.4rem; font-weight:700; line-height:1; color:var(--accent-2); }
 .countdown-box .lbl { font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
-.countdown-today { text-align:center; color:var(--warm); font-weight:700; font-size:1rem; margin:10px 0 22px; }
+.countdown-today { text-align:center; color:var(--accent-2); font-weight:700; font-size:1rem; margin:10px 0 22px; }
 
 /* NEXT MEETING DETAILS */
 .next-meeting-details { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
 .nmd-row { display:flex; gap:14px; align-items:baseline; }
-.nmd-label {
-  flex-shrink:0; width:64px; font-size:.66rem; font-weight:700; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--accent);
-}
+.nmd-label { flex-shrink:0; width:64px; font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-2); }
 .nmd-value { font-size:.92rem; color:var(--ink); font-weight:500; line-height:1.4; }
-
-.rsvp-block { border-top:1px solid rgba(0,0,0,.08); padding-top:18px; }
+.rsvp-block { border-top:1px solid var(--border); padding-top:18px; }
 
 /* RSVP */
 .rsvp-row { display:flex; gap:10px; margin-top:14px; }
 .rsvp-btn {
-  flex:1; padding:11px; border-radius:4px; border:1px solid var(--border);
+  flex:1; padding:11px; border-radius:8px; border:1px solid var(--border);
   font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; cursor:pointer;
-  transition:all .15s; background:var(--surface); color:var(--muted);
+  transition:all .15s; background:var(--surface-2); color:var(--muted);
 }
-.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:var(--success-soft); border-color:var(--success); color:var(--success); }
-.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
-.rsvp-input { width:100%; padding:11px 14px; border-radius:4px; border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif; font-size:.9rem; color:var(--ink); outline:none; margin-bottom:10px; }
-.rsvp-input:focus { border-color:var(--accent); }
+.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:var(--success-soft); border-color:var(--success); color:#4ade80; }
+.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:var(--accent-soft); border-color:var(--accent); color:var(--accent-2); }
+.rsvp-input { width:100%; padding:11px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.9rem; color:var(--ink); outline:none; margin-bottom:10px; }
+.rsvp-input:focus { border-color:var(--accent-2); }
 .rsvp-tally { display:flex; gap:24px; margin-top:18px; }
-.rsvp-tally-box { font-size:.8rem; }
+.rsvp-tally-box { font-size:.8rem; display:flex; align-items:baseline; gap:5px; }
 .rsvp-tally-box .count { font-family:'Lexend',sans-serif; font-size:.95rem; font-weight:700; display:inline; }
-.rsvp-tally-box { display:flex; align-items:baseline; gap:5px; }
-.rsvp-tally-box.yes .count { color:var(--success); }
-.rsvp-tally-box.no  .count { color:var(--accent); }
+.rsvp-tally-box.yes .count { color:#4ade80; }
+.rsvp-tally-box.no  .count { color:var(--accent-2); }
 .rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
 
 /* EVENTS CALENDAR */
 .cal-month { display:flex; align-items:flex-start; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
 .cal-month:last-child { border-bottom:none; }
-.cal-month-current .cal-month-label { color:var(--warm); }
+.cal-month-current .cal-month-label { color:var(--accent-2); }
 .cal-month-label { flex-shrink:0; width:88px; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding-top:2px; }
 .cal-events-col { flex:1; display:flex; flex-direction:column; gap:4px; }
 .cal-empty { font-size:.78rem; color:var(--border); }
 .cal-event { display:flex; align-items:baseline; gap:6px; }
 .cal-icon { font-size:.78rem; flex-shrink:0; }
-.cal-day { flex-shrink:0; font-size:.72rem; font-weight:700; color:var(--accent); min-width:18px; }
+.cal-day { flex-shrink:0; font-size:.72rem; font-weight:700; color:var(--accent-2); min-width:18px; }
 .cal-title { font-size:.84rem; color:var(--ink); font-weight:500; }
 .cal-note { font-size:.72rem; color:var(--muted); margin-left:4px; }
 
 /* EVENTS HOME */
 .event-item { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--border); }
 .event-item:last-child { border-bottom:none; }
-.event-day { flex-shrink:0; min-width:52px; background:var(--accent-soft); color:var(--accent); font-weight:700; font-size:.76rem; text-align:center; padding:5px 8px; border-radius:6px; line-height:1.3; }
+.event-day { flex-shrink:0; min-width:52px; background:var(--accent-soft); color:var(--accent-2); font-weight:700; font-size:.76rem; text-align:center; padding:5px 8px; border-radius:6px; line-height:1.3; }
 .event-body .event-title { font-weight:600; font-size:.9rem; color:var(--ink); }
 .event-body .event-note  { font-size:.76rem; color:var(--muted); margin-top:2px; }
+
+/* RATINGS */
+.rating-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border); font-size:.84rem; }
+.rating-row:last-child { border-bottom:none; }
+.rating-name { font-weight:600; color:var(--ink); }
+.rating-stars { color:#f59e0b; letter-spacing:.05em; }
+.rating-avg { text-align:center; padding:10px 0; font-family:'Lexend',sans-serif; }
+.rating-avg .avg-num { font-size:2rem; font-weight:700; color:var(--accent-2); line-height:1; }
+.rating-avg .avg-label { font-size:.72rem; color:var(--muted); margin-top:2px; letter-spacing:.05em; text-transform:uppercase; }
+
+/* CHAPTER NOTES */
+.chapter-block { margin-bottom:8px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.chapter-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; background:var(--surface); transition:background .15s; }
+.chapter-header:hover { background:var(--accent-soft); }
+.chapter-header h3 { font-size:.9rem; font-weight:700; color:var(--ink); }
+.chapter-count { font-size:.72rem; color:var(--muted); }
+.chapter-chevron { font-size:.8rem; color:var(--muted); transition:transform .2s; }
+.chapter-block.open .chapter-chevron { transform:rotate(90deg); }
+.chapter-notes { display:none; border-top:1px solid var(--border); }
+.chapter-block.open .chapter-notes { display:block; }
+.chapter-note { padding:12px 16px; border-bottom:1px solid var(--border); }
+.chapter-note:last-child { border-bottom:none; }
+.chapter-note-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.chapter-note-type { font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:99px; }
+.chapter-note-type.comment { background:var(--accent-soft); color:var(--accent-2); }
+.chapter-note-type.question { background:var(--warm-soft); color:var(--warm); }
+.chapter-note-who { font-size:.76rem; font-weight:600; color:var(--ink); }
+.chapter-note-page { font-size:.72rem; color:var(--muted); margin-left:auto; }
+.chapter-note-text { font-size:.86rem; color:var(--ink); line-height:1.5; }
+
+/* FORUM */
+.forum-spoiler-check { margin-bottom:12px; }
+.spoiler-label { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:.88rem; font-weight:600; color:var(--ink); }
+.spoiler-label input { width:16px; height:16px; cursor:pointer; accent-color:var(--accent-2); }
+.forum-post { border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:12px; background:var(--surface); }
+.forum-post:last-child { margin-bottom:0; }
+.forum-post-header { padding:14px 16px 10px; }
+.forum-post-meta { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+.forum-badge-spoiler { font-size:.65rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 8px; border-radius:99px; background:#2d1a00; color:#f59e0b; border:1px solid #4a3000; }
+.forum-badge-chapter { font-size:.65rem; font-weight:600; padding:2px 8px; border-radius:99px; background:var(--accent-soft); color:var(--accent-2); }
+.forum-badge-page { font-size:.65rem; color:var(--muted); }
+.forum-author { font-size:.72rem; font-weight:700; color:var(--ink); margin-left:auto; }
+.forum-title { font-weight:700; font-size:.96rem; color:var(--ink); margin-bottom:6px; }
+.forum-body-hidden { display:none; }
+.forum-spoiler-reveal { background:none; border:1px dashed var(--accent-2); border-radius:6px; padding:8px 14px; font-size:.8rem; font-weight:600; color:var(--accent-2); cursor:pointer; width:100%; text-align:center; margin-bottom:8px; }
+.forum-body { font-size:.86rem; color:var(--muted); line-height:1.6; padding-bottom:2px; }
+.forum-post-footer { display:flex; align-items:center; gap:0; border-top:1px solid var(--border); padding:0; }
+.reaction-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:4px; padding:9px 4px; background:none; border:none; border-right:1px solid var(--border); cursor:pointer; font-size:.8rem; color:var(--muted); transition:background .15s; font-family:'Lexend',sans-serif; }
+.reaction-btn:last-child { border-right:none; }
+.reaction-btn:hover { background:var(--accent-soft); }
+.reaction-btn.reacted { background:var(--warm-soft); color:var(--warm); font-weight:700; }
+.reaction-emoji { font-size:1rem; }
+.reaction-count { font-size:.72rem; font-weight:600; }
+.forum-replies { border-top:1px solid var(--border); background:var(--bg); }
+.forum-reply { padding:10px 16px; border-bottom:1px solid var(--border); font-size:.84rem; }
+.forum-reply:last-child { border-bottom:none; }
+.forum-reply-meta { font-size:.72rem; font-weight:700; color:var(--accent-2); margin-bottom:3px; }
+.forum-reply-body { color:var(--ink); line-height:1.5; }
+.forum-reply-form { padding:10px 16px; display:flex; gap:8px; border-top:1px solid var(--border); }
+.forum-reply-input { flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.84rem; color:var(--ink); outline:none; }
+.forum-reply-input:focus { border-color:var(--accent-2); }
+.forum-reply-submit { padding:8px 14px; border-radius:8px; border:none; background:var(--accent); color:white; font-family:'Lexend',sans-serif; font-size:.8rem; font-weight:600; cursor:pointer; }
+
+/* MEMBERS */
+#membersList { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.member-card { display:flex; flex-direction:column; align-items:center; text-align:center; padding:16px 12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); gap:8px; }
+.member-photo { width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-2); }
+.member-photo-placeholder { width:72px; height:72px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.8rem; border:2px solid var(--accent-2); }
+.member-name { font-weight:700; font-size:.96rem; color:var(--ink); font-family:'Playfair Display',serif; }
+.member-bday { font-size:.74rem; color:var(--accent-2); font-weight:600; }
+.member-facts { display:flex; flex-direction:column; gap:3px; }
+.member-fact { font-size:.76rem; color:var(--muted); line-height:1.4; }
+.member-fact strong { color:var(--ink); font-weight:600; }
+@media (max-width:400px) { #membersList { grid-template-columns:1fr; } }
 
 /* TODAY BANNERS */
 .today-banner {
   width:100%; padding:11px 20px; text-align:center;
   font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem;
-  letter-spacing:.02em; position:relative; overflow:hidden;
+  letter-spacing:.02em; position:relative;
 }
-.today-banner.banner-bookclub {
-  background:linear-gradient(90deg, var(--warm) 0%, #c45ab3 100%);
-  color:white;
-}
-.today-banner.banner-birthday {
-  background:linear-gradient(90deg, var(--accent) 0%, #a78bfa 100%);
-  color:white;
-}
-.today-banner.banner-event {
-  background:linear-gradient(90deg, #f9a8d4 0%, var(--accent) 100%);
-  color:white;
-}
+.today-banner.banner-bookclub { background:linear-gradient(90deg, #0047AB, #4169E1); color:white; }
+.today-banner.banner-birthday { background:linear-gradient(90deg, #3a7bd5, #0047AB); color:white; }
+.today-banner.banner-event    { background:linear-gradient(90deg, #4169E1, #3a7bd5); color:white; }
 .today-banner .banner-close {
   position:absolute; right:14px; top:50%; transform:translateY(-50%);
   background:none; border:none; color:white; font-size:1rem;
-  cursor:pointer; opacity:.8; line-height:1;
+  cursor:pointer; opacity:.7; line-height:1;
 }
 .today-banner .banner-close:hover { opacity:1; }
 
-footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a857e; letter-spacing:.04em; background:var(--ink); margin-top:0; }
+footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(--muted); letter-spacing:.04em; background:var(--bg); border-top:1px solid var(--border); }
 
 @media (max-width: 560px) {
   .nom-form-grid { grid-template-columns:1fr !important; }
+  .nav-link { padding:13px 12px; font-size:.7rem; }
 }
 </style>
 </head>
@@ -350,56 +429,63 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
 
 <header class="site-header">
   <div class="site-header-inner">
-    <img src="logo.png" alt="Triple B Book Club" class="site-logo"/>
+    <div class="site-wordmark">Triple B Book Club</div>
     <p class="site-tagline">Est. 2026</p>
   </div>
   <nav class="nav" id="tabBar">
     <button class="nav-link active" data-tab="home">Home</button>
+    <button class="nav-link" data-tab="meeting">Meetings</button>
+    <button class="nav-link" data-tab="currentbook">Current Book</button>
+    <button class="nav-link" data-tab="bookshelf">Bookshelf</button>
     <button class="nav-link" data-tab="calendar">Calendar</button>
-    <button class="nav-link" data-tab="vote">Vote</button>
-    <button class="nav-link" data-tab="discuss">Discussion</button>
-    <button class="nav-link" data-tab="host">Host</button>
-    <button class="nav-link" data-tab="shelf">Shelf</button>
-    <button class="nav-link" data-tab="vibes">Vibes</button>
+    <button class="nav-link" data-tab="club">Club</button>
   </nav>
 </header>
 
 <div class="page-bg">
 <div class="page">
 
-  <!-- HOME -->
+  <!-- HOME — Announcements -->
   <div class="tab-content active" id="tab-home">
 
-    <div class="section boxed tint-pink">
+    <div class="section boxed tint-blue" id="homeCurrentlyReading" style="cursor:pointer;" onclick="switchToTab('currentbook')">
       <div class="section-head">
         <h2>Currently Reading</h2>
         <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
       </div>
-      <div class="entry">
-        <div class="entry-marker active"></div>
-        <div class="entry-body">
-          <div class="entry-title" id="currentBook">Book Selection Loading...</div>
-          <div class="entry-meta" id="currentBookMeta"></div>
-        </div>
+      <div class="currently-reading-home">
+        <div class="cr-book" id="homeCurrentBook">Book Selection Loading...</div>
+        <div class="cr-meta" id="homeCurrentBookMeta"></div>
+        <div id="homeRatingStarsDisplay" style="font-size:1.1rem;letter-spacing:.08em;margin-top:6px;"></div>
+      </div>
+      <div style="margin-top:12px;">
+        <span style="font-size:.78rem;color:var(--accent-2);font-weight:600;letter-spacing:.04em;">Tap to read, rate & discuss →</span>
       </div>
     </div>
 
-    <div class="section boxed tint-lav" id="nextMeetingCard" style="display:none;">
-      <div class="section-head"><h2>Next Meeting</h2><span class="badge muted" id="nextMeetingBadge"></span></div>
+    <div class="section boxed tint-mid" id="comingUpCard">
+      <div class="section-head"><h2>Coming Up 🎉</h2></div>
+      <div id="comingUpList"><div class="no-content">Nothing coming up in the next 30 days.</div></div>
+    </div>
 
-      <div class="countdown" id="countdown"></div>
+  </div>
 
+  <!-- MEETING TAB -->
+  <div class="tab-content" id="tab-meeting">
+
+    <div class="section boxed tint-mid">
+      <div class="section-head"><h2>Next Meeting</h2><span class="badge muted" id="meetingTabBadge"></span></div>
+      <div class="countdown" id="meetingCountdown"></div>
       <div class="next-meeting-details">
-        <div class="nmd-row"><span class="nmd-label">Host</span><span class="nmd-value" id="nextHost"></span></div>
-        <div class="nmd-row"><span class="nmd-label">Book</span><span class="nmd-value" id="nextBook"></span></div>
-        <div class="nmd-row" id="nextDateTimeRow"><span class="nmd-label">When</span><span class="nmd-value" id="nextDateTime"></span></div>
-        <div class="nmd-row" id="nextLocationRow"><span class="nmd-label">Where</span><span class="nmd-value" id="nextLocation"></span></div>
-        <div class="nmd-row" id="nextFoodRow"><span class="nmd-label">Food</span><span class="nmd-value" id="nextFood"></span></div>
-        <div class="nmd-row" id="nextThemeRow"><span class="nmd-label">Theme</span><span class="nmd-value" id="nextTheme"></span></div>
+        <div class="nmd-row"><span class="nmd-label">Host</span><span class="nmd-value" id="meetingHost2"></span></div>
+        <div class="nmd-row"><span class="nmd-label">Book</span><span class="nmd-value" id="meetingBook2"></span></div>
+        <div class="nmd-row" id="meetingDateRow"><span class="nmd-label">When</span><span class="nmd-value" id="meetingDateTime2"></span></div>
+        <div class="nmd-row" id="meetingLocRow"><span class="nmd-label">Where</span><span class="nmd-value" id="meetingLocation2"></span></div>
+        <div class="nmd-row" id="meetingFoodRow"><span class="nmd-label">Food</span><span class="nmd-value" id="meetingFood2"></span></div>
+        <div class="nmd-row" id="meetingThemeRow"><span class="nmd-label">Theme</span><span class="nmd-value" id="meetingTheme2"></span></div>
       </div>
-
       <div class="rsvp-block">
-        <p class="section-note" style="margin-bottom:10px;">RSVP below</p>
+        <p class="section-note" style="margin-bottom:10px;">RSVP</p>
         <input class="rsvp-input" id="rsvpName" placeholder="Your name"/>
         <div class="rsvp-row">
           <button class="rsvp-btn yes" id="rsvpYes">I'm in</button>
@@ -413,48 +499,8 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
       </div>
     </div>
 
-    <div class="section boxed" id="noMeetingCard">
-      <div class="section-head"><h2>Next Meeting</h2></div>
-      <p class="no-content">No upcoming meeting scheduled yet — check the Host tab.</p>
-    </div>
-
-
-    <div class="section boxed tint-lav" id="discussionCard" style="display:none;">
-      <div class="section-head"><h2>Discussion</h2><span class="badge accent" style="cursor:pointer;" onclick="switchToTab('discuss')">Join →</span></div>
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px;">Questions for <strong id="discussCurrentBookLink"></strong></p>
-      <div id="discussionList"></div>
-      <button onclick="switchToTab('discuss')" style="margin-top:14px;background:none;border:none;font-family:'Lexend',sans-serif;font-size:.82rem;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;">Add a question →</button>
-    </div>
-
-    <div class="section boxed tint-pink" id="comingUpCard">
-      <div class="section-head"><h2>Coming Up 🎉</h2></div>
-      <div id="comingUpList"><div class="no-content">Nothing coming up in the next 30 days.</div></div>
-    </div>
-
-  </div>
-
-  <!-- CALENDAR -->
-  <div class="tab-content" id="tab-calendar">
-    <div class="section boxed tint-lav">
-      <div class="section-head"><h2>Calendar</h2></div>
-      <div id="eventsCalendar"></div>
-    </div>
-    <div class="section boxed tint-pink">
-      <div class="section-head"><h2>Add an Event</h2></div>
-      <input class="input" id="eventTitle" placeholder="Event name (e.g. Girls trip! 🌴)"/>
-      <div class="two-col">
-        <input class="input" id="eventDate" type="date"/>
-        <input class="input" id="eventNote" placeholder="Note (optional)"/>
-      </div>
-      <button class="btn btn-secondary" id="addEventBtn">Add Event</button>
-      <div class="success-msg" id="eventSuccess">Event added!</div>
-    </div>
-  </div>
-
-  <!-- VOTE -->
-  <div class="tab-content" id="tab-vote">
-    <div class="section boxed tint-lav">
-      <div class="section-head"><h2>Cast Your Vote</h2></div>
+    <div class="section boxed tint-blue">
+      <div class="section-head"><h2>Cast Your Vote 🗳️</h2></div>
       <div id="voteForm" style="display:none;">
         <span class="section-eyebrow" id="voteMonthLabel"></span>
         <input class="input" id="voterName" placeholder="Your name"/>
@@ -464,94 +510,218 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
       </div>
       <div id="noVoteYet" class="no-content">The host hasn't posted their picks yet — check back soon.</div>
     </div>
-  </div>
 
-  <!-- HOST -->
-  <div class="tab-content" id="tab-host">
-
-    <div class="section">
-      <div class="section-head"><h2>Host Controls</h2><span class="badge muted">Host Only</span></div>
-      <p class="section-note">Follow these three steps each month to set up your meeting.</p>
+    <div class="section boxed tint-dark">
+      <div class="section-head"><h2>Discussion Questions 💬</h2></div>
+      <p class="section-note" style="margin-bottom:12px;">Add a question for this month's meeting!</p>
+      <div id="discussionQuestionsList"><div class="no-content">No questions yet — add the first one below!</div></div>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+        <input class="input" id="newDiscussionQ" placeholder="Your discussion question..."/>
+        <input class="input" id="newDiscussionName" placeholder="Your name"/>
+        <button class="btn btn-secondary" id="addDiscussionQBtn">Add Question</button>
+        <div class="success-msg" id="discussionQSuccess">Question added!</div>
+      </div>
     </div>
 
-    <div class="section boxed tint-pink">
-      <span class="section-eyebrow">Step 1</span>
-      <div class="section-head"><h2>Post Your Three Books</h2></div>
-      <p class="section-note">Post your picks so members can vote in the Vote tab.</p>
-      <span class="field-label">Your name & month</span>
-      <div class="two-col" style="margin-bottom:10px;">
-        <select class="input" id="hostName" style="margin-bottom:0;">
-          <option value="" disabled selected>Host Name</option>
-          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
-          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
-          <option>Tricia</option><option>Val</option>
-        </select>
-        <select class="input" id="hostMonth" style="margin-bottom:0;">
+    <!-- HOST CONTROLS — collapsible -->
+    <div class="section boxed" id="hostControlsToggle" style="cursor:pointer;" onclick="toggleHostControls()">
+      <div class="section-head" style="margin-bottom:0;">
+        <h2 style="color:var(--muted);font-size:1rem;">Host Controls</h2>
+        <span style="font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;">Tap to expand ▸</span>
+      </div>
+    </div>
+
+    <div id="hostControlsBody" style="display:none;display:flex;flex-direction:column;gap:20px;">
+      <div class="section boxed tint-dark">
+        <span class="section-eyebrow">Step 1</span>
+        <div class="section-head"><h2>Post Your Three Books</h2></div>
+        <p class="section-note">Post your picks so members can vote.</p>
+        <div class="two-col" style="margin-bottom:10px;">
+          <select class="input" id="hostName" style="margin-bottom:0;">
+            <option value="" disabled selected>Host Name</option>
+            <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+            <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+            <option>Tricia</option><option>Val</option>
+          </select>
+          <select class="input" id="hostMonth" style="margin-bottom:0;">
+            <option value="" disabled selected>Month</option>
+            <option>January</option><option>February</option><option>March</option><option>April</option>
+            <option>May</option><option>June</option><option>July</option><option>August</option>
+            <option>September</option><option>October</option><option>November</option><option>December</option>
+          </select>
+        </div>
+        <input class="input" id="book1" placeholder="Book option 1"/>
+        <input class="input" id="book2" placeholder="Book option 2"/>
+        <input class="input" id="book3" placeholder="Book option 3"/>
+        <button class="btn btn-secondary" id="submitBooksBtn">Post for Voting</button>
+        <div class="success-msg" id="hostSuccess">Posted — members can now vote.</div>
+      </div>
+      <div class="section boxed tint-mid">
+        <span class="section-eyebrow">Step 2</span>
+        <div class="section-head"><h2>Announce Winning Book</h2></div>
+        <select class="input" id="winnerMonth">
           <option value="" disabled selected>Month</option>
           <option>January</option><option>February</option><option>March</option><option>April</option>
           <option>May</option><option>June</option><option>July</option><option>August</option>
           <option>September</option><option>October</option><option>November</option><option>December</option>
         </select>
+        <input class="input" id="winnerInput" placeholder="Winning book title"/>
+        <button class="btn btn-secondary" id="announceWinnerBtn">Announce Winner</button>
+        <div class="success-msg" id="winnerSuccess">Winner announced.</div>
       </div>
-      <span class="field-label" style="margin-top:6px;">Your three book picks</span>
-      <input class="input" id="book1" placeholder="Book option 1"/>
-      <input class="input" id="book2" placeholder="Book option 2"/>
-      <input class="input" id="book3" placeholder="Book option 3"/>
-      <button class="btn btn-secondary" id="submitBooksBtn">Post for Voting</button>
-      <div class="success-msg" id="hostSuccess">Posted — members can now vote.</div>
-    </div>
-
-    <div class="section boxed tint-lav">
-      <span class="section-eyebrow">Step 2</span>
-      <div class="section-head"><h2>Announce Winning Book</h2></div>
-      <p class="section-note">After voting closes, announce the book you'll be reading.</p>
-      <select class="input" id="winnerMonth">
-        <option value="" disabled selected>Month</option>
-        <option>January</option><option>February</option><option>March</option><option>April</option>
-        <option>May</option><option>June</option><option>July</option><option>August</option>
-        <option>September</option><option>October</option><option>November</option><option>December</option>
-      </select>
-      <input class="input" id="winnerInput" placeholder="Winning book title"/>
-      <button class="btn btn-secondary" id="announceWinnerBtn">Announce Winner</button>
-      <div class="success-msg" id="winnerSuccess">Winner announced.</div>
-    </div>
-
-    <div class="section boxed tint-ink">
-      <span class="section-eyebrow">Step 3</span>
-      <div class="section-head"><h2>Meeting Details</h2></div>
-      <p class="section-note">Set up the meeting so everyone knows where to be.</p>
-      <select class="input" id="meetingMonth">
-        <option value="" disabled selected>Month</option>
-        <option>January</option><option>February</option><option>March</option><option>April</option>
-        <option>May</option><option>June</option><option>July</option><option>August</option>
-        <option>September</option><option>October</option><option>November</option><option>December</option>
-      </select>
-      <select class="input" id="meetingHost">
-        <option value="" disabled selected>Host Name</option>
-        <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
-        <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
-        <option>Tricia</option><option>Val</option>
-      </select>
-      <input class="input" id="meetingLocation" placeholder="Location name & address"/>
-      <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers)"/>
-      <input class="input" id="meetingTheme" placeholder="Theme or things to know"/>
-      <div class="two-col">
-        <input class="input" id="meetingDate" type="date"/>
-        <select class="input" id="meetingTime">
-          <option value="" disabled selected>Time</option>
-          <option>5:00pm</option><option>5:30pm</option><option>6:00pm</option><option>6:30pm</option>
-          <option>7:00pm</option><option>7:30pm</option><option>8:00pm</option><option>8:30pm</option>
+      <div class="section boxed tint-blue">
+        <span class="section-eyebrow">Step 3</span>
+        <div class="section-head"><h2>Meeting Details</h2></div>
+        <p class="section-note">Set up the meeting so everyone knows where to be.</p>
+        <select class="input" id="meetingMonth">
+          <option value="" disabled selected>Month</option>
+          <option>January</option><option>February</option><option>March</option><option>April</option>
+          <option>May</option><option>June</option><option>July</option><option>August</option>
+          <option>September</option><option>October</option><option>November</option><option>December</option>
         </select>
+        <select class="input" id="meetingHost">
+          <option value="" disabled selected>Host Name</option>
+          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+          <option>Tricia</option><option>Val</option>
+        </select>
+        <input class="input" id="meetingLocation" placeholder="Location name & address"/>
+        <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers)"/>
+        <input class="input" id="meetingTheme" placeholder="Theme or things to know"/>
+        <div class="two-col">
+          <input class="input" id="meetingDate" type="date"/>
+          <select class="input" id="meetingTime">
+            <option value="" disabled selected>Time</option>
+            <option>5:00pm</option><option>5:30pm</option><option>6:00pm</option><option>6:30pm</option>
+            <option>7:00pm</option><option>7:30pm</option><option>8:00pm</option><option>8:30pm</option>
+          </select>
+        </div>
+        <button class="btn btn-secondary" id="submitBooksBtn2">Save Meeting Details</button>
+        <div class="success-msg" id="hostSuccess2">Meeting details saved.</div>
       </div>
-      <button class="btn btn-secondary" id="submitBooksBtn2">Save Meeting Details</button>
-      <div class="success-msg" id="hostSuccess2">Meeting details saved.</div>
     </div>
 
   </div>
 
-  <!-- SHELF -->
-  <div class="tab-content" id="tab-shelf">
-    <div class="section boxed tint-lav">
+  <!-- CURRENT BOOK TAB -->
+  <div class="tab-content" id="tab-currentbook">
+
+    <div class="section boxed tint-blue">
+      <div class="section-head">
+        <h2>Currently Reading</h2>
+        <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
+      </div>
+      <div class="entry" style="padding:10px 0;">
+        <div class="entry-marker active"></div>
+        <div class="entry-body" style="flex:1;">
+          <div class="entry-title" id="currentBook">Book Selection Loading...</div>
+          <div class="entry-meta" id="currentBookMeta"></div>
+        </div>
+        <div id="homeRatingStars" style="font-size:1.1rem;letter-spacing:.06em;flex-shrink:0;"></div>
+      </div>
+      <div id="homeRatingSection" style="padding-top:14px;border-top:1px solid var(--border);display:none;margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Group Rating</span>
+          <span id="homeRatingAvg" style="font-family:'Lexend',sans-serif;font-size:.92rem;font-weight:700;color:var(--accent-2);"></span>
+          <span id="homeRatingCount" style="font-size:.72rem;color:var(--muted);"></span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="input" id="homeRatingName" style="margin-bottom:0;font-size:.82rem;padding:8px 10px;flex:1;">
+            <option value="" disabled selected>Your name</option>
+            <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+            <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+            <option>Tricia</option><option>Val</option>
+          </select>
+          <select class="input" id="homeRatingScore" style="margin-bottom:0;font-size:.82rem;padding:8px 10px;flex:1;">
+            <option value="" disabled selected>Stars</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="1">⭐</option>
+          </select>
+          <button id="homeRatingBtn" style="flex-shrink:0;padding:8px 14px;border-radius:8px;border:none;background:var(--accent);color:white;font-family:'Lexend',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;">Rate</button>
+        </div>
+        <div class="success-msg" id="homeRatingSuccess" style="margin-top:8px;">Rating saved!</div>
+      </div>
+    </div>
+
+    <!-- FORUM + NEW POST COMBINED -->
+    <div class="section boxed tint-dark">
+      <div class="section-head">
+        <h2>Forum</h2>
+        <button class="btn btn-secondary" onclick="document.getElementById('newPostForm').style.display=document.getElementById('newPostForm').style.display==='none'?'block':'none'" style="padding:6px 14px;font-size:.74rem;margin-top:0;">+ New Post</button>
+      </div>
+
+      <div id="newPostForm" style="display:none;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+        <div class="forum-spoiler-check" style="margin-bottom:10px;">
+          <label class="spoiler-label">
+            <input type="checkbox" id="postSpoiler"/>
+            <span>⚠️ This post contains spoilers</span>
+          </label>
+        </div>
+        <div class="two-col" style="margin-bottom:8px;">
+          <input class="input" id="postChapter" placeholder="Chapter" style="margin-bottom:0;"/>
+          <input class="input" id="postPage" placeholder="Page #" style="margin-bottom:0;"/>
+        </div>
+        <input class="input" id="postTitle" placeholder="Post title..."/>
+        <select class="input" id="postAuthor">
+          <option value="" disabled selected>Your name</option>
+          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+          <option>Tricia</option><option>Val</option>
+        </select>
+        <textarea class="input" id="postBody" placeholder="What's on your mind..." style="height:100px;resize:none;"></textarea>
+        <button class="btn btn-secondary" id="addPostBtn">Post</button>
+        <div class="success-msg" id="postSuccess">Posted!</div>
+      </div>
+
+      <div id="forumPosts"><div class="no-content">No posts yet — be the first!</div></div>
+    </div>
+
+    <!-- RATINGS detail view -->
+    <div class="section boxed tint-mid">
+      <div class="section-head"><h2>All Ratings</h2></div>
+      <div id="ratingsDisplay"></div>
+      <div class="two-col" style="margin-bottom:8px;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
+        <select class="input" id="ratingName" style="margin-bottom:0;">
+          <option value="" disabled selected>Your name</option>
+          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+          <option>Tricia</option><option>Val</option>
+        </select>
+        <select class="input" id="ratingScore" style="margin-bottom:0;">
+          <option value="" disabled selected>Stars</option>
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
+      </div>
+      <button class="btn btn-secondary" id="addRatingBtn">Submit Rating</button>
+      <div class="success-msg" id="ratingSuccess">Rating saved!</div>
+    </div>
+
+  </div>
+
+  <!-- BOOKSHELF TAB -->
+  <div class="tab-content" id="tab-bookshelf">
+
+    <div class="section boxed tint-blue">
+      <div class="section-head">
+        <h2>Currently Reading</h2>
+        <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
+      </div>
+      <div id="shelfCurrentBook" class="no-content">Loading...</div>
+    </div>
+
+    <div class="section boxed tint-dark">
+      <div class="section-head"><h2>Past Reads</h2></div>
+      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here.</div></div>
+    </div>
+
+    <div class="section boxed tint-mid">
       <div class="section-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet.</div></div>
       <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
@@ -565,45 +735,88 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
         <div class="success-msg" id="shelfSuccess">Added to the nominations list.</div>
       </div>
     </div>
-    <div class="section boxed tint-ink">
-      <div class="section-head"><h2>Past Reads</h2></div>
-      <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here.</div></div>
+
+  </div>
+
+  <div class="tab-content" id="tab-calendar">
+    <div class="section boxed tint-mid">
+      <div class="section-head"><h2>Calendar</h2></div>
+      <div id="eventsCalendar"></div>
+    </div>
+    <div class="section boxed tint-blue">
+      <div class="section-head"><h2>Add an Event</h2></div>
+      <input class="input" id="eventTitle" placeholder="Event name (e.g. Girls trip! 🌴)"/>
+      <div class="two-col">
+        <input class="input" id="eventDate" type="date"/>
+        <input class="input" id="eventNote" placeholder="Note (optional)"/>
+      </div>
+      <button class="btn btn-secondary" id="addEventBtn">Add Event</button>
+      <div class="success-msg" id="eventSuccess">Event added!</div>
     </div>
   </div>
 
-  <!-- DISCUSS -->
-  <div class="tab-content" id="tab-discuss">
 
-    <div class="section boxed tint-pink">
-      <div class="section-head"><h2>Currently Reading</h2></div>
-      <div class="entry">
-        <div class="entry-marker active"></div>
-        <div class="entry-body">
-          <div class="entry-title" id="discussCurrentBook">Book Selection Loading...</div>
-          <div class="entry-meta" id="discussCurrentMeta"></div>
+  <!-- CLUB TAB — Members + Vibes -->
+  <div class="tab-content" id="tab-club">
+
+    <div class="section boxed tint-mid">
+      <div class="section-head"><h2>Members 👥</h2></div>
+      <div id="membersList">
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Rachael</div>
+          <div class="member-bday">🎂 January 5</div>
+          <div class="member-fact"><strong>Founder</strong> · Est. 2026</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Christa</div>
+          <div class="member-bday">🎂 May 1</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Katie</div>
+          <div class="member-bday">🎂 October 3</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Simone</div>
+          <div class="member-bday">🎂 December 8</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Carly</div>
+          <div class="member-bday">🎂 October 2</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Sasha</div>
+          <div class="member-bday">🎂 April 15</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Val</div>
+          <div class="member-bday">🎂 August 25</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Betsy</div>
+          <div class="member-bday">🎂 July 13</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Emily</div>
+          <div class="member-bday">🎂 November 9</div>
+        </div>
+        <div class="member-card">
+          <div class="member-photo-placeholder">👤</div>
+          <div class="member-name">Tricia</div>
+          <div class="member-bday">🎂 August 31</div>
         </div>
       </div>
     </div>
 
-    <div class="section boxed tint-lav">
-      <div class="section-head"><h2>Discussion Questions 💬</h2></div>
-      <p class="section-note" style="margin-bottom:12px;">Everyone is welcome to add a question for the meeting!</p>
-      <div id="discussionQuestionsList"><div class="no-content">No questions yet — add the first one below!</div></div>
-    </div>
-
-    <div class="section boxed">
-      <div class="section-head"><h2>Add a Question</h2></div>
-      <input class="input" id="newDiscussionQ" placeholder="Your discussion question..."/>
-      <input class="input" id="newDiscussionName" placeholder="Your name"/>
-      <button class="btn btn-secondary" id="addDiscussionQBtn">Add Question</button>
-      <div class="success-msg" id="discussionQSuccess">Question added!</div>
-    </div>
-
-  </div>
-
-  <!-- VIBES -->
-  <div class="tab-content" id="tab-vibes">
-    <div class="section boxed tint-pink">
+    <div class="section boxed tint-blue">
       <div class="section-head"><h2>The Vibes</h2></div>
       <ul class="rule-list">
         <li class="rule-item"><span class="marker">📚</span> Host picks three books, everyone votes, most votes wins</li>
@@ -617,7 +830,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
       </ul>
     </div>
 
-    <div class="section boxed tint-lav">
+    <div class="section boxed tint-dark">
       <div class="section-head"><h2>Food Heads Up 🍽️</h2></div>
       <p class="section-note">Keep these in mind when bringing food to book club.</p>
       <ul class="rule-list">
@@ -630,9 +843,18 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:#8a8
 </div>
 </div>
 
-<footer>Triple B Book Club — Est. 2026</footer>
+<footer>Triple B Book Club · Est. 2026</footer>
 
 </div>
+
+<!-- BOOK ARCHIVE PAGE -->
+<div id="bookArchivePage" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:999;overflow-y:auto;">
+  <div style="max-width:760px;margin:0 auto;padding:24px 20px 80px;">
+    <button onclick="closeBookArchive()" style="display:flex;align-items:center;gap:6px;background:none;border:none;font-family:'Lexend',sans-serif;font-size:.86rem;font-weight:600;color:var(--muted);cursor:pointer;padding:0;margin-bottom:24px;">← Back to Shelf</button>
+    <div id="archiveContent"></div>
+  </div>
+</div>
+
 
 <script>
 const SUPABASE_URL = 'https://cijgzajhjhjyhroeqywx.supabase.co';
@@ -652,27 +874,38 @@ function switchToTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   const navBtn = btn || document.querySelector('.nav-link[data-tab="' + name + '"]');
   if (navBtn) navBtn.classList.add('active');
-  if (name === 'vote') loadVoting();
-  if (name === 'shelf') { loadShelf(); loadPastReads(); }
+  if (name === 'meeting') { loadVoting(); loadDiscussionQuestions(); }
+  if (name === 'bookshelf') { loadShelf(); loadPastReads(); }
+  if (name === 'currentbook') loadDiscussionQuestions();
   if (name === 'calendar') loadEvents();
-  if (name === 'discuss') loadDiscussionQuestions();
+}
+
+function toggleHostControls() {
+  const body = document.getElementById('hostControlsBody');
+  const toggle = document.getElementById('hostControlsToggle');
+  const isHidden = body.style.display === 'none' || body.style.display === '';
+  body.style.display = isHidden ? 'flex' : 'none';
+  toggle.querySelector('span:last-child').textContent = isHidden ? 'Tap to collapse ▾' : 'Tap to expand ▸';
 }
 
 function init() {
   loadNextMeeting();
   loadEvents();
+  loadDiscussionQuestions().then(() => { loadRatings(); loadForum(); });
   setInterval(() => {
-    if (window.currentMeetingDate) updateCountdown(window.currentMeetingDate, window.currentMeetingTime);
+    if (window.currentMeetingDate) {
+      updateCountdown(window.currentMeetingDate, window.currentMeetingTime, 'countdown');
+      updateCountdown(window.currentMeetingDate, window.currentMeetingTime, 'meetingCountdown');
+    }
   }, 60000);
 }
 
 // COUNTDOWN
-function updateCountdown(dateStr, timeStr) {
-  const el = document.getElementById('countdown');
+function updateCountdown(dateStr, timeStr, targetId) {
+  const el = document.getElementById(targetId || 'countdown');
   if (!el) return;
   if (!dateStr) { el.innerHTML = ''; return; }
 
-  // parse time like "6:30pm" into hours/minutes, default to noon if unparseable
   let hours = 12, mins = 0;
   if (timeStr) {
     const match = timeStr.match(/(\d+):?(\d*)\s*(am|pm)?/i);
@@ -690,7 +923,7 @@ function updateCountdown(dateStr, timeStr) {
   const now = new Date();
   const diff = next - now;
 
-  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">It\'s meeting day!</div>'; return; }
+  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">It\'s meeting day! 🎉</div>'; return; }
   const days  = Math.floor(diff/(1000*60*60*24));
   const hrs   = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
   const mns   = Math.floor((diff%(1000*60*60))/(1000*60));
@@ -720,71 +953,49 @@ async function loadNextMeeting() {
   const completed = allMeetings.filter(m => m.meeting_date && new Date(m.meeting_date) < today && m.winning_book);
   if (completed.length > 0) await syncPastReads(completed);
 
-  // CURRENTLY READING — the winning book of the next upcoming meeting
-  if (nextMeeting && nextMeeting.winning_book) {
-    document.getElementById('currentBook').textContent = nextMeeting.winning_book;
-    document.getElementById('currentBookMeta').textContent =
-      [nextMeeting.month, nextMeeting.host ? 'hosted by ' + nextMeeting.host : ''].filter(Boolean).join(' · ');
-  } else {
-    document.getElementById('currentBook').textContent = 'Book Selection Loading...';
-    document.getElementById('currentBookMeta').textContent = '';
-  }
+  // CURRENTLY READING — populate home card and current book tab
+  const bookTitle = nextMeeting && nextMeeting.winning_book ? nextMeeting.winning_book : 'Book Selection Loading...';
+  const bookMeta = nextMeeting ? [nextMeeting.month, nextMeeting.host ? 'hosted by ' + nextMeeting.host : ''].filter(Boolean).join(' · ') : '';
 
-  // NEXT MEETING CARD
+  // current book tab
+  const cbEl = document.getElementById('currentBook');
+  if (cbEl) cbEl.textContent = bookTitle;
+  const cbMetaEl = document.getElementById('currentBookMeta');
+  if (cbMetaEl) cbMetaEl.textContent = bookMeta;
+
+  // home tab card
+  const hcbEl = document.getElementById('homeCurrentBook');
+  if (hcbEl) hcbEl.textContent = bookTitle;
+  const hcbMetaEl = document.getElementById('homeCurrentBookMeta');
+  if (hcbMetaEl) hcbMetaEl.textContent = bookMeta;
+
+  // bookshelf tab
+  const scbEl = document.getElementById('shelfCurrentBook');
+  if (scbEl) scbEl.innerHTML = nextMeeting && nextMeeting.winning_book
+    ? `<div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);">${nextMeeting.winning_book}</div><div style="font-size:.8rem;color:var(--muted);margin-top:4px;">${bookMeta}</div>`
+    : '<div class="no-content">No book selected yet.</div>';
+
+  // MEETING TAB details
   if (nextMeeting) {
-    document.getElementById('nextMeetingCard').style.display = 'block';
-    document.getElementById('noMeetingCard').style.display = 'none';
-
-    document.getElementById('nextMeetingBadge').textContent = nextMeeting.month || '';
-    document.getElementById('nextHost').textContent = nextMeeting.host || 'TBD';
-    document.getElementById('nextBook').textContent = nextMeeting.winning_book ? nextMeeting.winning_book : 'Book Selection Loading...';
-
     const whenText = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
-    document.getElementById('nextDateTime').textContent = whenText;
-    document.getElementById('nextDateTimeRow').style.display = whenText ? 'flex' : 'none';
 
-    document.getElementById('nextLocation').textContent = nextMeeting.location || '';
-    document.getElementById('nextLocationRow').style.display = nextMeeting.location ? 'flex' : 'none';
-
-    document.getElementById('nextFood').textContent = nextMeeting.food_theme || '';
-    document.getElementById('nextFoodRow').style.display = nextMeeting.food_theme ? 'flex' : 'none';
-
-    document.getElementById('nextTheme').textContent = nextMeeting.theme || '';
-    document.getElementById('nextThemeRow').style.display = nextMeeting.theme ? 'flex' : 'none';
+    document.getElementById('meetingTabBadge').textContent = nextMeeting.month || '';
+    document.getElementById('meetingHost2').textContent = nextMeeting.host || 'TBD';
+    document.getElementById('meetingBook2').textContent = nextMeeting.winning_book || 'Book Selection Loading...';
+    document.getElementById('meetingDateTime2').textContent = whenText;
+    document.getElementById('meetingDateRow').style.display = whenText ? 'flex' : 'none';
+    document.getElementById('meetingLocation2').textContent = nextMeeting.location || '';
+    document.getElementById('meetingLocRow').style.display = nextMeeting.location ? 'flex' : 'none';
+    document.getElementById('meetingFood2').textContent = nextMeeting.food_theme || '';
+    document.getElementById('meetingFoodRow').style.display = nextMeeting.food_theme ? 'flex' : 'none';
+    document.getElementById('meetingTheme2').textContent = nextMeeting.theme || '';
+    document.getElementById('meetingThemeRow').style.display = nextMeeting.theme ? 'flex' : 'none';
+    updateCountdown(nextMeeting.meeting_date, nextMeeting.meeting_time, 'meetingCountdown');
 
     window.currentMeetingMonth = nextMeeting.month;
     window.currentMeetingDate = nextMeeting.meeting_date;
     window.currentMeetingTime = nextMeeting.meeting_time;
-    updateCountdown(nextMeeting.meeting_date, nextMeeting.meeting_time);
     loadRsvp();
-
-    const today = new Date(); today.setHours(0,0,0,0);
-    const meetingDay = nextMeeting.meeting_date ? new Date(nextMeeting.meeting_date + 'T00:00:00') : null;
-    const dayAfter = meetingDay ? new Date(meetingDay.getTime() + 86400000) : null;
-    const showQuestions = !dayAfter || today < dayAfter;
-
-    if (showQuestions) {
-      const { data: qs } = await sb.from('discussions').select('*').eq('month', nextMeeting.month).order('created_at');
-      if (qs && qs.length > 0) {
-        document.getElementById('discussionCard').style.display = 'block';
-        const bookName = nextMeeting.winning_book || 'this month\'s book';
-        const linkEl = document.getElementById('discussCurrentBookLink');
-        if (linkEl) linkEl.textContent = bookName;
-        document.getElementById('discussionList').innerHTML = qs.map(q =>
-          `<div class="rule-item"><span class="marker">💬</span><div>
-            <div>${q.question}</div>
-            ${q.asked_by ? `<div style="font-size:.72rem;color:var(--muted);margin-top:2px;">— ${q.asked_by}</div>` : ''}
-          </div></div>`
-        ).join('');
-      } else {
-        document.getElementById('discussionCard').style.display = 'none';
-      }
-    } else {
-      document.getElementById('discussionCard').style.display = 'none';
-    }
-  } else {
-    document.getElementById('nextMeetingCard').style.display = 'none';
-    document.getElementById('noMeetingCard').style.display = 'block';
   }
 }
 
@@ -808,6 +1019,26 @@ const PLANNED_HOSTS = [
 
 // VOTING
 let selectedBook = null, currentMonth = '';
+async function fetchBookInfo(title) {
+  try {
+    const q = encodeURIComponent(title);
+    const res = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=title,author_name,cover_i,first_sentence,description,key`);
+    const json = await res.json();
+    const doc = json.docs && json.docs[0];
+    if (!doc) return null;
+    let description = '';
+    if (doc.first_sentence) {
+      description = typeof doc.first_sentence === 'string' ? doc.first_sentence : (doc.first_sentence.value || '');
+    }
+    return {
+      author: doc.author_name ? doc.author_name[0] : '',
+      cover: doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null,
+      description: description,
+      key: doc.key || ''
+    };
+  } catch(e) { return null; }
+}
+
 async function loadVoting() {
   const { data: meeting } = await sb.from('meetings').select('*').order('created_at',{ascending:false}).limit(1).maybeSingle();
   const noVote = document.getElementById('noVoteYet');
@@ -815,19 +1046,46 @@ async function loadVoting() {
   if (!meeting || !meeting.book1) { noVote.style.display='block'; form.style.display='none'; return; }
   noVote.style.display='none'; form.style.display='block';
   currentMonth = meeting.month;
-  document.getElementById('voteMonthLabel').textContent = 'Voting for: ' + meeting.month;
+  document.getElementById('voteMonthLabel').textContent = 'Voting for ' + meeting.month;
   const books = [meeting.book1,meeting.book2,meeting.book3].filter(Boolean);
   const { data: votes } = await sb.from('votes').select('*').eq('month',meeting.month);
   const total = votes ? votes.length : 0;
   const container = document.getElementById('bookOptions');
+  container.innerHTML = '<div class="no-content" style="padding:16px 0;">Loading book info...</div>';
+
+  // fetch book info in parallel
+  const infos = await Promise.all(books.map(b => fetchBookInfo(b)));
+
   container.innerHTML = '';
-  books.forEach(book => {
+  books.forEach((book, i) => {
     const count = votes ? votes.filter(v=>v.book===book).length : 0;
     const pct = total > 0 ? Math.round((count/total)*100) : 0;
+    const info = infos[i];
+
     const div = document.createElement('div');
-    div.className = 'book-option';
-    div.innerHTML = `<div><div class="book-name">${book}</div><div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div></div><span class="vote-count">${count} vote${count!==1?'s':''}</span>`;
-    div.addEventListener('click', function(){ document.querySelectorAll('.book-option').forEach(o=>o.classList.remove('selected')); div.classList.add('selected'); selectedBook=book; });
+    div.className = 'book-option-card';
+    div.innerHTML = `
+      <div class="boc-inner">
+        ${info && info.cover ? `<img class="boc-cover" src="${info.cover}" alt="${book}" onerror="this.style.display='none'"/>` : '<div class="boc-cover-placeholder">📚</div>'}
+        <div class="boc-info">
+          <div class="boc-title">${book}</div>
+          ${info && info.author ? `<div class="boc-author">by ${info.author}</div>` : ''}
+          ${info && info.description ? `<div class="boc-desc">${info.description}</div>` : ''}
+          <div class="boc-footer">
+            <div class="vote-bar" style="width:100%;margin-top:8px;"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px;">
+              <span class="vote-count">${count} vote${count!==1?'s':''}</span>
+              ${info && info.key ? `<a href="https://openlibrary.org${info.key}" target="_blank" style="font-size:.72rem;color:var(--accent);text-decoration:none;font-weight:600;">View on Open Library →</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    div.addEventListener('click', function(){
+      document.querySelectorAll('.book-option-card').forEach(o=>o.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedBook = book;
+    });
     container.appendChild(div);
   });
 }
@@ -842,7 +1100,6 @@ document.getElementById('voteBtn').addEventListener('click', async function() {
   document.getElementById('voteBtn').style.display='none';
   loadVoting();
 });
-
 // HOST
 document.getElementById('submitBooksBtn').addEventListener('click', async function() {
   const host = document.getElementById('hostName').value.trim();
@@ -947,8 +1204,34 @@ async function loadPastReads() {
   const { data } = await sb.from('past_reads').select('*').order('created_at',{ascending:false});
   const container = document.getElementById('pastList');
   if (!data||data.length===0) { container.innerHTML='<div class="no-content">Nothing yet — your reading history will live here.</div>'; return; }
-  container.innerHTML = data.map(b=>{
-    return `<div class="past-read"><div class="pr-title">${b.title}</div><div class="pr-meta">by ${b.author} · ${b.month} · hosted by ${b.hosted_by}</div>${b.note?`<div class="pr-note">"${b.note}"</div>`:''}</div>`;
+
+  // fetch ratings for each past read month
+  const months = [...new Set(data.map(b => b.month))];
+  const { data: allRatings } = await sb.from('ratings').select('*').in('month', months);
+
+  const avgByMonth = {};
+  months.forEach(m => {
+    const mRatings = (allRatings || []).filter(r => r.month === m);
+    if (mRatings.length > 0) {
+      avgByMonth[m] = (mRatings.reduce((s,r) => s+r.rating, 0) / mRatings.length).toFixed(1);
+    }
+  });
+
+  container.innerHTML = data.map(b => {
+    const avg = avgByMonth[b.month];
+    const fullStars = avg ? Math.round(parseFloat(avg)) : 0;
+    const starsHtml = avg ? `<div class="pr-stars" style="margin-top:4px;">
+      <span style="color:#f59e0b;">${'⭐'.repeat(fullStars)}${'☆'.repeat(5-fullStars)}</span>
+      <span style="font-size:.72rem;color:var(--muted);margin-left:4px;">${avg} / 5</span>
+    </div>` : '';
+    return `<div class="past-read">
+      <div class="pr-title" style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="openBookArchive('${b.month}','${b.title.replace(/'/g,"\\'")}')">
+        ${b.title}
+      </div>
+      <div class="pr-meta">${b.author ? 'by '+b.author+' · ' : ''}${b.month}${b.hosted_by ? ' · hosted by '+b.hosted_by : ''}</div>
+      ${starsHtml}
+      ${b.note?`<div class="pr-note">"${b.note}"</div>`:''}
+    </div>`;
   }).join('');
 }
 
@@ -998,7 +1281,394 @@ async function loadDiscussionQuestions() {
   }
 
   window.discussionMonth = nextMeeting.month;
+
+  // load ratings
+  loadRatings();
 }
+
+// RATINGS
+async function loadRatings() {
+  const month = window.discussionMonth;
+  if (!month) return;
+  const { data } = await sb.from('ratings').select('*').eq('month', month).order('created_at');
+
+  // Update discuss tab ratings display
+  const container = document.getElementById('ratingsDisplay');
+  if (container) {
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="no-content" style="margin-bottom:0;">No ratings yet — be the first!</div>';
+    } else {
+      const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length).toFixed(1);
+      const stars = n => '⭐'.repeat(n) + '☆'.repeat(5 - n);
+      container.innerHTML = `
+        <div class="rating-avg"><div class="avg-num">${avg}</div><div class="avg-label">avg · ${data.length} rating${data.length !== 1 ? 's' : ''}</div></div>
+        ${data.map(r => `<div class="rating-row"><span class="rating-name">${r.member_name}</span><span class="rating-stars">${stars(r.rating)}</span></div>`).join('')}
+      `;
+    }
+  }
+
+  // Update home tab rating section (on Current Book tab)
+  const homeSection = document.getElementById('homeRatingSection');
+  if (homeSection) {
+    homeSection.style.display = 'block';
+    if (!data || data.length === 0) {
+      document.getElementById('homeRatingAvg').textContent = '';
+      document.getElementById('homeRatingStars').textContent = '';
+      document.getElementById('homeRatingCount').textContent = 'No ratings yet — be the first!';
+      const dispEl = document.getElementById('homeRatingStarsDisplay');
+      if (dispEl) dispEl.textContent = '';
+    } else {
+      const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length);
+      const avgStr = avg.toFixed(1);
+      const fullStars = Math.round(avg);
+      const starsStr = '⭐'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
+      document.getElementById('homeRatingAvg').textContent = avgStr + ' / 5';
+      document.getElementById('homeRatingStars').textContent = starsStr;
+      document.getElementById('homeRatingCount').textContent = data.length + ' rating' + (data.length !== 1 ? 's' : '') + ' from the group';
+      // also update the inline stars on the home page currently reading card
+      const dispEl = document.getElementById('homeRatingStarsDisplay');
+      if (dispEl) dispEl.textContent = starsStr;
+    }
+  }
+}
+
+document.getElementById('addRatingBtn').addEventListener('click', async function() {
+  const member_name = document.getElementById('ratingName').value;
+  const rating = parseInt(document.getElementById('ratingScore').value);
+  const month = window.discussionMonth;
+  if (!member_name) { alert('Select your name!'); return; }
+  if (!rating) { alert('Select a star rating!'); return; }
+  if (!month) { alert('No active meeting found!'); return; }
+  const { error } = await sb.from('ratings').upsert({ month, member_name, rating }, { onConflict: 'month,member_name' });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('ratingSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('ratingSuccess').style.display = 'none', 3000);
+  loadRatings();
+});
+
+document.getElementById('homeRatingBtn').addEventListener('click', async function() {
+  const member_name = document.getElementById('homeRatingName').value;
+  const rating = parseInt(document.getElementById('homeRatingScore').value);
+  const month = window.discussionMonth;
+  if (!member_name) { alert('Select your name!'); return; }
+  if (!rating) { alert('Select a rating!'); return; }
+  if (!month) { alert('No active meeting found!'); return; }
+  const { error } = await sb.from('ratings').upsert({ month, member_name, rating }, { onConflict: 'month,member_name' });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('homeRatingSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('homeRatingSuccess').style.display = 'none', 3000);
+  loadRatings();
+});
+
+// CHAPTER NOTES
+async function loadChapterNotes() {
+  const month = window.discussionMonth;
+  if (!month) return;
+  const { data } = await sb.from('chapter_comments').select('*').eq('month', month).order('chapter').order('created_at');
+  const container = document.getElementById('chaptersList');
+  if (!container) return;
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="no-content">No chapter notes yet!</div>';
+    return;
+  }
+  // group by chapter
+  const byChapter = {};
+  data.forEach(n => {
+    if (!byChapter[n.chapter]) byChapter[n.chapter] = [];
+    byChapter[n.chapter].push(n);
+  });
+  container.innerHTML = Object.keys(byChapter).sort().map(chapter => `
+    <div class="chapter-block" id="chapter-${chapter.replace(/\s+/g,'-')}">
+      <div class="chapter-header" onclick="toggleChapter('${chapter.replace(/\s+/g,'-')}')">
+        <h3>${chapter}</h3>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="chapter-count">${byChapter[chapter].length} note${byChapter[chapter].length !== 1 ? 's' : ''}</span>
+          <span class="chapter-chevron">▶</span>
+        </div>
+      </div>
+      <div class="chapter-notes">
+        ${byChapter[chapter].map(n => `
+          <div class="chapter-note">
+            <div class="chapter-note-header">
+              <span class="chapter-note-type ${n.type}">${n.type === 'question' ? '❓ Question' : '💬 Comment'}</span>
+              <span class="chapter-note-who">${n.member_name}</span>
+              ${n.page_number ? `<span class="chapter-note-page">p.${n.page_number}</span>` : ''}
+            </div>
+            <div class="chapter-note-text">${n.comment}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleChapter(id) {
+  const block = document.getElementById('chapter-' + id);
+  if (block) block.classList.toggle('open');
+}
+
+if (document.getElementById('addNoteBtn')) document.getElementById('addNoteBtn').addEventListener('click', async function() {
+  const chapter = document.getElementById('noteChapter').value.trim();
+  const page_number = document.getElementById('notePage').value.trim();
+  const type = document.getElementById('noteType').value;
+  const member_name = document.getElementById('noteName').value.trim();
+  const comment = document.getElementById('noteComment').value.trim();
+  const month = window.discussionMonth;
+  if (!chapter) { alert('Enter a chapter!'); return; }
+  if (!member_name) { alert('Enter your name!'); return; }
+  if (!comment) { alert('Enter your note!'); return; }
+  if (!month) { alert('No active meeting found!'); return; }
+  const { error } = await sb.from('chapter_comments').insert({ month, chapter, page_number, type, member_name, comment });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('noteComment').value = '';
+  document.getElementById('notePage').value = '';
+  document.getElementById('noteSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('noteSuccess').style.display = 'none', 3000);
+  loadChapterNotes();
+});
+
+// FORUM
+const REACTIONS = ['❤️','🔥','😂','😮','👏','💀'];
+
+function renderForumPosts(posts, replies, reactions, opts) {
+  opts = opts || {};
+  const repliesByPost = {};
+  (replies || []).forEach(r => { if (!repliesByPost[r.post_id]) repliesByPost[r.post_id] = []; repliesByPost[r.post_id].push(r); });
+  const reactionsByPost = {};
+  (reactions || []).forEach(r => {
+    if (!reactionsByPost[r.post_id]) reactionsByPost[r.post_id] = {};
+    if (!reactionsByPost[r.post_id][r.emoji]) reactionsByPost[r.post_id][r.emoji] = 0;
+    reactionsByPost[r.post_id][r.emoji]++;
+  });
+  return posts.map(post => {
+    const spoiler = post.has_spoiler;
+    const postReplies = repliesByPost[post.id] || [];
+    const postReactions = reactionsByPost[post.id] || {};
+    const reactionBtns = REACTIONS.map(emoji => `
+      <button class="reaction-btn" onclick="toggleReaction('${post.id}','${emoji}',this)">
+        <span class="reaction-emoji">${emoji}</span>
+        <span class="reaction-count">${postReactions[emoji] || ''}</span>
+      </button>`).join('');
+    const replyItems = postReplies.map(r => `
+      <div class="forum-reply">
+        <div class="forum-reply-meta">${r.author}</div>
+        <div class="forum-reply-body">${r.body}</div>
+      </div>`).join('');
+    return `
+    <div class="forum-post">
+      <div class="forum-post-header">
+        <div class="forum-post-meta">
+          ${spoiler ? '<span class="forum-badge-spoiler">⚠️ Spoiler</span>' : ''}
+          ${post.chapter ? `<span class="forum-badge-chapter">${post.chapter}</span>` : ''}
+          ${post.page_number ? `<span class="forum-badge-page">p.${post.page_number}</span>` : ''}
+          <span class="forum-author">${post.author}</span>
+        </div>
+        <div class="forum-title">${post.title}</div>
+        ${spoiler
+          ? `<button class="forum-spoiler-reveal" onclick="revealSpoiler(this)">👀 Tap to reveal spoiler</button>
+             <div class="forum-body forum-body-hidden">${post.body}</div>`
+          : `<div class="forum-body">${post.body}</div>`
+        }
+      </div>
+      <div class="forum-post-footer">${reactionBtns}</div>
+      <div class="forum-replies">
+        ${replyItems}
+        ${opts.showReplyForm !== false ? `
+        <div class="forum-reply-form">
+          <select class="forum-reply-input" id="replyAuthor-${post.id}" style="max-width:120px;padding:6px 8px;">
+            <option value="" disabled selected>Name</option>
+            <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+            <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+            <option>Tricia</option><option>Val</option>
+          </select>
+          <input class="forum-reply-input" id="replyBody-${post.id}" placeholder="Reply..."/>
+          <button class="forum-reply-submit" onclick="submitReply('${post.id}')">↑</button>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadForum() {
+  const month = window.discussionMonth;
+  if (!month) return;
+  const [{ data: posts }, { data: replies }, { data: reactions }] = await Promise.all([
+    sb.from('forum_posts').select('*').eq('month', month).order('created_at', { ascending: false }),
+    sb.from('forum_replies').select('*').eq('month', month).order('created_at'),
+    sb.from('forum_reactions').select('*').eq('month', month)
+  ]);
+
+  // populate discuss tab (if forum section exists there)
+  const container = document.getElementById('forumPosts');
+  if (container) {
+    if (!posts || posts.length === 0) {
+      container.innerHTML = '<div class="no-content">No posts yet — be the first!</div>';
+    } else {
+      container.innerHTML = renderForumPosts(posts, replies, reactions);
+    }
+  }
+
+  // populate home feed
+  const homeCard = document.getElementById('homeForum');
+  const homeFeed = document.getElementById('homeForumFeed');
+  if (homeCard && homeFeed) {
+    if (posts && posts.length > 0) {
+      homeCard.style.display = 'block';
+      homeFeed.innerHTML = renderForumPosts(posts, replies, reactions);
+    } else {
+      homeCard.style.display = 'none';
+    }
+  }
+}
+
+function revealSpoiler(btn) {
+  const body = btn.nextElementSibling;
+  body.classList.remove('forum-body-hidden');
+  btn.style.display = 'none';
+}
+
+// BOOK ARCHIVE
+async function openBookArchive(month, title) {
+  const page = document.getElementById('bookArchivePage');
+  const content = document.getElementById('archiveContent');
+  page.style.display = 'block';
+  page.scrollTop = 0;
+  content.innerHTML = '<div class="no-content" style="padding:40px 0;text-align:center;">Loading archive...</div>';
+
+  const [
+    { data: ratings },
+    { data: questions },
+    { data: posts },
+    { data: replies },
+    { data: reactions },
+    { data: chapterNotes }
+  ] = await Promise.all([
+    sb.from('ratings').select('*').eq('month', month),
+    sb.from('discussions').select('*').eq('month', month).order('created_at'),
+    sb.from('forum_posts').select('*').eq('month', month).order('created_at', { ascending: false }),
+    sb.from('forum_replies').select('*').eq('month', month).order('created_at'),
+    sb.from('forum_reactions').select('*').eq('month', month),
+    sb.from('chapter_comments').select('*').eq('month', month).order('chapter').order('created_at')
+  ]);
+
+  // ratings section
+  const stars = n => '⭐'.repeat(n) + '☆'.repeat(5 - n);
+  const avgRating = ratings && ratings.length > 0
+    ? (ratings.reduce((s,r) => s+r.rating, 0) / ratings.length).toFixed(1) : null;
+
+  const ratingsHtml = ratings && ratings.length > 0
+    ? `<div class="rating-avg" style="margin-bottom:12px;"><div class="avg-num">${avgRating}</div><div class="avg-label">avg · ${ratings.length} ratings</div></div>
+       ${ratings.map(r => `<div class="rating-row"><span class="rating-name">${r.member_name}</span><span class="rating-stars">${stars(r.rating)}</span></div>`).join('')}`
+    : '<div class="no-content">No ratings yet.</div>';
+
+  // questions section
+  const questionsHtml = questions && questions.length > 0
+    ? questions.map(q => `<div class="rule-item"><span class="marker">💬</span><div><div>${q.question}</div>${q.asked_by ? `<div style="font-size:.72rem;color:var(--muted);margin-top:2px;">— ${q.asked_by}</div>` : ''}</div></div>`).join('')
+    : '<div class="no-content">No questions were added.</div>';
+
+  // chapter notes section
+  const byChapter = {};
+  (chapterNotes || []).forEach(n => { if (!byChapter[n.chapter]) byChapter[n.chapter] = []; byChapter[n.chapter].push(n); });
+  const chapterHtml = Object.keys(byChapter).length > 0
+    ? Object.keys(byChapter).sort().map(ch => `
+        <div style="margin-bottom:10px;">
+          <div style="font-size:.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">${ch}</div>
+          ${byChapter[ch].map(n => `<div class="chapter-note">
+            <div class="chapter-note-header">
+              <span class="chapter-note-type ${n.type}">${n.type === 'question' ? '❓' : '💬'} ${n.type}</span>
+              <span class="chapter-note-who">${n.member_name}</span>
+              ${n.page_number ? `<span class="chapter-note-page">p.${n.page_number}</span>` : ''}
+            </div>
+            <div class="chapter-note-text">${n.comment}</div>
+          </div>`).join('')}
+        </div>`).join('')
+    : '<div class="no-content">No chapter notes were added.</div>';
+
+  // forum posts
+  const forumHtml = posts && posts.length > 0
+    ? renderForumPosts(posts, replies, reactions, { showReplyForm: false })
+    : '<div class="no-content">No forum posts for this book.</div>';
+
+  content.innerHTML = `
+    <div style="margin-bottom:28px;">
+      <h1 style="font-family:'Lexend',sans-serif;font-weight:800;font-size:1.6rem;color:var(--ink);margin-bottom:4px;">${title}</h1>
+      <p style="font-size:.82rem;color:var(--muted);">${month}</p>
+    </div>
+
+    <div class="section boxed tint-mid" style="margin-bottom:16px;">
+      <div class="section-head"><h2>Ratings ⭐</h2></div>
+      ${ratingsHtml}
+    </div>
+
+    <div class="section boxed tint-blue" style="margin-bottom:16px;">
+      <div class="section-head"><h2>Discussion Questions 💬</h2></div>
+      ${questionsHtml}
+    </div>
+
+    <div class="section boxed" style="margin-bottom:16px;">
+      <div class="section-head"><h2>Chapter Notes 📖</h2></div>
+      ${chapterHtml}
+    </div>
+
+    <div class="section boxed tint-mid" style="margin-bottom:16px;">
+      <div class="section-head"><h2>Forum Posts</h2></div>
+      ${forumHtml}
+    </div>
+  `;
+}
+
+function closeBookArchive() {
+  document.getElementById('bookArchivePage').style.display = 'none';
+}
+
+async function toggleReaction(postId, emoji, btn) {
+  const month = window.discussionMonth;
+  if (!month) return;
+  const member = prompt('Your name?');
+  if (!member) return;
+  const { data: existing } = await sb.from('forum_reactions').select('id').eq('post_id', postId).eq('emoji', emoji).eq('member_name', member);
+  if (existing && existing.length > 0) {
+    await sb.from('forum_reactions').delete().eq('id', existing[0].id);
+  } else {
+    await sb.from('forum_reactions').insert({ month, post_id: postId, emoji, member_name: member });
+  }
+  loadForum();
+}
+
+async function submitReply(postId) {
+  const month = window.discussionMonth;
+  const author = document.getElementById('replyAuthor-' + postId).value;
+  const body = document.getElementById('replyBody-' + postId).value.trim();
+  if (!author) { alert('Pick your name!'); return; }
+  if (!body) { alert('Type a reply!'); return; }
+  const { error } = await sb.from('forum_replies').insert({ month, post_id: postId, author, body });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('replyBody-' + postId).value = '';
+  loadForum();
+}
+
+document.getElementById('addPostBtn').addEventListener('click', async function() {
+  const title = document.getElementById('postTitle').value.trim();
+  const author = document.getElementById('postAuthor').value;
+  const body = document.getElementById('postBody').value.trim();
+  const chapter = document.getElementById('postChapter').value.trim();
+  const page_number = document.getElementById('postPage').value.trim();
+  const has_spoiler = document.getElementById('postSpoiler').checked;
+  const month = window.discussionMonth;
+  if (!title) { alert('Add a title!'); return; }
+  if (!author) { alert('Select your name!'); return; }
+  if (!body) { alert('Write something!'); return; }
+  if (!month) { alert('No active meeting found!'); return; }
+  const { error } = await sb.from('forum_posts').insert({ month, title, author, body, chapter, page_number, has_spoiler });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postBody').value = '';
+  document.getElementById('postChapter').value = '';
+  document.getElementById('postPage').value = '';
+  document.getElementById('postSpoiler').checked = false;
+  document.getElementById('postSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('postSuccess').style.display = 'none', 3000);
+  loadForum();
+});
 
 document.getElementById('addDiscussionQBtn').addEventListener('click', async function() {
   const question = document.getElementById('newDiscussionQ').value.trim();
