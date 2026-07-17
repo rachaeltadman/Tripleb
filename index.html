@@ -2,8 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Triple B Book Club</title>
+
+<!-- PWA -->
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Triple B"/>
+<meta name="theme-color" content="#f7f4ef"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -28,19 +38,19 @@
   </script>
 <style>
 :root {
-  --bg:          #1a1d23;
-  --surface:     #22262f;
-  --surface-2:   #2a2f3a;
-  --border:      #2e3340;
-  --ink:         #e8eaf0;
-  --muted:       #8892a4;
-  --accent:      #0047AB;
-  --accent-soft: #0d1f3c;
-  --accent-2:    #4169E1;
-  --warm:        #3a7bd5;
-  --warm-soft:   #0f1e35;
-  --success:     #2d8a5e;
-  --success-soft:#0d2419;
+  --bg:          #f7f4ef;
+  --surface:     #ffffff;
+  --surface-2:   #f0ece4;
+  --border:      #ddd8ce;
+  --ink:         #1c2a1e;
+  --muted:       #7a8c72;
+  --accent:      #2d5a27;
+  --accent-soft: #e8f0e6;
+  --accent-2:    #4a8c42;
+  --warm:        #3d7035;
+  --warm-soft:   #edf5eb;
+  --success:     #2d6e3e;
+  --success-soft:#e6f4eb;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -49,8 +59,6 @@ body {
   background:var(--bg);
   color:var(--ink);
   min-height:100vh;
-  background-image: radial-gradient(circle at 1px 1px, #4169E115 1px, transparent 0);
-  background-size: 24px 24px;
 }
 h1,h2,h3 { font-family:'Playfair Display',serif; }
 
@@ -60,353 +68,283 @@ h1,h2,h3 { font-family:'Playfair Display',serif; }
   display:flex; flex-direction:column; align-items:center;
   justify-content:center; padding:24px; text-align:center;
 }
-.pw-logo { font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
-.pw-title { font-family:'Lexend',sans-serif; font-weight:500; font-size:2rem; color:var(--ink); margin-bottom:6px; }
-.pw-sub { font-size:.82rem; color:var(--muted); margin-bottom:28px; }
+.pw-logo { width:140px; height:auto; margin-bottom:20px; }
+.pw-sub { font-size:.84rem; color:var(--muted); margin-bottom:24px; letter-spacing:.04em; }
 .pw-input {
-  width:100%; max-width:280px; padding:12px 16px; border-radius:8px;
-  border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif;
-  font-size:.95rem; color:var(--ink); text-align:center; outline:none; margin-bottom:10px;
+  width:100%; max-width:280px; padding:12px 16px; border-radius:4px;
+  border:1px solid var(--border); background:var(--surface);
+  font-family:'Lexend',sans-serif; font-size:.95rem; color:var(--ink);
+  text-align:center; outline:none; margin-bottom:10px;
 }
-.pw-input:focus { border-color:var(--accent-2); }
+.pw-input:focus { border-color:var(--accent); }
 .pw-btn {
-  width:100%; max-width:280px; padding:12px; border-radius:8px; border:none;
+  width:100%; max-width:280px; padding:12px; border-radius:4px; border:none;
   background:var(--accent); color:white; font-family:'Lexend',sans-serif;
-  font-weight:600; font-size:.85rem; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
+  font-weight:600; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
 }
 .pw-btn:hover { background:var(--accent-2); }
-.pw-error { color:#e05555; font-size:.8rem; margin-top:10px; display:none; }
+.pw-error { color:#b94a4a; font-size:.8rem; margin-top:8px; display:none; }
 
 /* ANIMATIONS */
-@keyframes rise { to { opacity:1; transform:translateY(0); } }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse  { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+.tab-content.active > * { animation:fadeIn .3s ease forwards; opacity:0; }
+.tab-content.active > *:nth-child(2) { animation-delay:.06s; }
+.tab-content.active > *:nth-child(3) { animation-delay:.12s; }
+.tab-content.active > *:nth-child(4) { animation-delay:.18s; }
+.tab-content.active > *:nth-child(5) { animation-delay:.22s; }
 
 /* HEADER */
-.site-header {
-  border-bottom:1px solid var(--border);
-  background:var(--surface);
-  padding:28px 24px 0;
-  text-align:center;
-}
-.site-header-inner {
-  max-width:760px; margin:0 auto;
-}
-.site-wordmark {
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.6rem,6vw,2.4rem);
-  font-weight:700;
-  color:var(--ink);
-  letter-spacing:.04em;
-  line-height:1;
-  margin-bottom:6px;
-}
-.site-tagline { font-size:.72rem; color:var(--muted); letter-spacing:.18em; text-transform:uppercase; margin-bottom:0; }
+.site-header { background:var(--surface); border-bottom:1px solid var(--border); padding:20px 24px 0; text-align:center; }
+.site-header-inner { max-width:680px; margin:0 auto; }
+.site-logo { width:150px; max-width:55%; height:auto; display:block; margin:0 auto 6px; }
+.site-tagline { font-size:.66rem; color:var(--muted); letter-spacing:.18em; text-transform:uppercase; padding-bottom:2px; }
 
 /* NAV */
-.nav {
-  display:flex; gap:0; max-width:760px; margin:0 auto;
-  padding:0 16px; overflow-x:auto; scrollbar-width:none;
-  border-top:1px solid var(--border);
-  justify-content:center; background:var(--surface);
-}
+.nav { background:var(--surface); border-bottom:1px solid var(--border); display:flex; overflow-x:auto; scrollbar-width:none; justify-content:center; }
 .nav::-webkit-scrollbar { display:none; }
 .nav-link {
-  flex-shrink:0; padding:13px 16px; background:none; border:none;
+  flex-shrink:0; padding:12px 13px; background:none; border:none;
   border-bottom:2px solid transparent; margin-bottom:-1px;
-  font-family:'Lexend',sans-serif; font-weight:700; font-size:.78rem;
-  color:var(--muted); cursor:pointer; transition:color .15s, border-color .15s;
-  letter-spacing:.08em; text-transform:uppercase;
+  font-family:'Lexend',sans-serif; font-weight:600; font-size:.68rem;
+  color:var(--muted); cursor:pointer; transition:color .2s, border-color .2s;
+  letter-spacing:.09em; text-transform:uppercase;
 }
 .nav-link:hover { color:var(--ink); }
-.nav-link.active { color:var(--accent-2); border-bottom-color:var(--accent-2); }
+.nav-link.active { color:var(--accent); border-bottom-color:var(--accent); }
 
 /* PAGE */
 .page-bg { background:var(--bg); }
-.page { max-width:760px; margin:0 auto; padding:32px 24px 80px; }
-.tab-content { display:none; flex-direction:column; gap:20px; }
+.page { max-width:680px; margin:0 auto; padding:36px 24px 100px; }
+.tab-content { display:none; flex-direction:column; }
 .tab-content.active { display:flex; }
 
-/* SECTIONS */
-.section {
-  opacity:0; transform:translateY(8px); animation:rise .35s ease forwards;
-  padding-bottom:28px; border-bottom:1px solid var(--border);
-}
+/* SECTIONS — editorial, no boxes */
+.section { padding:28px 0; border-bottom:1px solid var(--border); }
+.section:first-child { padding-top:0; }
 .section:last-child { border-bottom:none; padding-bottom:0; }
-.section.boxed {
-  border:1px solid var(--border); border-radius:14px; padding:24px;
-  background:var(--surface);
-}
-.section.boxed.tint-blue  { background:var(--warm-soft); border-color:#1a3a6b; }
-.section.boxed.tint-mid   { background:var(--accent-soft); border-color:#1a2d52; }
-.section.boxed.tint-dark  { background:var(--surface-2); border-color:var(--border); }
+.section-eyebrow { display:block; font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--accent-2); margin-bottom:8px; font-family:'Lexend',sans-serif; }
+.section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; gap:12px; flex-wrap:wrap; }
+.section-head h2 { font-family:'Playfair Display',serif; font-weight:700; font-size:1.35rem; color:var(--ink); line-height:1.2; }
+.section-note { font-size:.84rem; color:var(--muted); margin-bottom:14px; line-height:1.6; }
 
-.section:not(.boxed) .section-head h2 { color:var(--ink); }
-.section:not(.boxed) .section-note { color:var(--muted); }
-.section:not(.boxed) .badge.muted { background:var(--surface); color:var(--muted); border-color:var(--border); }
-
-.section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
-.section-head h2 { font-weight:600; font-size:1.2rem; color:var(--ink); letter-spacing:.01em; font-family:'Playfair Display',serif; }
-.section-eyebrow { font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-2); margin-bottom:6px; display:block; font-weight:700; }
-.section-note { font-size:.82rem; color:var(--muted); margin-bottom:16px; line-height:1.5; }
-
-.badge { font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; }
-.badge.accent  { background:var(--accent-soft); color:var(--accent-2); border:1px solid #1a3a6b; }
-.badge.warm    { background:var(--warm-soft); color:var(--warm); border:1px solid #1a3560; }
+.badge { font-size:.58rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; padding:3px 8px; border-radius:3px; font-family:'Lexend',sans-serif; }
+.badge.accent  { background:var(--accent-soft); color:var(--accent); }
+.badge.warm    { background:var(--warm-soft); color:var(--warm); }
 .badge.muted   { background:var(--surface-2); color:var(--muted); border:1px solid var(--border); }
-.badge.success { background:var(--success-soft); color:#4ade80; border:1px solid #1a3a2a; }
+.badge.success { background:var(--success-soft); color:var(--success); }
 
-/* ENTRY ROWS */
-.entry { display:flex; align-items:flex-start; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+.entry { display:flex; align-items:flex-start; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); }
+.entry:first-child { padding-top:0; }
 .entry:last-child { border-bottom:none; }
-.entry-marker { width:6px; height:6px; border-radius:50%; background:var(--border); flex-shrink:0; margin-top:7px; }
-.entry-marker.active { background:var(--accent-2); box-shadow:0 0 6px var(--accent-2); }
-.entry-body .entry-title { font-weight:600; font-size:.92rem; color:var(--ink); }
-.entry-body .entry-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; line-height:1.5; }
-.entry-tag {
-  margin-left:auto; font-size:.64rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
-  padding:3px 9px; border-radius:4px; white-space:nowrap; flex-shrink:0;
-  background:var(--surface-2); color:var(--muted); border:1px solid var(--border);
-}
-.entry-tag.active { background:var(--accent-soft); color:var(--accent-2); border-color:#1a3a6b; }
+.entry-marker { width:5px; height:5px; border-radius:50%; background:var(--border); flex-shrink:0; margin-top:8px; }
+.entry-marker.active { background:var(--accent-2); box-shadow:0 0 0 3px var(--accent-soft); }
+.entry-body .entry-title { font-weight:600; font-size:.9rem; color:var(--ink); }
+.entry-body .entry-meta  { font-size:.76rem; color:var(--muted); margin-top:3px; line-height:1.5; }
+.entry-tag { margin-left:auto; font-size:.6rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:3px; white-space:nowrap; flex-shrink:0; background:var(--surface-2); color:var(--muted); font-family:'Lexend',sans-serif; }
+.entry-tag.active { background:var(--accent-soft); color:var(--accent); }
 
-/* CURRENTLY READING HOME CARD */
-.currently-reading-home { padding:4px 0; }
-.cr-book { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; color:var(--ink); line-height:1.3; margin-bottom:4px; }
-.cr-meta { font-size:.8rem; color:var(--muted); }
-
-/* RULES LIST */
-.rule-list { list-style:none; }
-.rule-item { display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); font-size:.88rem; color:var(--ink); line-height:1.55; }
-.rule-item:last-child { border-bottom:none; }
-.rule-item .marker { color:var(--accent); font-weight:600; flex-shrink:0; }
+.rule-list { list-style:none; display:flex; flex-direction:column; gap:11px; }
+.rule-item { display:flex; gap:12px; align-items:flex-start; font-size:.88rem; color:var(--ink); line-height:1.5; }
+.rule-item .marker { flex-shrink:0; font-size:.95rem; margin-top:1px; }
 
 /* FORMS */
-.field-label { font-size:.72rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:block; }
 .input {
-  width:100%; padding:11px 14px; border-radius:8px; border:1px solid var(--border);
-  background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.9rem;
+  width:100%; padding:10px 13px; border-radius:4px; border:1px solid var(--border);
+  background:var(--surface); font-family:'Lexend',sans-serif; font-size:.88rem;
   color:var(--ink); margin-bottom:10px; outline:none; transition:border-color .15s;
 }
-.input:focus { border-color:var(--accent-2); }
+.input:focus { border-color:var(--accent); }
 .input::placeholder { color:var(--muted); }
 select.input {
   appearance:none; -webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 14px center; padding-right:34px;
-  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8c72' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; cursor:pointer;
 }
+textarea.input { resize:none; }
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .two-col .input { margin-bottom:0; }
 
-.btn {
-  padding:11px 22px; border-radius:8px; border:none;
-  font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem;
-  letter-spacing:.03em; cursor:pointer; transition:all .15s; margin-top:6px;
-  background:var(--accent); color:white;
-}
+.btn { display:inline-block; padding:9px 20px; border-radius:4px; border:none; font-family:'Lexend',sans-serif; font-weight:600; font-size:.78rem; letter-spacing:.05em; cursor:pointer; transition:all .2s; margin-top:4px; background:var(--accent); color:white; }
 .btn:hover { background:var(--accent-2); }
-.btn-secondary { background:var(--surface-2); color:var(--ink); border:1px solid var(--border); }
-.btn-secondary:hover { border-color:var(--accent-2); color:var(--accent-2); background:var(--accent-soft); }
-.btn-full { width:100%; }
-
-.success-msg {
-  font-size:.82rem; color:#4ade80; background:var(--success-soft);
-  border-radius:8px; padding:10px 14px; margin-top:10px; display:none;
-  border:1px solid #1a3a2a;
-}
-.no-content { color:var(--muted); font-size:.86rem; padding:8px 0; font-style:italic; }
+.btn-secondary { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+.btn-secondary:hover { background:var(--accent-soft); }
+.btn-full { width:100%; text-align:center; }
+.success-msg { font-size:.82rem; color:var(--success); background:var(--success-soft); border-radius:4px; padding:10px 14px; margin-top:8px; display:none; border-left:3px solid var(--success); }
+.no-content { color:var(--muted); font-size:.86rem; padding:6px 0; font-style:italic; }
+.field-label { font-size:.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px; display:block; }
 
 /* VOTING */
-.book-option {
-  display:flex; align-items:center; justify-content:space-between; padding:14px 16px;
-  border:1px solid var(--border); border-radius:10px; margin-bottom:10px; cursor:pointer;
-  transition:border-color .15s, background .15s; background:var(--surface);
-}
-.book-option:hover { border-color:var(--accent-2); }
-.book-option.selected { border-color:var(--accent-2); background:var(--accent-soft); }
-.book-option .book-name { font-weight:600; font-size:.9rem; color:var(--ink); }
-.vote-bar { height:3px; border-radius:2px; background:var(--border); margin-top:7px; overflow:hidden; }
-.vote-bar-fill { height:100%; background:var(--accent-2); transition:width .4s ease; }
-.vote-count { font-size:.74rem; color:var(--muted); flex-shrink:0; }
-.book-option.selected .vote-count { color:var(--accent-2); font-weight:600; }
-
-.book-option-card {
-  border:1px solid var(--border); border-radius:12px; margin-bottom:14px; cursor:pointer;
-  transition:border-color .15s, background .15s; overflow:hidden; background:var(--surface);
-}
-.book-option-card:hover { border-color:var(--accent-2); }
-.book-option-card.selected { border-color:var(--accent-2); background:var(--accent-soft); }
-.boc-inner { display:flex; gap:14px; padding:14px; align-items:flex-start; }
-.boc-cover { width:64px; height:96px; object-fit:cover; border-radius:6px; flex-shrink:0; box-shadow:0 2px 12px rgba(0,0,0,.4); }
-.boc-cover-placeholder { width:64px; height:96px; background:var(--accent-soft); border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+.book-option-card { border:1px solid var(--border); border-radius:4px; margin-bottom:10px; cursor:pointer; transition:border-color .15s, background .15s; background:var(--surface); }
+.book-option-card:hover { border-color:var(--accent); }
+.book-option-card.selected { border-color:var(--accent); background:var(--accent-soft); }
+.boc-inner { display:flex; gap:13px; padding:13px; align-items:flex-start; }
+.boc-cover { width:52px; height:78px; object-fit:cover; border-radius:2px; flex-shrink:0; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+.boc-cover-placeholder { width:52px; height:78px; background:var(--surface-2); border-radius:2px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
 .boc-info { flex:1; min-width:0; }
-.boc-title { font-weight:700; font-size:.94rem; color:var(--ink); margin-bottom:2px; }
-.boc-author { font-size:.78rem; color:var(--muted); margin-bottom:6px; }
-.boc-desc { font-size:.8rem; color:var(--muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:6px; }
-.boc-footer { margin-top:4px; }
+.boc-title { font-weight:700; font-size:.9rem; color:var(--ink); margin-bottom:2px; font-family:'Playfair Display',serif; }
+.boc-author { font-size:.74rem; color:var(--muted); margin-bottom:5px; }
+.boc-desc { font-size:.76rem; color:var(--muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.vote-bar { height:2px; border-radius:2px; background:var(--border); margin-top:8px; overflow:hidden; }
+.vote-bar-fill { height:100%; background:var(--accent-2); transition:width .4s ease; }
+.vote-count { font-size:.7rem; color:var(--muted); margin-top:3px; }
 
 /* SHELF */
-.shelf-item { display:flex; align-items:baseline; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.shelf-item { display:flex; align-items:baseline; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
 .shelf-item:last-child { border-bottom:none; }
-.shelf-item .title  { font-weight:600; font-size:.9rem; color:var(--ink); }
-.shelf-item .author { font-size:.8rem; color:var(--muted); margin-left:6px; }
-.shelf-item .nom    { margin-left:auto; font-size:.72rem; color:var(--accent-2); white-space:nowrap; flex-shrink:0; }
+.shelf-item .title  { font-weight:600; font-size:.9rem; color:var(--ink); font-family:'Playfair Display',serif; }
+.shelf-item .author { font-size:.76rem; color:var(--muted); }
+.shelf-item .nom    { margin-left:auto; font-size:.7rem; color:var(--accent-2); white-space:nowrap; flex-shrink:0; }
 
 /* PAST READS */
-.past-read { padding:14px 0; border-bottom:1px solid var(--border); }
+.past-read { padding:12px 0; border-bottom:1px solid var(--border); }
 .past-read:last-child { border-bottom:none; }
-.past-read .pr-title { font-weight:600; font-size:.92rem; color:var(--ink); }
-.past-read .pr-meta  { font-size:.78rem; color:var(--muted); margin-top:3px; }
-.past-read .pr-stars { color:#f59e0b; font-size:.85rem; margin-top:5px; letter-spacing:.05em; }
-.past-read .pr-note  { font-size:.8rem; color:var(--muted); font-style:italic; margin-top:5px; }
+.past-read .pr-title { font-weight:700; font-size:.94rem; color:var(--ink); font-family:'Playfair Display',serif; cursor:pointer; }
+.past-read .pr-title:hover { color:var(--accent); text-decoration:underline; }
+.past-read .pr-meta  { font-size:.74rem; color:var(--muted); margin-top:3px; }
+.past-read .pr-stars { color:#b8860b; font-size:.84rem; margin-top:4px; }
+.past-read .pr-note  { font-size:.78rem; color:var(--muted); font-style:italic; margin-top:4px; }
 
-/* COUNTDOWN */
-.countdown { display:flex; gap:28px; justify-content:center; margin:18px 0 22px; padding-bottom:18px; border-bottom:1px solid var(--border); }
-.countdown-box { text-align:center; }
-.countdown-box .num { font-family:'Lexend',sans-serif; font-size:2.4rem; font-weight:700; line-height:1; color:var(--accent-2); }
-.countdown-box .lbl { font-size:.66rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-top:4px; }
-.countdown-today { text-align:center; color:var(--accent-2); font-weight:700; font-size:1rem; margin:10px 0 22px; }
+/* COUNTDOWN — editorial big number style */
+.meeting-countdown-display { text-align:center; padding:16px 0 22px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+.meeting-days-number { font-family:'Playfair Display',serif; font-size:5rem; font-weight:700; line-height:1; color:var(--accent); }
+.meeting-days-label { font-size:.66rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-top:4px; font-family:'Lexend',sans-serif; }
+.meeting-today { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--accent); padding:16px 0; text-align:center; }
 
-/* NEXT MEETING DETAILS */
-.next-meeting-details { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
-.nmd-row { display:flex; gap:14px; align-items:baseline; }
-.nmd-label { flex-shrink:0; width:64px; font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-2); }
-.nmd-value { font-size:.92rem; color:var(--ink); font-weight:500; line-height:1.4; }
-.rsvp-block { border-top:1px solid var(--border); padding-top:18px; }
+/* MEETING DETAILS TABLE */
+.nmd-table { width:100%; border-collapse:collapse; }
+.nmd-table td { padding:9px 0; border-bottom:1px solid var(--border); vertical-align:top; }
+.nmd-table tr:last-child td { border-bottom:none; }
+.nmd-table .nmd-label { font-size:.64rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; width:76px; padding-right:14px; font-family:'Lexend',sans-serif; }
+.nmd-table .nmd-value { font-size:.9rem; color:var(--ink); font-weight:500; }
 
 /* RSVP */
-.rsvp-row { display:flex; gap:10px; margin-top:14px; }
-.rsvp-btn {
-  flex:1; padding:11px; border-radius:8px; border:1px solid var(--border);
-  font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; cursor:pointer;
-  transition:all .15s; background:var(--surface-2); color:var(--muted);
-}
-.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:var(--success-soft); border-color:var(--success); color:#4ade80; }
-.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:var(--accent-soft); border-color:var(--accent); color:var(--accent-2); }
-.rsvp-input { width:100%; padding:11px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.9rem; color:var(--ink); outline:none; margin-bottom:10px; }
-.rsvp-input:focus { border-color:var(--accent-2); }
-.rsvp-tally { display:flex; gap:24px; margin-top:18px; }
-.rsvp-tally-box { font-size:.8rem; display:flex; align-items:baseline; gap:5px; }
-.rsvp-tally-box .count { font-family:'Lexend',sans-serif; font-size:.95rem; font-weight:700; display:inline; }
-.rsvp-tally-box.yes .count { color:#4ade80; }
-.rsvp-tally-box.no  .count { color:var(--accent-2); }
-.rsvp-names { font-size:.74rem; color:var(--muted); margin-top:2px; }
+.rsvp-block { margin-top:20px; padding-top:20px; border-top:1px solid var(--border); }
+.rsvp-row { display:flex; gap:10px; margin-top:10px; }
+.rsvp-btn { flex:1; padding:10px; border-radius:4px; border:1px solid var(--border); font-family:'Lexend',sans-serif; font-weight:600; font-size:.8rem; cursor:pointer; transition:all .15s; background:var(--surface); color:var(--muted); }
+.rsvp-btn.yes:hover, .rsvp-btn.yes.active { background:var(--success-soft); border-color:var(--success); color:var(--success); }
+.rsvp-btn.no:hover,  .rsvp-btn.no.active  { background:#fdf0f0; border-color:#c0392b; color:#c0392b; }
+.rsvp-input { width:100%; padding:10px 13px; border-radius:4px; border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--ink); outline:none; margin-bottom:10px; }
+.rsvp-input:focus { border-color:var(--accent); }
+.rsvp-tally { display:flex; gap:28px; margin-top:16px; }
+.rsvp-tally-box { font-size:.78rem; color:var(--muted); }
+.rsvp-tally-box .count { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:700; display:block; line-height:1; margin-bottom:2px; }
+.rsvp-tally-box.yes .count { color:var(--success); }
+.rsvp-tally-box.no  .count { color:#c0392b; }
+.rsvp-names { font-size:.7rem; color:var(--muted); margin-top:2px; }
 
-/* EVENTS CALENDAR */
-.cal-month { display:flex; align-items:flex-start; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
-.cal-month:last-child { border-bottom:none; }
-.cal-month-current .cal-month-label { color:var(--accent-2); }
-.cal-month-label { flex-shrink:0; width:88px; font-size:.72rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); padding-top:2px; }
-.cal-events-col { flex:1; display:flex; flex-direction:column; gap:4px; }
-.cal-empty { font-size:.78rem; color:var(--border); }
-.cal-event { display:flex; align-items:baseline; gap:6px; }
-.cal-icon { font-size:.78rem; flex-shrink:0; }
-.cal-day { flex-shrink:0; font-size:.72rem; font-weight:700; color:var(--accent-2); min-width:18px; }
-.cal-title { font-size:.84rem; color:var(--ink); font-weight:500; }
-.cal-note { font-size:.72rem; color:var(--muted); margin-left:4px; }
+/* CALENDAR GRID */
+.cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.cal-nav h3 { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--ink); }
+.cal-nav-btn { background:none; border:1px solid var(--border); border-radius:4px; padding:5px 12px; cursor:pointer; color:var(--muted); font-size:.9rem; transition:all .15s; font-family:'Lexend',sans-serif; }
+.cal-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+.cal-day-header { background:var(--surface-2); text-align:center; padding:7px 2px; font-size:.6rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); font-family:'Lexend',sans-serif; }
+.cal-day-cell { background:var(--surface); min-height:48px; padding:5px; }
+.cal-day-cell.empty { background:var(--bg); }
+.cal-day-cell.today { background:var(--accent-soft); }
+.cal-day-cell.today .cal-day-num { color:var(--accent); font-weight:700; }
+.cal-day-num { font-size:.74rem; font-weight:500; color:var(--ink); font-family:'Lexend',sans-serif; margin-bottom:3px; }
+.cal-day-cell.empty .cal-day-num { color:var(--border); }
+.cal-dots { display:flex; gap:2px; flex-wrap:wrap; }
+.cal-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.cal-dot.book-club { background:var(--accent); }
+.cal-dot.birthday  { background:#b8860b; }
+.cal-dot.event     { background:var(--accent-2); }
+.cal-day-cell:not(.empty):hover { background:var(--accent-soft); cursor:pointer; }
 
 /* EVENTS HOME */
-.event-item { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--border); }
+.event-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); }
 .event-item:last-child { border-bottom:none; }
-.event-day { flex-shrink:0; min-width:52px; background:var(--accent-soft); color:var(--accent-2); font-weight:700; font-size:.76rem; text-align:center; padding:5px 8px; border-radius:6px; line-height:1.3; }
-.event-body .event-title { font-weight:600; font-size:.9rem; color:var(--ink); }
-.event-body .event-note  { font-size:.76rem; color:var(--muted); margin-top:2px; }
+.event-day { flex-shrink:0; min-width:44px; background:var(--accent-soft); color:var(--accent); font-weight:700; font-size:.72rem; text-align:center; padding:4px 6px; border-radius:3px; line-height:1.3; font-family:'Lexend',sans-serif; }
+.event-body .event-title { font-weight:600; font-size:.88rem; color:var(--ink); }
+.event-body .event-note  { font-size:.74rem; color:var(--muted); margin-top:1px; }
 
 /* RATINGS */
-.rating-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border); font-size:.84rem; }
-.rating-row:last-child { border-bottom:none; }
-.rating-name { font-weight:600; color:var(--ink); }
-.rating-stars { color:#f59e0b; letter-spacing:.05em; }
-.rating-avg { text-align:center; padding:10px 0; font-family:'Lexend',sans-serif; }
-.rating-avg .avg-num { font-size:2rem; font-weight:700; color:var(--accent-2); line-height:1; }
-.rating-avg .avg-label { font-size:.72rem; color:var(--muted); margin-top:2px; letter-spacing:.05em; text-transform:uppercase; }
-
-/* CHAPTER NOTES */
-.chapter-block { margin-bottom:8px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
-.chapter-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; background:var(--surface); transition:background .15s; }
-.chapter-header:hover { background:var(--accent-soft); }
-.chapter-header h3 { font-size:.9rem; font-weight:700; color:var(--ink); }
-.chapter-count { font-size:.72rem; color:var(--muted); }
-.chapter-chevron { font-size:.8rem; color:var(--muted); transition:transform .2s; }
-.chapter-block.open .chapter-chevron { transform:rotate(90deg); }
-.chapter-notes { display:none; border-top:1px solid var(--border); }
-.chapter-block.open .chapter-notes { display:block; }
-.chapter-note { padding:12px 16px; border-bottom:1px solid var(--border); }
-.chapter-note:last-child { border-bottom:none; }
-.chapter-note-header { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
-.chapter-note-type { font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 7px; border-radius:99px; }
-.chapter-note-type.comment { background:var(--accent-soft); color:var(--accent-2); }
-.chapter-note-type.question { background:var(--warm-soft); color:var(--warm); }
-.chapter-note-who { font-size:.76rem; font-weight:600; color:var(--ink); }
-.chapter-note-page { font-size:.72rem; color:var(--muted); margin-left:auto; }
-.chapter-note-text { font-size:.86rem; color:var(--ink); line-height:1.5; }
+.rating-avg-display { text-align:center; padding:8px 0 18px; }
+.rating-avg-display .avg-num { font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:700; color:var(--accent); line-height:1; }
+.rating-avg-display .avg-stars { font-size:1rem; color:#b8860b; margin:4px 0; letter-spacing:.1em; }
+.rating-avg-display .avg-label { font-size:.68rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; font-family:'Lexend',sans-serif; }
 
 /* FORUM */
-.forum-spoiler-check { margin-bottom:12px; }
-.spoiler-label { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:.88rem; font-weight:600; color:var(--ink); }
-.spoiler-label input { width:16px; height:16px; cursor:pointer; accent-color:var(--accent-2); }
-.forum-post { border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:12px; background:var(--surface); }
-.forum-post:last-child { margin-bottom:0; }
-.forum-post-header { padding:14px 16px 10px; }
-.forum-post-meta { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
-.forum-badge-spoiler { font-size:.65rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 8px; border-radius:99px; background:#2d1a00; color:#f59e0b; border:1px solid #4a3000; }
-.forum-badge-chapter { font-size:.65rem; font-weight:600; padding:2px 8px; border-radius:99px; background:var(--accent-soft); color:var(--accent-2); }
-.forum-badge-page { font-size:.65rem; color:var(--muted); }
-.forum-author { font-size:.72rem; font-weight:700; color:var(--ink); margin-left:auto; }
-.forum-title { font-weight:700; font-size:.96rem; color:var(--ink); margin-bottom:6px; }
+.forum-post { padding:14px 0; border-bottom:1px solid var(--border); }
+.forum-post:first-child { padding-top:0; }
+.forum-post:last-child { border-bottom:none; }
+.forum-post-meta { display:flex; align-items:center; gap:7px; margin-bottom:5px; flex-wrap:wrap; }
+.forum-badge-spoiler { font-size:.6rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:2px 6px; border-radius:3px; background:#fef8e7; color:#8a6200; border:1px solid #d4b800; font-family:'Lexend',sans-serif; }
+.forum-badge-chapter { font-size:.6rem; font-weight:600; padding:2px 6px; border-radius:3px; background:var(--accent-soft); color:var(--accent); font-family:'Lexend',sans-serif; }
+.forum-badge-page { font-size:.6rem; color:var(--muted); font-family:'Lexend',sans-serif; }
+.forum-author { font-size:.7rem; font-weight:700; color:var(--muted); margin-left:auto; font-family:'Lexend',sans-serif; }
+.forum-title { font-weight:700; font-size:1rem; color:var(--ink); margin-bottom:5px; font-family:'Playfair Display',serif; cursor:pointer; line-height:1.3; }
+.forum-title:hover { color:var(--accent); }
+.forum-body { font-size:.86rem; color:var(--muted); line-height:1.6; margin-bottom:10px; }
 .forum-body-hidden { display:none; }
-.forum-spoiler-reveal { background:none; border:1px dashed var(--accent-2); border-radius:6px; padding:8px 14px; font-size:.8rem; font-weight:600; color:var(--accent-2); cursor:pointer; width:100%; text-align:center; margin-bottom:8px; }
-.forum-body { font-size:.86rem; color:var(--muted); line-height:1.6; padding-bottom:2px; }
-.forum-post-footer { display:flex; align-items:center; gap:0; border-top:1px solid var(--border); padding:0; }
-.reaction-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:4px; padding:9px 4px; background:none; border:none; border-right:1px solid var(--border); cursor:pointer; font-size:.8rem; color:var(--muted); transition:background .15s; font-family:'Lexend',sans-serif; }
+.forum-spoiler-reveal { background:none; border:1px dashed var(--accent-2); border-radius:4px; padding:7px 14px; font-size:.78rem; font-weight:600; color:var(--accent-2); cursor:pointer; margin-bottom:8px; font-family:'Lexend',sans-serif; display:inline-block; }
+.forum-post-footer { display:flex; border-top:1px solid var(--border); margin-top:8px; }
+.reaction-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:3px; padding:7px 3px; background:none; border:none; border-right:1px solid var(--border); cursor:pointer; color:var(--muted); transition:background .15s; font-family:'Lexend',sans-serif; }
 .reaction-btn:last-child { border-right:none; }
 .reaction-btn:hover { background:var(--accent-soft); }
-.reaction-btn.reacted { background:var(--warm-soft); color:var(--warm); font-weight:700; }
-.reaction-emoji { font-size:1rem; }
-.reaction-count { font-size:.72rem; font-weight:600; }
-.forum-replies { border-top:1px solid var(--border); background:var(--bg); }
-.forum-reply { padding:10px 16px; border-bottom:1px solid var(--border); font-size:.84rem; }
+.reaction-emoji { font-size:.88rem; }
+.reaction-count { font-size:.66rem; font-weight:600; }
+.forum-replies { margin-top:6px; padding-left:14px; border-left:2px solid var(--border); }
+.forum-reply { padding:7px 0; border-bottom:1px solid var(--border); font-size:.82rem; }
 .forum-reply:last-child { border-bottom:none; }
-.forum-reply-meta { font-size:.72rem; font-weight:700; color:var(--accent-2); margin-bottom:3px; }
+.forum-reply-meta { font-size:.68rem; font-weight:700; color:var(--accent-2); margin-bottom:2px; font-family:'Lexend',sans-serif; }
 .forum-reply-body { color:var(--ink); line-height:1.5; }
-.forum-reply-form { padding:10px 16px; display:flex; gap:8px; border-top:1px solid var(--border); }
-.forum-reply-input { flex:1; padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); font-family:'Lexend',sans-serif; font-size:.84rem; color:var(--ink); outline:none; }
-.forum-reply-input:focus { border-color:var(--accent-2); }
-.forum-reply-submit { padding:8px 14px; border-radius:8px; border:none; background:var(--accent); color:white; font-family:'Lexend',sans-serif; font-size:.8rem; font-weight:600; cursor:pointer; }
+.forum-reply-form { display:flex; gap:8px; margin-top:8px; }
+.forum-reply-input { flex:1; padding:7px 11px; border-radius:4px; border:1px solid var(--border); background:var(--surface); font-family:'Lexend',sans-serif; font-size:.82rem; color:var(--ink); outline:none; }
+.forum-reply-input:focus { border-color:var(--accent); }
+.forum-reply-submit { padding:7px 13px; border-radius:4px; border:none; background:var(--accent); color:white; font-family:'Lexend',sans-serif; font-size:.78rem; font-weight:600; cursor:pointer; }
+.forum-spoiler-check { margin-bottom:10px; }
+.spoiler-label { display:flex; align-items:center; gap:8px; cursor:pointer; font-size:.84rem; color:var(--ink); }
+.spoiler-label input { accent-color:var(--accent); }
+
+/* CHAPTER NOTES */
+.chapter-block { margin-bottom:4px; }
+.chapter-header { display:flex; align-items:center; justify-content:space-between; padding:10px 0; cursor:pointer; border-bottom:1px solid var(--border); }
+.chapter-header h3 { font-size:.88rem; font-weight:700; color:var(--ink); }
+.chapter-count { font-size:.7rem; color:var(--muted); }
+.chapter-chevron { font-size:.78rem; color:var(--muted); transition:transform .2s; }
+.chapter-block.open .chapter-chevron { transform:rotate(90deg); }
+.chapter-notes { display:none; padding-left:12px; border-left:2px solid var(--border); margin:6px 0; }
+.chapter-block.open .chapter-notes { display:block; }
+.chapter-note { padding:7px 0; border-bottom:1px solid var(--border); }
+.chapter-note:last-child { border-bottom:none; }
+.chapter-note-header { display:flex; align-items:center; gap:7px; margin-bottom:3px; }
+.chapter-note-type { font-size:.62rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:2px 5px; border-radius:3px; font-family:'Lexend',sans-serif; }
+.chapter-note-type.comment { background:var(--accent-soft); color:var(--accent); }
+.chapter-note-type.question { background:var(--warm-soft); color:var(--warm); }
+.chapter-note-who { font-size:.72rem; font-weight:600; color:var(--ink); }
+.chapter-note-page { font-size:.68rem; color:var(--muted); margin-left:auto; }
+.chapter-note-text { font-size:.84rem; color:var(--ink); line-height:1.5; }
 
 /* MEMBERS */
-#membersList { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.member-card { display:flex; flex-direction:column; align-items:center; text-align:center; padding:16px 12px; border:1px solid var(--border); border-radius:12px; background:var(--surface-2); gap:8px; }
-.member-photo { width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-2); }
-.member-photo-placeholder { width:72px; height:72px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.8rem; border:2px solid var(--accent-2); }
-.member-name { font-weight:700; font-size:.96rem; color:var(--ink); font-family:'Playfair Display',serif; }
-.member-bday { font-size:.74rem; color:var(--accent-2); font-weight:600; }
-.member-facts { display:flex; flex-direction:column; gap:3px; }
-.member-fact { font-size:.76rem; color:var(--muted); line-height:1.4; }
-.member-fact strong { color:var(--ink); font-weight:600; }
+#membersList { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.member-card { text-align:center; padding:18px 10px; border:1px solid var(--border); border-radius:4px; background:var(--surface); }
+.member-photo { width:68px; height:68px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-soft); margin-bottom:8px; }
+.member-photo-placeholder { width:68px; height:68px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.6rem; border:2px solid var(--border); margin:0 auto 8px; }
+.member-name { font-weight:700; font-size:.94rem; color:var(--ink); font-family:'Playfair Display',serif; }
+.member-bday { font-size:.7rem; color:var(--accent-2); font-weight:600; margin-top:3px; }
+.member-fact { font-size:.72rem; color:var(--muted); margin-top:2px; }
 @media (max-width:400px) { #membersList { grid-template-columns:1fr; } }
 
+/* CURRENTLY READING HOME */
+.cr-book { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--ink); line-height:1.3; }
+.cr-meta { font-size:.76rem; color:var(--muted); margin-top:2px; }
+
 /* TODAY BANNERS */
-.today-banner {
-  width:100%; padding:11px 20px; text-align:center;
-  font-family:'Lexend',sans-serif; font-weight:600; font-size:.88rem;
-  letter-spacing:.02em; position:relative;
-}
-.today-banner.banner-bookclub { background:linear-gradient(90deg, #0047AB, #4169E1); color:white; }
-.today-banner.banner-birthday { background:linear-gradient(90deg, #3a7bd5, #0047AB); color:white; }
-.today-banner.banner-event    { background:linear-gradient(90deg, #4169E1, #3a7bd5); color:white; }
-.today-banner .banner-close {
-  position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  background:none; border:none; color:white; font-size:1rem;
-  cursor:pointer; opacity:.7; line-height:1;
-}
-.today-banner .banner-close:hover { opacity:1; }
+.today-banner { width:100%; padding:10px 20px; text-align:center; font-family:'Lexend',sans-serif; font-weight:600; font-size:.82rem; letter-spacing:.02em; position:relative; }
+.today-banner.banner-bookclub { background:var(--accent); color:white; }
+.today-banner.banner-birthday { background:#8a6200; color:white; }
+.today-banner.banner-event    { background:var(--accent-2); color:white; }
+.today-banner .banner-close { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:white; font-size:1rem; cursor:pointer; opacity:.7; }
 
-footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(--muted); letter-spacing:.04em; background:var(--bg); border-top:1px solid var(--border); }
+footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); letter-spacing:.06em; border-top:1px solid var(--border); background:var(--surface); }
 
-@media (max-width: 560px) {
+@media (max-width:560px) {
   .nom-form-grid { grid-template-columns:1fr !important; }
-  .nav-link { padding:13px 12px; font-size:.7rem; }
+  .nav-link { padding:11px 9px; font-size:.62rem; }
+  .page { padding:24px 16px 100px; }
 }
 </style>
 </head>
@@ -414,9 +352,8 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
 
 <!-- PASSWORD -->
 <div id="pwScreen">
-  <img src="logo.png" alt="Triple B Book Club" style="width:200px;max-width:70%;height:auto;margin-bottom:20px;"/>
-  <span class="pw-logo" style="margin-bottom:6px;">Members Only</span>
-  <p class="pw-sub">enter the password to continue</p>
+  <img src="logo.png" alt="Triple B Book Club" class="pw-logo"/>
+  <p class="pw-sub">Members only — enter the password to continue</p>
   <input class="pw-input" id="pwInput" type="password" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()"/>
   <button class="pw-btn" id="pwBtn" onclick="checkPw()">Enter</button>
   <p class="pw-error" id="pwError">Incorrect password</p>
@@ -429,7 +366,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
 
 <header class="site-header">
   <div class="site-header-inner">
-    <div class="site-wordmark">Triple B Book Club</div>
+    <img src="logo.png" alt="Triple B Book Club" class="site-logo"/>
     <p class="site-tagline">Est. 2026</p>
   </div>
   <nav class="nav" id="tabBar">
@@ -439,6 +376,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     <button class="nav-link" data-tab="bookshelf">Bookshelf</button>
     <button class="nav-link" data-tab="calendar">Calendar</button>
     <button class="nav-link" data-tab="club">Club</button>
+    <button class="nav-link" data-tab="host">Host</button>
   </nav>
 </header>
 
@@ -448,7 +386,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   <!-- HOME — Announcements -->
   <div class="tab-content active" id="tab-home">
 
-    <div class="section boxed tint-blue" id="homeCurrentlyReading" style="cursor:pointer;" onclick="switchToTab('currentbook')">
+    <div class="section" id="homeCurrentlyReading" style="cursor:pointer;" onclick="switchToTab('currentbook')">
       <div class="section-head">
         <h2>Currently Reading</h2>
         <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
@@ -463,7 +401,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       </div>
     </div>
 
-    <div class="section boxed tint-mid" id="comingUpCard">
+    <div class="section" id="comingUpCard">
       <div class="section-head"><h2>Coming Up 🎉</h2></div>
       <div id="comingUpList"><div class="no-content">Nothing coming up in the next 30 days.</div></div>
     </div>
@@ -473,16 +411,11 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   <!-- MEETING TAB -->
   <div class="tab-content" id="tab-meeting">
 
-    <div class="section boxed tint-mid">
+    <div class="section">
       <div class="section-head"><h2>Next Meeting</h2><span class="badge muted" id="meetingTabBadge"></span></div>
-      <div class="countdown" id="meetingCountdown"></div>
-      <div class="next-meeting-details">
-        <div class="nmd-row"><span class="nmd-label">Host</span><span class="nmd-value" id="meetingHost2"></span></div>
-        <div class="nmd-row"><span class="nmd-label">Book</span><span class="nmd-value" id="meetingBook2"></span></div>
-        <div class="nmd-row" id="meetingDateRow"><span class="nmd-label">When</span><span class="nmd-value" id="meetingDateTime2"></span></div>
-        <div class="nmd-row" id="meetingLocRow"><span class="nmd-label">Where</span><span class="nmd-value" id="meetingLocation2"></span></div>
-        <div class="nmd-row" id="meetingFoodRow"><span class="nmd-label">Food</span><span class="nmd-value" id="meetingFood2"></span></div>
-        <div class="nmd-row" id="meetingThemeRow"><span class="nmd-label">Theme</span><span class="nmd-value" id="meetingTheme2"></span></div>
+      <div id="meetingCountdown"></div>
+      <div id="meetingDetailsContent">
+        <p class="no-content">Details haven't been added yet.</p>
       </div>
       <div class="rsvp-block">
         <p class="section-note" style="margin-bottom:10px;">RSVP</p>
@@ -499,8 +432,8 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       </div>
     </div>
 
-    <div class="section boxed tint-blue">
-      <div class="section-head"><h2>Cast Your Vote 🗳️</h2></div>
+    <div class="section">
+      <div class="section-head"><h2>Cast Your Vote</h2></div>
       <div id="voteForm" style="display:none;">
         <span class="section-eyebrow" id="voteMonthLabel"></span>
         <input class="input" id="voterName" placeholder="Your name"/>
@@ -511,8 +444,8 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       <div id="noVoteYet" class="no-content">The host hasn't posted their picks yet — check back soon.</div>
     </div>
 
-    <div class="section boxed tint-dark">
-      <div class="section-head"><h2>Discussion Questions 💬</h2></div>
+    <div class="section">
+      <div class="section-head"><h2>Discussion Questions</h2></div>
       <p class="section-note" style="margin-bottom:12px;">Add a question for this month's meeting!</p>
       <div id="discussionQuestionsList"><div class="no-content">No questions yet — add the first one below!</div></div>
       <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
@@ -524,7 +457,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     </div>
 
     <!-- HOST CONTROLS — collapsible -->
-    <div class="section boxed" id="hostControlsToggle" style="cursor:pointer;" onclick="toggleHostControls()">
+    <div class="section" id="hostControlsToggle" style="cursor:pointer;" onclick="toggleHostControls()">
       <div class="section-head" style="margin-bottom:0;">
         <h2 style="color:var(--muted);font-size:1rem;">Host Controls</h2>
         <span style="font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;">Tap to expand ▸</span>
@@ -532,7 +465,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     </div>
 
     <div id="hostControlsBody" style="display:none;display:flex;flex-direction:column;gap:20px;">
-      <div class="section boxed tint-dark">
+      <div class="section">
         <span class="section-eyebrow">Step 1</span>
         <div class="section-head"><h2>Post Your Three Books</h2></div>
         <p class="section-note">Post your picks so members can vote.</p>
@@ -556,7 +489,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
         <button class="btn btn-secondary" id="submitBooksBtn">Post for Voting</button>
         <div class="success-msg" id="hostSuccess">Posted — members can now vote.</div>
       </div>
-      <div class="section boxed tint-mid">
+      <div class="section">
         <span class="section-eyebrow">Step 2</span>
         <div class="section-head"><h2>Announce Winning Book</h2></div>
         <select class="input" id="winnerMonth">
@@ -569,7 +502,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
         <button class="btn btn-secondary" id="announceWinnerBtn">Announce Winner</button>
         <div class="success-msg" id="winnerSuccess">Winner announced.</div>
       </div>
-      <div class="section boxed tint-blue">
+      <div class="section">
         <span class="section-eyebrow">Step 3</span>
         <div class="section-head"><h2>Meeting Details</h2></div>
         <p class="section-note">Set up the meeting so everyone knows where to be.</p>
@@ -606,7 +539,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   <!-- CURRENT BOOK TAB -->
   <div class="tab-content" id="tab-currentbook">
 
-    <div class="section boxed tint-blue">
+    <div class="section">
       <div class="section-head">
         <h2>Currently Reading</h2>
         <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
@@ -647,7 +580,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     </div>
 
     <!-- FORUM + NEW POST COMBINED -->
-    <div class="section boxed tint-dark">
+    <div class="section">
       <div class="section-head">
         <h2>Forum</h2>
         <button class="btn btn-secondary" onclick="document.getElementById('newPostForm').style.display=document.getElementById('newPostForm').style.display==='none'?'block':'none'" style="padding:6px 14px;font-size:.74rem;margin-top:0;">+ New Post</button>
@@ -680,7 +613,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
     </div>
 
     <!-- RATINGS detail view -->
-    <div class="section boxed tint-mid">
+    <div class="section">
       <div class="section-head"><h2>All Ratings</h2></div>
       <div id="ratingsDisplay"></div>
       <div class="two-col" style="margin-bottom:8px;margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
@@ -708,7 +641,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   <!-- BOOKSHELF TAB -->
   <div class="tab-content" id="tab-bookshelf">
 
-    <div class="section boxed tint-blue">
+    <div class="section">
       <div class="section-head">
         <h2>Currently Reading</h2>
         <span class="badge warm" style="animation:pulse 2s ease-in-out infinite;">Active</span>
@@ -716,12 +649,12 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       <div id="shelfCurrentBook" class="no-content">Loading...</div>
     </div>
 
-    <div class="section boxed tint-dark">
+    <div class="section">
       <div class="section-head"><h2>Past Reads</h2></div>
       <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here.</div></div>
     </div>
 
-    <div class="section boxed tint-mid">
+    <div class="section">
       <div class="section-head"><h2>Nominations</h2></div>
       <div id="shelfList"><div class="no-content">No nominations yet.</div></div>
       <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
@@ -739,11 +672,20 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   </div>
 
   <div class="tab-content" id="tab-calendar">
-    <div class="section boxed tint-mid">
-      <div class="section-head"><h2>Calendar</h2></div>
-      <div id="eventsCalendar"></div>
+    <div class="section">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calPrevMonth()">‹</button>
+        <h3 id="calMonthTitle"></h3>
+        <button class="cal-nav-btn" onclick="calNextMonth()">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap;">
+        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot book-club" style="display:inline-block;"></span>Book Club</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot birthday" style="display:inline-block;"></span>Birthday</span>
+        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot event" style="display:inline-block;"></span>Event</span>
+      </div>
     </div>
-    <div class="section boxed tint-blue">
+    <div class="section">
       <div class="section-head"><h2>Add an Event</h2></div>
       <input class="input" id="eventTitle" placeholder="Event name (e.g. Girls trip! 🌴)"/>
       <div class="two-col">
@@ -759,7 +701,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
   <!-- CLUB TAB — Members + Vibes -->
   <div class="tab-content" id="tab-club">
 
-    <div class="section boxed tint-mid">
+    <div class="section">
       <div class="section-head"><h2>Members 👥</h2></div>
       <div id="membersList">
         <div class="member-card">
@@ -816,7 +758,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       </div>
     </div>
 
-    <div class="section boxed tint-blue">
+    <div class="section">
       <div class="section-head"><h2>The Vibes</h2></div>
       <ul class="rule-list">
         <li class="rule-item"><span class="marker">📚</span> Host picks three books, everyone votes, most votes wins</li>
@@ -830,7 +772,7 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
       </ul>
     </div>
 
-    <div class="section boxed tint-dark">
+    <div class="section">
       <div class="section-head"><h2>Food Heads Up 🍽️</h2></div>
       <p class="section-note">Keep these in mind when bringing food to book club.</p>
       <ul class="rule-list">
@@ -838,6 +780,81 @@ footer { text-align:center; padding:32px 24px 40px; font-size:.74rem; color:var(
         <li class="rule-item"><span class="marker">🙅</span> <div><strong>Preferences:</strong> no red meat, no cilantro</div></li>
       </ul>
     </div>
+  </div>
+
+  <!-- HOST TAB -->
+  <div class="tab-content" id="tab-host">
+
+    <div class="section">
+      <span class="section-eyebrow">Step 1</span>
+      <div class="section-head"><h2>Post Your Three Books</h2></div>
+      <p class="section-note">Post your picks so members can vote.</p>
+      <div class="two-col" style="margin-bottom:10px;">
+        <select class="input" id="hostName" style="margin-bottom:0;">
+          <option value="" disabled selected>Host Name</option>
+          <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+          <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+          <option>Tricia</option><option>Val</option>
+        </select>
+        <select class="input" id="hostMonth" style="margin-bottom:0;">
+          <option value="" disabled selected>Month</option>
+          <option>January</option><option>February</option><option>March</option><option>April</option>
+          <option>May</option><option>June</option><option>July</option><option>August</option>
+          <option>September</option><option>October</option><option>November</option><option>December</option>
+        </select>
+      </div>
+      <input class="input" id="book1" placeholder="Book option 1"/>
+      <input class="input" id="book2" placeholder="Book option 2"/>
+      <input class="input" id="book3" placeholder="Book option 3"/>
+      <button class="btn btn-secondary" id="submitBooksBtn">Post for Voting</button>
+      <div class="success-msg" id="hostSuccess">Posted — members can now vote.</div>
+    </div>
+
+    <div class="section">
+      <span class="section-eyebrow">Step 2</span>
+      <div class="section-head"><h2>Announce Winning Book</h2></div>
+      <select class="input" id="winnerMonth">
+        <option value="" disabled selected>Month</option>
+        <option>January</option><option>February</option><option>March</option><option>April</option>
+        <option>May</option><option>June</option><option>July</option><option>August</option>
+        <option>September</option><option>October</option><option>November</option><option>December</option>
+      </select>
+      <input class="input" id="winnerInput" placeholder="Winning book title"/>
+      <button class="btn btn-secondary" id="announceWinnerBtn">Announce Winner</button>
+      <div class="success-msg" id="winnerSuccess">Winner announced.</div>
+    </div>
+
+    <div class="section">
+      <span class="section-eyebrow">Step 3</span>
+      <div class="section-head"><h2>Meeting Details</h2></div>
+      <p class="section-note">Set up the meeting so everyone knows where to be.</p>
+      <select class="input" id="meetingMonth">
+        <option value="" disabled selected>Month</option>
+        <option>January</option><option>February</option><option>March</option><option>April</option>
+        <option>May</option><option>June</option><option>July</option><option>August</option>
+        <option>September</option><option>October</option><option>November</option><option>December</option>
+      </select>
+      <select class="input" id="meetingHost">
+        <option value="" disabled selected>Host Name</option>
+        <option>Betsy</option><option>Carly</option><option>Christa</option><option>Emily</option>
+        <option>Katie</option><option>Rachael</option><option>Sasha</option><option>Simone</option>
+        <option>Tricia</option><option>Val</option>
+      </select>
+      <input class="input" id="meetingLocation" placeholder="Location name & address"/>
+      <input class="input" id="meetingFood" placeholder="Food theme (e.g. Potluck — Appetizers)"/>
+      <input class="input" id="meetingTheme" placeholder="Theme or things to know"/>
+      <div class="two-col">
+        <input class="input" id="meetingDate" type="date"/>
+        <select class="input" id="meetingTime">
+          <option value="" disabled selected>Time</option>
+          <option>5:00pm</option><option>5:30pm</option><option>6:00pm</option><option>6:30pm</option>
+          <option>7:00pm</option><option>7:30pm</option><option>8:00pm</option><option>8:30pm</option>
+        </select>
+      </div>
+      <button class="btn btn-secondary" id="submitBooksBtn2">Save Meeting Details</button>
+      <div class="success-msg" id="hostSuccess2">Meeting details saved.</div>
+    </div>
+
   </div>
 
 </div>
@@ -878,6 +895,7 @@ function switchToTab(name, btn) {
   if (name === 'bookshelf') { loadShelf(); loadPastReads(); }
   if (name === 'currentbook') loadDiscussionQuestions();
   if (name === 'calendar') loadEvents();
+  if (name === 'host') {} // no dynamic loading needed
 }
 
 function toggleHostControls() {
@@ -902,7 +920,7 @@ function init() {
 
 // COUNTDOWN
 function updateCountdown(dateStr, timeStr, targetId) {
-  const el = document.getElementById(targetId || 'countdown');
+  const el = document.getElementById(targetId || 'meetingCountdown');
   if (!el) return;
   if (!dateStr) { el.innerHTML = ''; return; }
 
@@ -923,14 +941,16 @@ function updateCountdown(dateStr, timeStr, targetId) {
   const now = new Date();
   const diff = next - now;
 
-  if (diff <= 0) { el.innerHTML = '<div class="countdown-today">It\'s meeting day! 🎉</div>'; return; }
-  const days  = Math.floor(diff/(1000*60*60*24));
-  const hrs   = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-  const mns   = Math.floor((diff%(1000*60*60))/(1000*60));
+  if (diff <= 0) {
+    el.innerHTML = '<div class="meeting-today">It\'s meeting night! 🎉</div>';
+    return;
+  }
+  const days = Math.floor(diff/(1000*60*60*24));
   el.innerHTML = `
-    <div class="countdown-box"><div class="num">${days}</div><div class="lbl">days</div></div>
-    <div class="countdown-box"><div class="num">${hrs}</div><div class="lbl">hours</div></div>
-    <div class="countdown-box"><div class="num">${mns}</div><div class="lbl">mins</div></div>
+    <div class="meeting-countdown-display">
+      <div class="meeting-days-number">${days}</div>
+      <div class="meeting-days-label">days until book club</div>
+    </div>
   `;
 }
 
@@ -977,19 +997,26 @@ async function loadNextMeeting() {
 
   // MEETING TAB details
   if (nextMeeting) {
-    const whenText = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
-
     document.getElementById('meetingTabBadge').textContent = nextMeeting.month || '';
-    document.getElementById('meetingHost2').textContent = nextMeeting.host || 'TBD';
-    document.getElementById('meetingBook2').textContent = nextMeeting.winning_book || 'Book Selection Loading...';
-    document.getElementById('meetingDateTime2').textContent = whenText;
-    document.getElementById('meetingDateRow').style.display = whenText ? 'flex' : 'none';
-    document.getElementById('meetingLocation2').textContent = nextMeeting.location || '';
-    document.getElementById('meetingLocRow').style.display = nextMeeting.location ? 'flex' : 'none';
-    document.getElementById('meetingFood2').textContent = nextMeeting.food_theme || '';
-    document.getElementById('meetingFoodRow').style.display = nextMeeting.food_theme ? 'flex' : 'none';
-    document.getElementById('meetingTheme2').textContent = nextMeeting.theme || '';
-    document.getElementById('meetingThemeRow').style.display = nextMeeting.theme ? 'flex' : 'none';
+
+    // build meeting details table — only show if real details exist
+    const hasDetails = nextMeeting.host || nextMeeting.meeting_date || nextMeeting.location;
+    const detailsEl = document.getElementById('meetingDetailsContent');
+    if (hasDetails) {
+      const whenText = [formatDate(nextMeeting.meeting_date), nextMeeting.meeting_time].filter(Boolean).join(' · ');
+      const rows = [
+        nextMeeting.host         ? ['Host',  nextMeeting.host] : null,
+        nextMeeting.winning_book ? ['Book',  nextMeeting.winning_book] : null,
+        whenText                 ? ['When',  whenText] : null,
+        nextMeeting.location     ? ['Where', nextMeeting.location] : null,
+        nextMeeting.food_theme   ? ['Food',  nextMeeting.food_theme] : null,
+        nextMeeting.theme        ? ['Theme', nextMeeting.theme] : null,
+      ].filter(Boolean);
+      detailsEl.innerHTML = `<table class="nmd-table">${rows.map(([l,v]) => `<tr><td class="nmd-label">${l}</td><td class="nmd-value">${v}</td></tr>`).join('')}</table>`;
+    } else {
+      detailsEl.innerHTML = '<p class="no-content" style="padding:8px 0;">Details haven\'t been added yet.</p>';
+    }
+
     updateCountdown(nextMeeting.meeting_date, nextMeeting.meeting_time, 'meetingCountdown');
 
     window.currentMeetingMonth = nextMeeting.month;
@@ -1292,22 +1319,27 @@ async function loadRatings() {
   if (!month) return;
   const { data } = await sb.from('ratings').select('*').eq('month', month).order('created_at');
 
-  // Update discuss tab ratings display
+  // Update Current Book tab ratings display — group average only
   const container = document.getElementById('ratingsDisplay');
   if (container) {
     if (!data || data.length === 0) {
-      container.innerHTML = '<div class="no-content" style="margin-bottom:0;">No ratings yet — be the first!</div>';
+      container.innerHTML = '<div class="no-content">No ratings yet — be the first below!</div>';
     } else {
-      const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length).toFixed(1);
-      const stars = n => '⭐'.repeat(n) + '☆'.repeat(5 - n);
+      const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length);
+      const avgStr = avg.toFixed(1);
+      const fullStars = Math.round(avg);
+      const starsStr = '⭐'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
       container.innerHTML = `
-        <div class="rating-avg"><div class="avg-num">${avg}</div><div class="avg-label">avg · ${data.length} rating${data.length !== 1 ? 's' : ''}</div></div>
-        ${data.map(r => `<div class="rating-row"><span class="rating-name">${r.member_name}</span><span class="rating-stars">${stars(r.rating)}</span></div>`).join('')}
+        <div class="rating-avg-display">
+          <div class="avg-num">${avgStr}</div>
+          <div class="avg-stars">${starsStr}</div>
+          <div class="avg-label">${data.length} rating${data.length !== 1 ? 's' : ''} from the group</div>
+        </div>
       `;
     }
   }
 
-  // Update home tab rating section (on Current Book tab)
+  // Update Current Book tab inline stars next to book title
   const homeSection = document.getElementById('homeRatingSection');
   if (homeSection) {
     homeSection.style.display = 'block';
@@ -1315,8 +1347,6 @@ async function loadRatings() {
       document.getElementById('homeRatingAvg').textContent = '';
       document.getElementById('homeRatingStars').textContent = '';
       document.getElementById('homeRatingCount').textContent = 'No ratings yet — be the first!';
-      const dispEl = document.getElementById('homeRatingStarsDisplay');
-      if (dispEl) dispEl.textContent = '';
     } else {
       const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length);
       const avgStr = avg.toFixed(1);
@@ -1325,10 +1355,16 @@ async function loadRatings() {
       document.getElementById('homeRatingAvg').textContent = avgStr + ' / 5';
       document.getElementById('homeRatingStars').textContent = starsStr;
       document.getElementById('homeRatingCount').textContent = data.length + ' rating' + (data.length !== 1 ? 's' : '') + ' from the group';
-      // also update the inline stars on the home page currently reading card
-      const dispEl = document.getElementById('homeRatingStarsDisplay');
-      if (dispEl) dispEl.textContent = starsStr;
     }
+  }
+
+  // update inline stars on home page currently reading card
+  const dispEl = document.getElementById('homeRatingStarsDisplay');
+  if (dispEl && data && data.length > 0) {
+    const avg = (data.reduce((sum, r) => sum + r.rating, 0) / data.length);
+    dispEl.textContent = '⭐'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+  } else if (dispEl) {
+    dispEl.textContent = '';
   }
 }
 
@@ -1594,22 +1630,22 @@ async function openBookArchive(month, title) {
       <p style="font-size:.82rem;color:var(--muted);">${month}</p>
     </div>
 
-    <div class="section boxed tint-mid" style="margin-bottom:16px;">
+    <div class="section" style="margin-bottom:16px;">
       <div class="section-head"><h2>Ratings ⭐</h2></div>
       ${ratingsHtml}
     </div>
 
-    <div class="section boxed tint-blue" style="margin-bottom:16px;">
+    <div class="section" style="margin-bottom:16px;">
       <div class="section-head"><h2>Discussion Questions 💬</h2></div>
       ${questionsHtml}
     </div>
 
-    <div class="section boxed" style="margin-bottom:16px;">
+    <div class="section" style="margin-bottom:16px;">
       <div class="section-head"><h2>Chapter Notes 📖</h2></div>
       ${chapterHtml}
     </div>
 
-    <div class="section boxed tint-mid" style="margin-bottom:16px;">
+    <div class="section" style="margin-bottom:16px;">
       <div class="section-head"><h2>Forum Posts</h2></div>
       ${forumHtml}
     </div>
@@ -1745,23 +1781,24 @@ async function loadEvents() {
 
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
 
   const allEvents = {};
   for (let m = 1; m <= 12; m++) allEvents[m] = [];
 
   // add birthdays
   BIRTHDAYS.forEach(b => {
-    allEvents[b.month].push({ title: b.title, day: b.day, note: '', icon: '🎂' });
+    allEvents[b.month].push({ title: b.title, day: b.day, note: '', type: 'birthday' });
   });
 
   // add custom events from Supabase
   (customEvents || []).forEach(e => {
     const d = new Date(e.date + 'T00:00:00');
     const m = d.getMonth() + 1;
-    allEvents[m].push({ title: e.title, day: d.getDate(), note: e.note || '', icon: '📅' });
+    allEvents[m].push({ title: e.title, day: d.getDate(), note: e.note || '', type: 'event' });
   });
 
-  // add meetings — map by month name to month number
+  // add meetings
   const meetingsByMonth = {};
   (allMeetings || []).forEach(m => { meetingsByMonth[m.month] = m; });
 
@@ -1769,59 +1806,88 @@ async function loadEvents() {
     const real = meetingsByMonth[planned.month];
     const monthNum = MONTH_NAMES.indexOf(planned.month);
     if (monthNum < 1) return;
-    let day, label, note;
+    let day, label;
     if (real && real.meeting_date) {
       const d = new Date(real.meeting_date + 'T00:00:00');
       day = d.getDate();
-      label = 'Book Club — ' + (real.host || planned.host);
-      note = real.winning_book || '';
+      label = 'Book Club';
     } else {
-      // parse day from tentativeDate like "July 9, 2026"
       const parts = planned.tentativeDate.split(' ');
       day = parseInt(parts[1]);
-      label = 'Book Club — ' + planned.host + ' (tentative)';
-      note = '';
+      label = 'Book Club (tentative)';
     }
-    allEvents[monthNum].push({ title: label, day, note, icon: '📚' });
+    allEvents[monthNum].push({ title: label, day, note: real && real.host ? real.host : planned.host, type: 'book-club' });
   });
 
   // sort each month by day
   for (let m = 1; m <= 12; m++) allEvents[m].sort((a,b) => a.day - b.day);
 
-  // build month order — current month first, then rest in order
-  const monthOrder = [];
-  for (let i = 0; i < 12; i++) monthOrder.push(((currentMonth - 1 + i) % 12) + 1);
+  // store globally for calendar navigation
+  window._allEvents = allEvents;
+  window._calYear = currentYear;
+  window._calMonth = currentMonth;
 
-  // render calendar
-  let calendarHtml = '';
-  monthOrder.forEach(m => {
-    const monthEvents = allEvents[m];
-    const isCurrentMonth = (m === currentMonth);
-    calendarHtml += `
-      <div class="cal-month${isCurrentMonth ? ' cal-month-current' : ''}">
-        <div class="cal-month-label">${MONTH_NAMES[m]}</div>
-        <div class="cal-events-col">
-        ${monthEvents.length === 0
-          ? '<div class="cal-empty">—</div>'
-          : monthEvents.map(e => `
-              <div class="cal-event">
-                <span class="cal-icon">${e.icon}</span>
-                <span class="cal-day">${e.day}</span>
-                <span class="cal-title">${e.title}${e.note ? ` <span class="cal-note">${e.note}</span>` : ''}</span>
-              </div>`).join('')
-        }
-        </div>
-      </div>`;
-  });
-
-  const calEl = document.getElementById('eventsCalendar');
-  if (calEl) calEl.innerHTML = calendarHtml;
+  // render calendar grid for current month
+  renderCalGrid(currentYear, currentMonth, allEvents);
 
   // populate Coming Up on Home tab (next 30 days)
   loadComingUp(allEvents, now);
 
   // show today banners
   loadTodayBanners(allEvents, allMeetings || [], now);
+}
+
+function renderCalGrid(year, month, allEvents) {
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const titleEl = document.getElementById('calMonthTitle');
+  const gridEl = document.getElementById('calGrid');
+  if (!titleEl || !gridEl) return;
+
+  titleEl.textContent = MONTH_NAMES[month] + ' ' + year;
+
+  const firstDay = new Date(year, month - 1, 1).getDay();
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const today = new Date();
+  const todayNum = today.getDate();
+  const isCurrentMonth = today.getMonth() + 1 === month && today.getFullYear() === year;
+
+  // build event lookup by day
+  const eventsByDay = {};
+  (allEvents[month] || []).forEach(e => {
+    if (!eventsByDay[e.day]) eventsByDay[e.day] = [];
+    eventsByDay[e.day].push(e);
+  });
+
+  let html = DAYS.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+  // empty cells before first day
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day-cell empty"><span class="cal-day-num"></span></div>';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = isCurrentMonth && d === todayNum;
+    const events = eventsByDay[d] || [];
+    const dots = events.map(e => `<span class="cal-dot ${e.type}" title="${e.title}${e.note ? ' — '+e.note : ''}"></span>`).join('');
+    html += `<div class="cal-day-cell${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${d}</div>
+      <div class="cal-dots">${dots}</div>
+    </div>`;
+  }
+
+  gridEl.innerHTML = html;
+}
+
+function calPrevMonth() {
+  let { _calYear: y, _calMonth: m, _allEvents: ev } = window;
+  m--; if (m < 1) { m = 12; y--; }
+  window._calYear = y; window._calMonth = m;
+  renderCalGrid(y, m, ev || {});
+}
+
+function calNextMonth() {
+  let { _calYear: y, _calMonth: m, _allEvents: ev } = window;
+  m++; if (m > 12) { m = 1; y++; }
+  window._calYear = y; window._calMonth = m;
+  renderCalGrid(y, m, ev || {});
 }
 
 function loadTodayBanners(allEvents, allMeetings, now) {
@@ -1912,6 +1978,11 @@ document.getElementById('addEventBtn').addEventListener('click', async function(
 // auto-init if already logged in
 if (sessionStorage.getItem('tripleB') === 'unlocked' || window._needsInit) {
   init();
+}
+
+// register service worker for PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
 
