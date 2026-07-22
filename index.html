@@ -935,6 +935,8 @@ async function loadNextMeeting() {
         </div>`).join('');
     }
   }
+  // bookshelf tab - currently reading
+  const scbEl = document.getElementById('shelfCurrentBook');
   if (scbEl) scbEl.innerHTML = nextMeeting && nextMeeting.winning_book
     ? `<div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);">${nextMeeting.winning_book}</div><div style="font-size:.8rem;color:var(--muted);margin-top:4px;">${bookMeta}</div>`
     : '<div class="no-content">No book selected yet.</div>';
@@ -1766,6 +1768,18 @@ async function loadEvents() {
   // sort each month by day
   for (let m = 1; m <= 12; m++) allEvents[m].sort((a,b) => a.day - b.day);
 
+  // remove past events (keep birthdays always, remove past custom events and past book club dates)
+  const todayDay = now.getDate();
+  for (let m = 1; m <= 12; m++) {
+    if (m < currentMonth) {
+      // past months — only keep birthdays
+      allEvents[m] = allEvents[m].filter(e => e.type === 'birthday');
+    } else if (m === currentMonth) {
+      // current month — remove past non-birthday events
+      allEvents[m] = allEvents[m].filter(e => e.type === 'birthday' || e.day >= todayDay);
+    }
+  }
+
   // store globally for coming up
   window._allEvents = allEvents;
 
@@ -1773,29 +1787,36 @@ async function loadEvents() {
   const monthOrder = [];
   for (let i = 0; i < 12; i++) monthOrder.push(((currentMonth - 1 + i) % 12) + 1);
 
-  // render list calendar
+  const icons = { 'birthday': '🎂', 'book-club': '📚', 'event': '📅' };
+
+  // render list calendar — cute editorial style
   let calHtml = '';
-  monthOrder.forEach(m => {
+  monthOrder.forEach((m, idx) => {
     const monthEvents = allEvents[m];
     const isCurrent = m === currentMonth;
+    const isLast = idx === 11;
     calHtml += `
-      <div style="padding:14px 0;border-bottom:1px solid var(--border);">
-        <div style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-          color:${isCurrent ? 'var(--accent)' : 'var(--muted)'};margin-bottom:${monthEvents.length ? '10px' : '0'};
-          font-family:'Lexend',sans-serif;">${MONTH_NAMES[m]}</div>
+      <div style="padding:18px 0;${isLast ? '' : 'border-bottom:1px solid var(--border);'}">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:${monthEvents.length ? '12px' : '0'};">
+          <span style="font-family:'Playfair Display',serif;font-size:${isCurrent ? '1.1rem' : '.95rem'};
+            font-weight:700;color:${isCurrent ? 'var(--accent)' : 'var(--ink)'};">${MONTH_NAMES[m]}</span>
+          ${isCurrent ? '<span style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:2px 7px;border-radius:3px;font-family:\'Lexend\',sans-serif;">Now</span>' : ''}
+        </div>
         ${monthEvents.length === 0
-          ? `<span style="font-size:.8rem;color:var(--border);font-style:italic;">—</span>`
+          ? `<span style="font-size:.8rem;color:var(--border);font-style:italic;font-family:'Lexend',sans-serif;">Nothing scheduled</span>`
           : monthEvents.map(e => `
-            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
-              <span style="flex-shrink:0;font-size:.7rem;font-weight:700;color:${
-                e.type === 'birthday' ? '#b8860b' : e.type === 'book-club' ? 'var(--accent)' : 'var(--accent-2)'
-              };width:20px;font-family:'Lexend',sans-serif;">${e.day}</span>
-              <span style="font-size:.86rem;color:var(--ink);font-weight:500;">${e.title}${e.note ? `<span style="color:var(--muted);font-weight:400;"> · ${e.note}</span>` : ''}</span>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+              <div style="flex-shrink:0;width:32px;height:32px;border-radius:50%;
+                background:${e.type === 'birthday' ? '#fef8e7' : e.type === 'book-club' ? 'var(--accent-soft)' : 'var(--surface-2)'};
+                display:flex;align-items:center;justify-content:center;font-size:.9rem;">${icons[e.type] || '📅'}</div>
+              <div>
+                <div style="font-size:.88rem;font-weight:600;color:var(--ink);font-family:'Lexend',sans-serif;">${e.title}${e.note ? ` <span style="font-weight:400;color:var(--muted);">· ${e.note}</span>` : ''}</div>
+                <div style="font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;margin-top:1px;">${MONTH_NAMES[m]} ${e.day}</div>
+              </div>
             </div>`).join('')
         }
       </div>`;
   });
-  calHtml = calHtml.replace(/border-bottom:1px solid var\(--border\);">[\s\S]*?$/, s => s.replace('border-bottom:1px solid var(--border)', 'border-bottom:none'));
 
   const calEl = document.getElementById('eventsCalendar');
   if (calEl) calEl.innerHTML = calHtml;
@@ -1958,4 +1979,3 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
-
