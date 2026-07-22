@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -572,6 +573,11 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
     </div>
 
     <div class="section">
+      <div class="section-head"><h2>Upcoming Books</h2></div>
+      <div id="upcomingBooksList"><div class="no-content">No upcoming books announced yet.</div></div>
+    </div>
+
+    <div class="section">
       <div class="section-head"><h2>Past Reads</h2></div>
       <div id="pastList"><div class="no-content">Nothing yet — your reading history will live here.</div></div>
     </div>
@@ -873,23 +879,27 @@ async function loadNextMeeting() {
 
   const today = new Date(); today.setHours(0,0,0,0);
 
-  // find the soonest meeting with a date today or in the future
+  // 1. Undated meetings with a winning book = CURRENTLY READING
+  const undated = allMeetings
+    .filter(m => !m.meeting_date && m.winning_book)
+    .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+  // 2. Future dated meetings = UPCOMING
   const upcoming = allMeetings
     .filter(m => m.meeting_date)
     .filter(m => new Date(m.meeting_date + 'T23:59:59') >= today)
     .sort((a,b) => new Date(a.meeting_date) - new Date(b.meeting_date));
 
-  // fall back to any meeting with a winning_book but no date set yet
-  const undated = allMeetings
-    .filter(m => !m.meeting_date && m.winning_book)
-    .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-
-  // fall back to most recent past meeting (still "current" until next one is set up)
+  // 3. Most recent past meeting = fallback if nothing else
   const recentPast = allMeetings
-    .filter(m => m.meeting_date && m.winning_book)
+    .filter(m => m.meeting_date && m.winning_book && new Date(m.meeting_date) < today)
     .sort((a,b) => new Date(b.meeting_date) - new Date(a.meeting_date));
 
-  const nextMeeting = upcoming[0] || undated[0] || recentPast[0] || null;
+  // Current = undated with book first, then soonest upcoming, then most recent past
+  const nextMeeting = undated[0] || upcoming[0] || recentPast[0] || null;
+
+  // Store upcoming for the bookshelf upcoming section
+  window._upcomingMeetings = upcoming.filter(m => m.winning_book);
 
   // auto-log any completed meetings (date passed + book announced) to Past Reads
   const completed = allMeetings.filter(m => m.meeting_date && new Date(m.meeting_date) < today && m.winning_book);
@@ -911,8 +921,20 @@ async function loadNextMeeting() {
   const hcbMetaEl = document.getElementById('homeCurrentBookMeta');
   if (hcbMetaEl) hcbMetaEl.textContent = bookMeta;
 
-  // bookshelf tab
-  const scbEl = document.getElementById('shelfCurrentBook');
+  // bookshelf upcoming books
+  const upcomingEl = document.getElementById('upcomingBooksList');
+  if (upcomingEl) {
+    const upcoming2 = (window._upcomingMeetings || []);
+    if (upcoming2.length === 0) {
+      upcomingEl.innerHTML = '<div class="no-content">No upcoming books announced yet.</div>';
+    } else {
+      upcomingEl.innerHTML = upcoming2.map(m => `
+        <div class="past-read">
+          <div class="pr-title" style="cursor:default;">${m.winning_book}</div>
+          <div class="pr-meta">${m.month}${m.host ? ' · hosted by ' + m.host : ''}${m.meeting_date ? ' · ' + formatDate(m.meeting_date) : ''}</div>
+        </div>`).join('');
+    }
+  }
   if (scbEl) scbEl.innerHTML = nextMeeting && nextMeeting.winning_book
     ? `<div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);">${nextMeeting.winning_book}</div><div style="font-size:.8rem;color:var(--muted);margin-top:4px;">${bookMeta}</div>`
     : '<div class="no-content">No book selected yet.</div>';
@@ -1936,3 +1958,4 @@ if ('serviceWorker' in navigator) {
 
 </body>
 </html>
+
