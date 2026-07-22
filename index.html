@@ -22,7 +22,7 @@
       if (val === 'bighairybush') {
         document.getElementById('pwScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
-        sessionStorage.setItem('tripleB','unlocked');
+        localStorage.setItem('tripleB','unlocked');
         if (typeof init === 'function') init(); else window._needsInit = true;
       } else {
         document.getElementById('pwError').style.display = 'block';
@@ -30,7 +30,7 @@
       }
     }
     window.addEventListener('DOMContentLoaded', function() {
-      if (sessionStorage.getItem('tripleB') === 'unlocked') {
+      if (localStorage.getItem('tripleB') === 'unlocked') {
         document.getElementById('pwScreen').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
       }
@@ -595,17 +595,7 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
 
   <div class="tab-content" id="tab-calendar">
     <div class="section">
-      <div class="cal-nav">
-        <button class="cal-nav-btn" onclick="calPrevMonth()">‹</button>
-        <h3 id="calMonthTitle"></h3>
-        <button class="cal-nav-btn" onclick="calNextMonth()">›</button>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-      <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap;">
-        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot book-club" style="display:inline-block;"></span>Book Club</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot birthday" style="display:inline-block;"></span>Birthday</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--muted);font-family:'Lexend',sans-serif;"><span class="cal-dot event" style="display:inline-block;"></span>Event</span>
-      </div>
+      <div id="eventsCalendar"></div>
     </div>
     <div class="section">
       <div class="section-head"><h2>Add an Event</h2></div>
@@ -894,7 +884,12 @@ async function loadNextMeeting() {
     .filter(m => !m.meeting_date && m.winning_book)
     .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
-  const nextMeeting = upcoming[0] || undated[0] || null;
+  // fall back to most recent past meeting (still "current" until next one is set up)
+  const recentPast = allMeetings
+    .filter(m => m.meeting_date && m.winning_book)
+    .sort((a,b) => new Date(b.meeting_date) - new Date(a.meeting_date));
+
+  const nextMeeting = upcoming[0] || undated[0] || recentPast[0] || null;
 
   // auto-log any completed meetings (date passed + book announced) to Past Reads
   const completed = allMeetings.filter(m => m.meeting_date && new Date(m.meeting_date) < today && m.winning_book);
@@ -1749,13 +1744,39 @@ async function loadEvents() {
   // sort each month by day
   for (let m = 1; m <= 12; m++) allEvents[m].sort((a,b) => a.day - b.day);
 
-  // store globally for calendar navigation
+  // store globally for coming up
   window._allEvents = allEvents;
-  window._calYear = currentYear;
-  window._calMonth = currentMonth;
 
-  // render calendar grid for current month
-  renderCalGrid(currentYear, currentMonth, allEvents);
+  // build month order — current month first
+  const monthOrder = [];
+  for (let i = 0; i < 12; i++) monthOrder.push(((currentMonth - 1 + i) % 12) + 1);
+
+  // render list calendar
+  let calHtml = '';
+  monthOrder.forEach(m => {
+    const monthEvents = allEvents[m];
+    const isCurrent = m === currentMonth;
+    calHtml += `
+      <div style="padding:14px 0;border-bottom:1px solid var(--border);">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+          color:${isCurrent ? 'var(--accent)' : 'var(--muted)'};margin-bottom:${monthEvents.length ? '10px' : '0'};
+          font-family:'Lexend',sans-serif;">${MONTH_NAMES[m]}</div>
+        ${monthEvents.length === 0
+          ? `<span style="font-size:.8rem;color:var(--border);font-style:italic;">—</span>`
+          : monthEvents.map(e => `
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+              <span style="flex-shrink:0;font-size:.7rem;font-weight:700;color:${
+                e.type === 'birthday' ? '#b8860b' : e.type === 'book-club' ? 'var(--accent)' : 'var(--accent-2)'
+              };width:20px;font-family:'Lexend',sans-serif;">${e.day}</span>
+              <span style="font-size:.86rem;color:var(--ink);font-weight:500;">${e.title}${e.note ? `<span style="color:var(--muted);font-weight:400;"> · ${e.note}</span>` : ''}</span>
+            </div>`).join('')
+        }
+      </div>`;
+  });
+  calHtml = calHtml.replace(/border-bottom:1px solid var\(--border\);">[\s\S]*?$/, s => s.replace('border-bottom:1px solid var(--border)', 'border-bottom:none'));
+
+  const calEl = document.getElementById('eventsCalendar');
+  if (calEl) calEl.innerHTML = calHtml;
 
   // populate Coming Up on Home tab (next 30 days)
   loadComingUp(allEvents, now);
@@ -1903,7 +1924,7 @@ document.getElementById('addEventBtn').addEventListener('click', async function(
 });
 
 // auto-init if already logged in
-if (sessionStorage.getItem('tripleB') === 'unlocked' || window._needsInit) {
+if (localStorage.getItem('tripleB') === 'unlocked' || window._needsInit) {
   init();
 }
 
