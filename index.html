@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -378,6 +377,7 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
     <button class="nav-link" data-tab="calendar">Calendar</button>
     <button class="nav-link" data-tab="club">Club</button>
     <button class="nav-link" data-tab="host">Host</button>
+    <button class="nav-link" data-tab="admin" id="adminNavBtn" style="display:none;">⚙️ Admin</button>
   </nav>
 </header>
 
@@ -775,6 +775,59 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
 
   </div>
 
+  <!-- ADMIN TAB -->
+  <div class="tab-content" id="tab-admin">
+
+    <!-- Admin login -->
+    <div class="section" id="adminLoginSection">
+      <div class="section-head"><h2>Admin Access</h2></div>
+      <p class="section-note">Enter the admin password to manage members and the hosting schedule.</p>
+      <input class="input" id="adminPwInput" type="password" placeholder="Admin password"/>
+      <button class="btn btn-secondary" id="adminPwBtn">Unlock</button>
+      <p style="color:#c0392b;font-size:.8rem;margin-top:8px;display:none;" id="adminPwError">Incorrect password</p>
+    </div>
+
+    <!-- Admin panel — hidden until unlocked -->
+    <div id="adminPanel" style="display:none;">
+
+      <div class="section">
+        <div class="section-head"><h2>Members</h2></div>
+        <div id="adminMembersList" style="margin-bottom:16px;"></div>
+        <p class="section-note">Add a new member:</p>
+        <div class="two-col" style="margin-bottom:8px;">
+          <input class="input" id="newMemberName" placeholder="Name" style="margin-bottom:0;"/>
+          <input class="input" id="newMemberBdayMonth" placeholder="Birthday month (1-12)" type="number" min="1" max="12" style="margin-bottom:0;"/>
+        </div>
+        <input class="input" id="newMemberBdayDay" placeholder="Birthday day (1-31)" type="number" min="1" max="31"/>
+        <button class="btn btn-secondary" id="addMemberBtn">Add Member</button>
+        <div class="success-msg" id="addMemberSuccess">Member added!</div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>Hosting Schedule</h2></div>
+        <div id="adminScheduleList" style="margin-bottom:16px;"></div>
+        <p class="section-note">Add a new month:</p>
+        <div class="two-col" style="margin-bottom:8px;">
+          <select class="input" id="newScheduleMonth" style="margin-bottom:0;">
+            <option value="" disabled selected>Month</option>
+            <option>January</option><option>February</option><option>March</option><option>April</option>
+            <option>May</option><option>June</option><option>July</option><option>August</option>
+            <option>September</option><option>October</option><option>November</option><option>December</option>
+          </select>
+          <input class="input" id="newScheduleYear" placeholder="Year (e.g. 2027)" type="number" style="margin-bottom:0;"/>
+        </div>
+        <div class="two-col" style="margin-bottom:8px;">
+          <input class="input" id="newScheduleHost" placeholder="Host name" style="margin-bottom:0;"/>
+          <input class="input" id="newScheduleDate" placeholder="Tentative date (e.g. Jan 8, 2027)" style="margin-bottom:0;"/>
+        </div>
+        <button class="btn btn-secondary" id="addScheduleBtn">Add to Schedule</button>
+        <div class="success-msg" id="addScheduleSuccess">Added to schedule!</div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
 </div>
 
@@ -813,7 +866,8 @@ function switchToTab(name, btn) {
   if (name === 'bookshelf') { loadShelf(); loadPastReads(); }
   if (name === 'currentbook') loadDiscussionQuestions();
   if (name === 'calendar') loadEvents();
-  if (name === 'host') {} // no dynamic loading needed
+  if (name === 'host') {}
+  if (name === 'admin') {} // no dynamic loading — handled by admin pw flow
 }
 
 function toggleHostControls() {
@@ -825,9 +879,11 @@ function toggleHostControls() {
 }
 
 function init() {
-  loadNextMeeting();
-  loadEvents();
-  loadDiscussionQuestions().then(() => { loadRatings(); loadForum(); });
+  loadAppData().then(() => {
+    loadNextMeeting();
+    loadEvents();
+    loadDiscussionQuestions().then(() => { loadRatings(); loadForum(); });
+  });
   setInterval(() => {
     if (window.currentMeetingDate) {
       updateCountdown(window.currentMeetingDate, window.currentMeetingTime, 'countdown');
@@ -979,16 +1035,63 @@ function formatDate(dateStr) {
 }
 
 // MEETINGS TAB — full schedule, merging known hosts with live Supabase rows
-const PLANNED_HOSTS = [
-  { month:'July',     host:'Sasha',         tentativeDate:'July 9, 2026' },
-  { month:'August',   host:'Val',           tentativeDate:'August 13, 2026' },
-  { month:'September',host:'Simone',        tentativeDate:'September 10, 2026' },
-  { month:'October',  host:'Emily',         tentativeDate:'October 8, 2026' },
-  { month:'November', host:'Christa',       tentativeDate:'November 12, 2026' },
-  { month:'December', host:'Katie & Betsy', tentativeDate:'December 10, 2026' },
-  { month:'January',  host:'Carly',         tentativeDate:'January 14, 2027' },
-  { month:'February', host:'Tricia',        tentativeDate:'February 11, 2027' },
-];
+// Dynamic data — loaded from Supabase
+let PLANNED_HOSTS = [];
+let BIRTHDAYS = [];
+let MEMBERS = [];
+
+async function loadAppData() {
+  const [{ data: members }, { data: schedule }] = await Promise.all([
+    sb.from('members').select('*').order('name'),
+    sb.from('hosting_schedule').select('*').order('created_at')
+  ]);
+
+  MEMBERS = members || [];
+  PLANNED_HOSTS = (schedule || []).map(s => ({
+    month: s.month,
+    host: s.host,
+    tentativeDate: s.tentative_date
+  }));
+  BIRTHDAYS = MEMBERS
+    .filter(m => m.birthday_month && m.birthday_day)
+    .map(m => ({
+      title: `${m.name}'s Birthday 🎂`,
+      month: m.birthday_month,
+      day: m.birthday_day
+    }));
+
+  // populate all member dropdowns
+  populateMemberDropdowns();
+}
+
+function populateMemberDropdowns() {
+  const names = MEMBERS.map(m => m.name).sort();
+  const dropdownIds = ['hostName','meetingHost','voterName','ratingName','homeRatingName','postAuthor','replyAuthor'];
+  dropdownIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const current = el.value;
+    // keep first disabled option, replace the rest
+    while (el.options.length > 1) el.remove(1);
+    names.forEach(n => {
+      const opt = document.createElement('option');
+      opt.value = n; opt.textContent = n;
+      el.appendChild(opt);
+    });
+    if (current) el.value = current;
+  });
+
+  // also update member grid in Club tab
+  const grid = document.getElementById('membersList');
+  if (grid) {
+    grid.innerHTML = MEMBERS.sort((a,b) => a.name.localeCompare(b.name)).map(m => `
+      <div class="member-card">
+        <div class="member-photo-placeholder">👤</div>
+        <div class="member-name">${m.name}</div>
+        ${m.birthday_month && m.birthday_day ? `<div class="member-bday">🎂 ${MONTH_NAMES[m.birthday_month]} ${m.birthday_day}</div>` : ''}
+      </div>`).join('');
+  }
+}
 
 // VOTING
 let selectedBook = null, currentMonth = '';
@@ -1699,18 +1802,6 @@ document.getElementById('rsvpYes').addEventListener('click', ()=>submitRsvp('yes
 document.getElementById('rsvpNo').addEventListener('click',  ()=>submitRsvp('no'));
 
 // EVENTS & BIRTHDAYS
-const BIRTHDAYS = [
-  { title: "Rachael's Birthday 🎂", month: 1,  day: 5  },
-  { title: "Christa's Birthday 🎂",  month: 5,  day: 1  },
-  { title: "Val's Birthday 🎂",     month: 8,  day: 25 },
-  { title: "Tricia's Birthday 🎂",  month: 8,  day: 31 },
-  { title: "Carly's Birthday 🎂",   month: 10, day: 2  },
-  { title: "Katie's Birthday 🎂",   month: 10, day: 3  },
-  { title: "Emily's Birthday 🎂",   month: 11, day: 9  },
-  { title: "Simone's Birthday 🎂",  month: 12, day: 8  },
-  { title: "Betsy's Birthday 🎂",   month: 7,  day: 13 },
-];
-
 const MONTH_NAMES = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function formatEventDate(dateStr) {
@@ -1970,6 +2061,109 @@ document.getElementById('addEventBtn').addEventListener('click', async function(
 if (localStorage.getItem('tripleB') === 'unlocked' || window._needsInit) {
   init();
 }
+
+// ADMIN PANEL
+const ADMIN_PASSWORD = 'tripleadmin2026';
+
+document.getElementById('adminPwBtn').addEventListener('click', function() {
+  const val = document.getElementById('adminPwInput').value.trim();
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('adminLoginSection').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    loadAdminMembers();
+    loadAdminSchedule();
+  } else {
+    document.getElementById('adminPwError').style.display = 'block';
+  }
+});
+
+// reveal admin tab with secret tap — triple-tap the footer
+let footerTaps = 0;
+document.querySelector('footer').addEventListener('click', () => {
+  footerTaps++;
+  if (footerTaps >= 3) {
+    footerTaps = 0;
+    document.getElementById('adminNavBtn').style.display = 'block';
+    switchToTab('admin');
+  }
+  setTimeout(() => { footerTaps = 0; }, 1500);
+});
+
+async function loadAdminMembers() {
+  const { data } = await sb.from('members').select('*').order('name');
+  const el = document.getElementById('adminMembersList');
+  if (!data || data.length === 0) { el.innerHTML = '<div class="no-content">No members yet.</div>'; return; }
+  el.innerHTML = data.map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <span style="font-weight:600;font-size:.9rem;color:var(--ink);font-family:'Playfair Display',serif;">${m.name}</span>
+        ${m.birthday_month && m.birthday_day ? `<span style="font-size:.76rem;color:var(--muted);margin-left:8px;">🎂 ${MONTH_NAMES[m.birthday_month]} ${m.birthday_day}</span>` : ''}
+      </div>
+      <button onclick="deleteMember('${m.id}','${m.name}')" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:.78rem;font-family:'Lexend',sans-serif;font-weight:600;">Remove</button>
+    </div>`).join('');
+}
+
+async function deleteMember(id, name) {
+  if (!confirm(`Remove ${name} from the club?`)) return;
+  await sb.from('members').delete().eq('id', id);
+  await loadAppData();
+  loadAdminMembers();
+}
+
+document.getElementById('addMemberBtn').addEventListener('click', async function() {
+  const name = document.getElementById('newMemberName').value.trim();
+  const month = parseInt(document.getElementById('newMemberBdayMonth').value);
+  const day = parseInt(document.getElementById('newMemberBdayDay').value);
+  if (!name) { alert('Enter a name!'); return; }
+  const { error } = await sb.from('members').insert({ name, birthday_month: month || null, birthday_day: day || null });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('newMemberName').value = '';
+  document.getElementById('newMemberBdayMonth').value = '';
+  document.getElementById('newMemberBdayDay').value = '';
+  document.getElementById('addMemberSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('addMemberSuccess').style.display = 'none', 3000);
+  await loadAppData();
+  loadAdminMembers();
+});
+
+async function loadAdminSchedule() {
+  const { data } = await sb.from('hosting_schedule').select('*').order('created_at');
+  const el = document.getElementById('adminScheduleList');
+  if (!data || data.length === 0) { el.innerHTML = '<div class="no-content">No schedule yet.</div>'; return; }
+  el.innerHTML = data.map(s => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
+      <div>
+        <span style="font-weight:600;font-size:.9rem;color:var(--ink);font-family:'Playfair Display',serif;">${s.month} ${s.year}</span>
+        <span style="font-size:.76rem;color:var(--muted);margin-left:8px;">· ${s.host} · ${s.tentative_date}</span>
+      </div>
+      <button onclick="deleteScheduleEntry('${s.id}')" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:.78rem;font-family:'Lexend',sans-serif;font-weight:600;">Remove</button>
+    </div>`).join('');
+}
+
+async function deleteScheduleEntry(id) {
+  if (!confirm('Remove this month from the schedule?')) return;
+  await sb.from('hosting_schedule').delete().eq('id', id);
+  await loadAppData();
+  loadAdminSchedule();
+}
+
+document.getElementById('addScheduleBtn').addEventListener('click', async function() {
+  const month = document.getElementById('newScheduleMonth').value;
+  const year = parseInt(document.getElementById('newScheduleYear').value);
+  const host = document.getElementById('newScheduleHost').value.trim();
+  const tentative_date = document.getElementById('newScheduleDate').value.trim();
+  if (!month || !host || !tentative_date || !year) { alert('Fill in all fields!'); return; }
+  const { error } = await sb.from('hosting_schedule').insert({ month, host, tentative_date, year });
+  if (error) { alert('Oops! ' + error.message); return; }
+  document.getElementById('newScheduleMonth').value = '';
+  document.getElementById('newScheduleYear').value = '';
+  document.getElementById('newScheduleHost').value = '';
+  document.getElementById('newScheduleDate').value = '';
+  document.getElementById('addScheduleSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('addScheduleSuccess').style.display = 'none', 3000);
+  await loadAppData();
+  loadAdminSchedule();
+});
 
 // register service worker for PWA
 if ('serviceWorker' in navigator) {
