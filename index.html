@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -615,27 +616,29 @@ async function loadCurrentMeeting() {
 
   if (nextMeeting) {
     window._rsvpMonth = nextMeeting.month;
-    const hasDetails = nextMeeting.host || nextMeeting.meeting_date;
     const titleEl = document.getElementById('mcTitle');
-    // show current book title but next meeting month details
+
+    // title shows the book being read (current), not next
     if (current && current.winning_book) titleEl.textContent = current.winning_book;
     else if (nextMeeting.winning_book) titleEl.textContent = nextMeeting.winning_book;
+    else titleEl.textContent = 'Book Club Night';
 
-    if (hasDetails) {
-      const rows = [];
-      if (nextMeeting.host) rows.push(['Host', nextMeeting.host]);
-      if (nextMeeting.winning_book) rows.push(['Book', nextMeeting.winning_book]);
-      if (nextMeeting.meeting_date) {
-        const d = new Date(nextMeeting.meeting_date+'T00:00:00');
-        const dateStr = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-        rows.push(['Date', dateStr + (nextMeeting.meeting_time ? ' · ' + nextMeeting.meeting_time : '')]);
-      }
-      if (nextMeeting.food_theme) rows.push(['Food', nextMeeting.food_theme]);
-      document.getElementById('mcDetails').innerHTML = rows.length > 0
-        ? rows.map(([l,v]) => `<div class="mc-row"><span class="mc-label">${l}</span><span class="mc-value">${v}</span></div>`).join('')
-        : '<p class="mc-empty">Details coming soon — stay tuned!</p>';
-      document.getElementById('mcNote').style.display = 'block';
+    // always show details rows — TBD for missing fields
+    const rows = [];
+    if (nextMeeting.host) rows.push(['Host', nextMeeting.host]);
+    if (nextMeeting.meeting_date) {
+      const d = new Date(nextMeeting.meeting_date+'T00:00:00');
+      const dateStr = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+      rows.push(['Date', dateStr + (nextMeeting.meeting_time ? ' · ' + nextMeeting.meeting_time : '')]);
+    } else {
+      rows.push(['Date', 'TBD']);
     }
+    if (nextMeeting.food_theme) rows.push(['Food', nextMeeting.food_theme]);
+
+    document.getElementById('mcDetails').innerHTML = rows.map(([l,v]) =>
+      `<div class="mc-row"><span class="mc-label">${l}</span><span class="mc-value">${v}</span></div>`
+    ).join('');
+    document.getElementById('mcNote').style.display = 'block';
     loadRsvp(nextMeeting.month);
   }
 }
@@ -820,13 +823,20 @@ async function loadCalendar() {
   // birthdays (always show)
   BIRTHDAYS.forEach(b => byMonth[b.month].push({ type:'birthday', day:b.day, name:`${b.name}'s Birthday`, note:'' }));
 
-  // US holidays — current year only, plus next year for already-passed months
+  // US holidays — current year, plus next year for past months only
+  const seenHolidays = new Set();
   getHolidaysForYear(currentYear).forEach(h => {
-    if (byMonth[h.month]) byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
+    const key = h.name + h.month + h.day;
+    if (!seenHolidays.has(key) && byMonth[h.month]) {
+      seenHolidays.add(key);
+      byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
+    }
   });
-  // for months already past this year, also load next year's version
   getHolidaysForYear(currentYear+1).forEach(h => {
-    if (h.month < currentMonth && byMonth[h.month]) {
+    if (h.month >= currentMonth) return; // only add next year for months already passed
+    const key = h.name + h.month + h.day + 'next';
+    if (!seenHolidays.has(key) && byMonth[h.month]) {
+      seenHolidays.add(key);
       byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
     }
   });
@@ -1034,14 +1044,19 @@ async function syncPastReads() {
   const today = new Date(); today.setHours(0,0,0,0);
   const { data: all } = await sb.from('meetings').select('*');
   const { data: existing } = await sb.from('past_reads').select('month,title');
-  const existingKeys = new Set((existing||[]).map(r=>(r.month+'|'+r.title).toLowerCase()));
+  const existingKeys = new Set((existing||[]).map(r => r.month.toLowerCase()));
+
   for (const m of (all||[])) {
-    if (!m.meeting_date || !m.winning_book) continue;
+    if (!m.winning_book) continue;
+    // only archive meetings that had a date AND it's now the day after
+    if (!m.meeting_date) continue;
     const dayAfter = new Date(new Date(m.meeting_date+'T00:00:00').getTime()+86400000);
     if (today < dayAfter) continue;
-    const key = (m.month+'|'+m.winning_book).toLowerCase();
-    if (existingKeys.has(key)) continue;
-    await sb.from('past_reads').insert({ title:m.winning_book, author:'', hosted_by:m.host||'', month:m.month, rating:0, note:'' });
+    // skip if already in past_reads for this month
+    if (existingKeys.has(m.month.toLowerCase())) continue;
+    await sb.from('past_reads').insert({
+      title: m.winning_book, author:'', hosted_by: m.host||'', month: m.month, rating:0, note:''
+    });
   }
 }
 
