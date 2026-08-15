@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#F5F0E8"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 function checkPw() {
@@ -35,27 +35,27 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 <style>
 :root {
-  --bg:      #F5F0E8;
-  --surface: #FFFFFF;
-  --surface2: #FAF7F2;
-  --border:  #E2D9CC;
-  --ink:     #1A1410;
-  --muted:   #8B7B6B;
-  --green:   #2C4A2E;
-  --green2:  #4A7C59;
-  --blush:   #C4856A;
-  --blush-soft: #F5EAE4;
-  --gold:    #B8860B;
+  --bg:       #F5F1E8;
+  --surface:  #FFFFFF;
+  --surface2: #F0EBE0;
+  --border:   #DDD5C4;
+  --ink:      #1A1A14;
+  --muted:    #7A7A65;
+  --green:    #1E3A1E;
+  --green2:   #4A6741;
+  --sage:     #8FA876;
+  --sage-soft:#EDF2E8;
+  --cream:    #F5F1E8;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  font-family:'Lato',sans-serif;
+  font-family:'Lexend',sans-serif;
+  font-weight:400;
   background:var(--bg);
   color:var(--ink);
   min-height:100vh;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23F5F0E8'/%3E%3Ccircle cx='1' cy='1' r='.4' fill='%23D4C9B8' opacity='.4'/%3E%3C/svg%3E");
 }
 
 /* PASSWORD */
@@ -64,46 +64,51 @@ body {
   display:flex; flex-direction:column; align-items:center;
   justify-content:center; padding:40px 24px; text-align:center;
 }
-.pw-wordmark { font-family:'Playfair Display',serif; font-style:italic; font-size:3rem; font-weight:700; color:var(--green); line-height:1; }
-.pw-sub-title { font-family:'Lato',sans-serif; font-size:.7rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); margin-top:4px; margin-bottom:32px; }
+.pw-logo { width:180px; max-width:65%; height:auto; margin-bottom:28px; }
 .pw-input {
-  width:100%; max-width:260px; padding:12px 16px; border-radius:4px;
-  border:1px solid var(--border); background:var(--surface);
-  font-family:'Lato',sans-serif; font-size:1rem; color:var(--ink);
-  text-align:center; outline:none; margin-bottom:10px;
+  width:100%; max-width:260px; padding:12px 16px; border-radius:6px;
+  border:1.5px solid var(--border); background:var(--surface);
+  font-family:'Lexend',sans-serif; font-size:.95rem; color:var(--ink);
+  text-align:center; outline:none; margin-bottom:10px; letter-spacing:.04em;
 }
 .pw-input:focus { border-color:var(--green); }
 .pw-btn {
-  width:100%; max-width:260px; padding:12px; border-radius:4px; border:none;
-  background:var(--green); color:white; font-family:'Lato',sans-serif;
-  font-weight:700; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer;
+  width:100%; max-width:260px; padding:12px; border-radius:6px; border:none;
+  background:var(--green); color:var(--cream); font-family:'Lexend',sans-serif;
+  font-weight:700; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+  transition:background .2s;
 }
 .pw-btn:hover { background:var(--green2); }
-.pw-error { color:var(--blush); font-size:.82rem; margin-top:8px; display:none; }
+.pw-error { color:#8B3A3A; font-size:.82rem; margin-top:8px; display:none; font-weight:500; }
 
 /* ANIMATIONS */
-@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
-.fade-up { animation:fadeUp .4s ease forwards; }
+.tab.active > .section { animation:fadeUp .35s ease both; }
+.tab.active > .section:nth-child(2) { animation-delay:.06s; }
+.tab.active > .section:nth-child(3) { animation-delay:.12s; }
 
 /* HEADER */
 .site-header {
   background:var(--surface);
-  border-bottom:1px solid var(--border);
-  padding:20px 24px 0;
+  border-bottom:1.5px solid var(--border);
+  padding:18px 24px 0;
   text-align:center;
 }
-.wordmark { font-family:'Playfair Display',serif; font-style:italic; font-size:2.2rem; font-weight:700; color:var(--green); line-height:1; }
-.wordmark-sub { font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); font-family:'Lato',sans-serif; padding-bottom:2px; margin-top:2px; }
+.site-header-inner { max-width:640px; margin:0 auto; }
+.site-logo { width:160px; max-width:58%; height:auto; display:block; margin:0 auto; }
 
 /* NAV */
-.nav { background:var(--surface); border-bottom:1px solid var(--border); display:flex; justify-content:center; overflow-x:auto; scrollbar-width:none; }
+.nav {
+  background:var(--surface); border-bottom:1.5px solid var(--border);
+  display:flex; justify-content:center; overflow-x:auto; scrollbar-width:none;
+}
 .nav::-webkit-scrollbar { display:none; }
 .nav-btn {
-  flex-shrink:0; padding:12px 20px; background:none; border:none;
-  border-bottom:2px solid transparent; margin-bottom:-1px;
-  font-family:'Lato',sans-serif; font-weight:700; font-size:.68rem;
-  color:var(--muted); cursor:pointer; letter-spacing:.1em; text-transform:uppercase;
+  flex-shrink:0; padding:13px 18px; background:none; border:none;
+  border-bottom:2.5px solid transparent; margin-bottom:-1.5px;
+  font-family:'Lexend',sans-serif; font-weight:700; font-size:.66rem;
+  color:var(--muted); cursor:pointer; letter-spacing:.12em; text-transform:uppercase;
   transition:color .2s, border-color .2s;
 }
 .nav-btn:hover { color:var(--green); }
@@ -112,139 +117,162 @@ body {
 /* PAGE */
 .page { max-width:640px; margin:0 auto; padding:36px 20px 100px; }
 .tab { display:none; }
-.tab.active { display:block; animation:fadeUp .3s ease; }
+.tab.active { display:block; }
 
 /* SECTIONS */
 .section { padding:28px 0; border-bottom:1px solid var(--border); }
 .section:last-child { border-bottom:none; padding-bottom:0; }
 .section:first-child { padding-top:0; }
 
-.eyebrow { font-size:.6rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--green2); font-family:'Lato',sans-serif; margin-bottom:8px; display:block; }
-.section-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--ink); margin-bottom:4px; }
-.section-title.italic { font-style:italic; }
-.section-note { font-size:.84rem; color:var(--muted); line-height:1.6; margin-bottom:14px; }
+.eyebrow {
+  display:block; font-size:.58rem; font-weight:800; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--green2); margin-bottom:10px;
+}
+.section-note { font-size:.84rem; color:var(--muted); line-height:1.7; margin-bottom:14px; font-weight:300; }
 
-/* CURRENTLY READING — featured */
+/* BOOK FEATURE */
 .book-feature { display:flex; gap:18px; align-items:flex-start; }
-.book-cover { width:80px; height:120px; border-radius:3px; object-fit:cover; flex-shrink:0; box-shadow:3px 4px 12px rgba(0,0,0,.18); }
-.book-cover-placeholder { width:80px; height:120px; background:var(--green); border-radius:3px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:2rem; box-shadow:3px 4px 12px rgba(0,0,0,.18); }
-.book-info { flex:1; padding-top:4px; }
-.book-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; font-style:italic; color:var(--ink); line-height:1.3; margin-bottom:4px; }
-.book-author { font-size:.82rem; color:var(--muted); margin-bottom:10px; }
-.book-desc { font-size:.82rem; color:var(--muted); line-height:1.6; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+.book-cover { width:82px; height:122px; border-radius:4px; object-fit:cover; flex-shrink:0; box-shadow:4px 5px 16px rgba(30,58,30,.2); }
+.book-cover-placeholder { width:82px; height:122px; background:var(--green); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:2rem; box-shadow:4px 5px 16px rgba(30,58,30,.2); }
+.book-info { flex:1; padding-top:2px; }
+.book-title { font-size:1.1rem; font-weight:700; color:var(--ink); line-height:1.3; margin-bottom:4px; }
+.book-author { font-size:.78rem; color:var(--muted); margin-bottom:10px; font-weight:400; }
+.book-desc { font-size:.8rem; color:var(--muted); line-height:1.7; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; font-weight:300; }
 
 /* MEETING CARD */
-.meeting-card { background:var(--green); border-radius:8px; padding:24px; color:white; }
-.meeting-card .mc-eyebrow { font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; opacity:.7; margin-bottom:8px; display:block; }
-.meeting-card .mc-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-style:italic; margin-bottom:16px; }
-.meeting-card .mc-row { display:flex; gap:10px; align-items:baseline; margin-bottom:8px; }
-.meeting-card .mc-label { font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.65; width:56px; flex-shrink:0; }
-.meeting-card .mc-value { font-size:.9rem; font-weight:400; opacity:.95; }
-.meeting-card .mc-note { font-size:.76rem; opacity:.6; margin-top:12px; font-style:italic; }
-.meeting-card .mc-empty { font-size:.9rem; opacity:.7; font-style:italic; }
+.meeting-card { background:var(--green); border-radius:10px; padding:24px; color:var(--cream); }
+.meeting-card .mc-eyebrow { font-size:.58rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; opacity:.6; margin-bottom:10px; display:block; }
+.meeting-card .mc-title { font-size:1.15rem; font-weight:700; margin-bottom:16px; line-height:1.3; }
+.meeting-card .mc-row { display:flex; gap:12px; align-items:baseline; margin-bottom:9px; }
+.meeting-card .mc-label { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; opacity:.55; width:52px; flex-shrink:0; }
+.meeting-card .mc-value { font-size:.88rem; font-weight:400; opacity:.92; line-height:1.4; }
+.meeting-card .mc-note { font-size:.74rem; opacity:.55; margin-top:14px; font-weight:300; }
+.meeting-card .mc-empty { font-size:.88rem; opacity:.6; font-weight:300; }
 
 /* RSVP */
-.rsvp-section { margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,.2); }
-.rsvp-label { font-size:.6rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; opacity:.7; margin-bottom:10px; display:block; }
-.rsvp-name-input { width:100%; padding:9px 12px; border-radius:4px; border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.12); color:white; font-family:'Lato',sans-serif; font-size:.9rem; outline:none; margin-bottom:10px; }
-.rsvp-name-input::placeholder { color:rgba(255,255,255,.5); }
-.rsvp-name-input:focus { border-color:rgba(255,255,255,.6); }
+.rsvp-section { margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,.15); }
+.rsvp-label { font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; opacity:.6; margin-bottom:10px; display:block; }
+.rsvp-name-input {
+  width:100%; padding:9px 13px; border-radius:6px;
+  border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.1);
+  color:var(--cream); font-family:'Lexend',sans-serif; font-size:.88rem;
+  outline:none; margin-bottom:10px;
+}
+.rsvp-name-input::placeholder { color:rgba(245,241,232,.45); }
+.rsvp-name-input:focus { border-color:rgba(255,255,255,.5); }
 .rsvp-btns { display:flex; gap:8px; }
-.rsvp-btn { flex:1; padding:10px; border-radius:4px; border:1px solid rgba(255,255,255,.4); background:transparent; color:white; font-family:'Lato',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.06em; cursor:pointer; transition:all .15s; text-transform:uppercase; }
-.rsvp-btn.yes:hover, .rsvp-btn.yes.chosen { background:rgba(255,255,255,.2); border-color:white; }
-.rsvp-btn.no:hover, .rsvp-btn.no.chosen { background:rgba(196,133,106,.4); border-color:var(--blush); }
-.rsvp-success { font-size:.82rem; opacity:.8; margin-top:8px; display:none; font-style:italic; }
-.rsvp-tally { display:flex; gap:20px; margin-top:14px; }
-.rsvp-tally-item { font-size:.78rem; opacity:.8; }
-.rsvp-tally-item strong { font-family:'Playfair Display',serif; font-size:1.4rem; display:block; opacity:1; }
-.rsvp-names-list { font-size:.72rem; opacity:.6; margin-top:2px; }
+.rsvp-btn {
+  flex:1; padding:10px; border-radius:6px; border:1px solid rgba(255,255,255,.35);
+  background:transparent; color:var(--cream); font-family:'Lexend',sans-serif;
+  font-weight:700; font-size:.72rem; letter-spacing:.08em; cursor:pointer;
+  transition:all .15s; text-transform:uppercase;
+}
+.rsvp-btn.yes:hover, .rsvp-btn.yes.chosen { background:rgba(143,168,118,.35); border-color:var(--sage); }
+.rsvp-btn.no:hover,  .rsvp-btn.no.chosen  { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.6); }
+.rsvp-success { font-size:.82rem; opacity:.75; margin-top:8px; display:none; font-weight:300; }
+.rsvp-tally { display:flex; gap:24px; margin-top:16px; }
+.rsvp-tally-item { font-size:.76rem; opacity:.75; }
+.rsvp-tally-item strong { font-size:1.6rem; font-weight:700; display:block; opacity:1; line-height:1; margin-bottom:2px; }
+.rsvp-names-list { font-size:.7rem; opacity:.6; margin-top:2px; font-weight:300; }
 
 /* COMING UP */
-.coming-item { display:flex; align-items:center; gap:14px; padding:11px 0; border-bottom:1px solid var(--border); }
+.coming-item { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
 .coming-item:last-child { border-bottom:none; }
-.coming-date { flex-shrink:0; width:42px; height:42px; background:var(--blush-soft); border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.coming-date .cd-month { font-size:.55rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--blush); }
-.coming-date .cd-day { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--ink); line-height:1; }
-.coming-title { font-size:.9rem; font-weight:700; color:var(--ink); }
-.coming-sub { font-size:.76rem; color:var(--muted); margin-top:1px; }
+.coming-date { flex-shrink:0; width:44px; height:44px; background:var(--sage-soft); border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid #C8D8BE; }
+.coming-date .cd-month { font-size:.52rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--green2); }
+.coming-date .cd-day { font-size:1.1rem; font-weight:700; color:var(--green); line-height:1; }
+.coming-title { font-size:.88rem; font-weight:600; color:var(--ink); }
+.coming-sub { font-size:.74rem; color:var(--muted); margin-top:2px; font-weight:300; }
 
 /* DISCUSSION QUESTIONS */
 .question-item { padding:12px 0; border-bottom:1px solid var(--border); }
 .question-item:last-child { border-bottom:none; }
-.question-text { font-size:.92rem; color:var(--ink); line-height:1.5; font-family:'Playfair Display',serif; font-style:italic; }
-.question-by { font-size:.72rem; color:var(--muted); margin-top:3px; }
+.question-text { font-size:.9rem; color:var(--ink); line-height:1.6; font-weight:500; }
+.question-by { font-size:.7rem; color:var(--muted); margin-top:3px; font-weight:300; }
 
 /* PAST READS */
-.past-book { display:flex; gap:14px; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.past-book { display:flex; gap:14px; align-items:center; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:opacity .15s; }
+.past-book:hover { opacity:.7; }
 .past-book:last-child { border-bottom:none; }
-.past-book-cover { width:36px; height:52px; border-radius:2px; object-fit:cover; flex-shrink:0; box-shadow:1px 2px 5px rgba(0,0,0,.12); }
-.past-book-cover-ph { width:36px; height:52px; border-radius:2px; background:var(--green); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
-.past-book-title { font-family:'Playfair Display',serif; font-size:.96rem; font-style:italic; color:var(--ink); font-weight:700; }
-.past-book-meta { font-size:.74rem; color:var(--muted); margin-top:2px; }
+.past-book-cover { width:38px; height:56px; border-radius:3px; object-fit:cover; flex-shrink:0; box-shadow:2px 3px 8px rgba(0,0,0,.14); }
+.past-book-cover-ph { width:38px; height:56px; border-radius:3px; background:var(--green); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:.9rem; }
+.past-book-title { font-size:.94rem; font-weight:700; color:var(--ink); }
+.past-book-meta { font-size:.74rem; color:var(--muted); margin-top:2px; font-weight:300; }
 
 /* CALENDAR */
-.cal-month-group { margin-bottom:24px; }
-.cal-month-label { font-family:'Playfair Display',serif; font-size:1rem; font-style:italic; color:var(--green); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-.cal-month-label span { font-family:'Lato',sans-serif; font-style:normal; font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; background:var(--green); color:white; padding:2px 7px; border-radius:3px; }
-.cal-event-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--border); }
+.cal-month-group { margin-bottom:26px; }
+.cal-month-label { font-size:.94rem; font-weight:700; color:var(--green); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.cal-month-label span { font-size:.54rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; background:var(--green); color:var(--cream); padding:2px 8px; border-radius:3px; }
+.cal-event-row { display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
 .cal-event-row:last-child { border-bottom:none; }
-.cal-event-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; flex-shrink:0; }
-.cal-event-icon.bookclub { background:var(--green); }
-.cal-event-icon.birthday { background:#FEF3C7; }
-.cal-event-icon.event { background:var(--blush-soft); }
-.cal-event-name { font-size:.88rem; font-weight:700; color:var(--ink); }
-.cal-event-date { font-size:.74rem; color:var(--muted); margin-top:1px; }
-.cal-empty { font-size:.82rem; color:var(--border); font-style:italic; padding:6px 0; }
+.cal-event-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; flex-shrink:0; }
+.cal-event-icon.bookclub  { background:var(--green); }
+.cal-event-icon.birthday  { background:#FEF3C7; }
+.cal-event-icon.event     { background:var(--sage-soft); }
+.cal-event-icon.holiday   { background:var(--surface2); }
+.cal-event-name { font-size:.86rem; font-weight:600; color:var(--ink); }
+.cal-event-date { font-size:.72rem; color:var(--muted); margin-top:1px; font-weight:300; }
+.cal-empty { font-size:.8rem; color:var(--border); font-style:italic; padding:4px 0; }
 
 /* FORMS */
-.field { width:100%; padding:10px 13px; border-radius:4px; border:1px solid var(--border); background:var(--surface); font-family:'Lato',sans-serif; font-size:.9rem; color:var(--ink); margin-bottom:10px; outline:none; transition:border .15s; }
+.field {
+  width:100%; padding:10px 13px; border-radius:6px;
+  border:1.5px solid var(--border); background:var(--surface);
+  font-family:'Lexend',sans-serif; font-size:.88rem; color:var(--ink);
+  margin-bottom:10px; outline:none; transition:border .15s; font-weight:400;
+}
 .field:focus { border-color:var(--green); }
-.field::placeholder { color:var(--muted); }
-select.field { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B7B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; cursor:pointer; }
+.field::placeholder { color:var(--muted); font-weight:300; }
+select.field {
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7A65' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 13px center; padding-right:34px; cursor:pointer;
+}
 textarea.field { resize:none; }
 .two-col { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .two-col .field { margin-bottom:0; }
 
-.btn { display:inline-block; padding:10px 22px; border-radius:4px; border:1px solid var(--green); background:var(--green); color:white; font-family:'Lato',sans-serif; font-weight:700; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+.btn {
+  display:inline-block; padding:10px 22px; border-radius:6px;
+  border:1.5px solid var(--green); background:var(--green); color:var(--cream);
+  font-family:'Lexend',sans-serif; font-weight:700; font-size:.74rem;
+  letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:all .2s;
+}
 .btn:hover { background:var(--green2); border-color:var(--green2); }
 .btn-outline { background:transparent; color:var(--green); }
-.btn-outline:hover { background:var(--green); color:white; }
-.btn-blush { background:var(--blush); border-color:var(--blush); }
-.btn-blush:hover { opacity:.85; }
+.btn-outline:hover { background:var(--green); color:var(--cream); }
 
-.success { font-size:.82rem; color:var(--green2); background:#EDF5EB; border-radius:4px; padding:10px 14px; margin-top:8px; display:none; border-left:3px solid var(--green2); font-family:'Lato',sans-serif; }
-.no-content { color:var(--muted); font-size:.86rem; font-style:italic; padding:8px 0; }
+.success {
+  font-size:.82rem; color:var(--green2); background:var(--sage-soft);
+  border-radius:6px; padding:10px 14px; margin-top:8px; display:none;
+  border-left:3px solid var(--sage); font-weight:500;
+}
+.no-content { color:var(--muted); font-size:.84rem; padding:6px 0; font-weight:300; }
 
-/* HOST COLLAPSIBLE */
-.host-toggle { display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:14px 0; border-top:1px solid var(--border); margin-top:14px; }
-.host-toggle-label { font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-family:'Lato',sans-serif; }
-.host-toggle-arrow { font-size:.8rem; color:var(--muted); transition:transform .2s; }
-.host-toggle.open .host-toggle-arrow { transform:rotate(90deg); }
-.host-body { display:none; padding-top:4px; }
-.host-body.open { display:block; }
-.host-step { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+/* HOST STEPS */
+.host-step { margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--border); }
 .host-step:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
-.host-step-label { font-size:.6rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--blush); margin-bottom:8px; display:block; font-family:'Lato',sans-serif; }
+.host-step-label { font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:var(--sage); margin-bottom:10px; display:block; }
 
 /* BANNERS */
-.banner { padding:10px 20px; text-align:center; font-size:.84rem; font-weight:700; letter-spacing:.02em; position:relative; font-family:'Lato',sans-serif; }
-.banner.bookclub { background:var(--green); color:white; }
-.banner.birthday { background:var(--gold); color:white; }
-.banner.event { background:var(--blush); color:white; }
-.banner .banner-x { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:white; opacity:.7; cursor:pointer; font-size:1rem; }
+.banner { padding:11px 20px; text-align:center; font-size:.82rem; font-weight:600; letter-spacing:.02em; position:relative; }
+.banner.bookclub { background:var(--green); color:var(--cream); }
+.banner.birthday { background:#92700A; color:white; }
+.banner.event    { background:var(--green2); color:white; }
+.banner.holiday  { background:var(--sage); color:white; }
+.banner .banner-x { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:inherit; opacity:.65; cursor:pointer; font-size:1rem; }
 
-/* BOOK ARCHIVE */
+/* ARCHIVE */
 #archivePage { display:none; position:fixed; inset:0; background:var(--bg); z-index:999; overflow-y:auto; }
 .archive-inner { max-width:640px; margin:0 auto; padding:28px 20px 80px; }
-.archive-back { background:none; border:none; font-family:'Lato',sans-serif; font-size:.82rem; font-weight:700; color:var(--muted); cursor:pointer; letter-spacing:.06em; text-transform:uppercase; margin-bottom:24px; display:block; }
+.archive-back { background:none; border:none; font-family:'Lexend',sans-serif; font-size:.78rem; font-weight:700; color:var(--muted); cursor:pointer; letter-spacing:.08em; text-transform:uppercase; margin-bottom:24px; display:block; }
 
-footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); letter-spacing:.08em; border-top:1px solid var(--border); background:var(--surface); font-family:'Lato',sans-serif; }
+footer { text-align:center; padding:22px; font-size:.68rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; border-top:1px solid var(--border); background:var(--surface); font-weight:400; }
 
 @media(max-width:480px) {
-  .nav-btn { padding:11px 14px; font-size:.62rem; }
+  .nav-btn { padding:12px 13px; font-size:.6rem; }
   .page { padding:24px 16px 100px; }
   .book-feature { gap:14px; }
-  .book-cover, .book-cover-placeholder { width:68px; height:102px; }
 }
 </style>
 </head>
@@ -255,8 +283,7 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
 
 <!-- PASSWORD -->
 <div id="pwScreen">
-  <div class="pw-wordmark">Triple B</div>
-  <div class="pw-sub-title">Book Club</div>
+  <img src="logo.png" alt="Triple B Book Club" class="pw-logo"/>
   <input class="pw-input" id="pwInput" type="password" placeholder="password" onkeydown="if(event.key==='Enter')checkPw()"/>
   <button class="pw-btn" onclick="checkPw()">Enter</button>
   <p class="pw-error" id="pwError">Incorrect password — try again</p>
@@ -266,8 +293,9 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
 <div id="mainContent" style="display:none;">
 
 <header class="site-header">
-  <div class="wordmark">Triple B</div>
-  <div class="wordmark-sub">Book Club · Est. 2026</div>
+  <div class="site-header-inner">
+    <img src="logo.png" alt="Triple B Book Club" class="site-logo"/>
+  </div>
 </header>
 
 <nav class="nav" id="tabBar">
@@ -344,16 +372,16 @@ footer { text-align:center; padding:24px; font-size:.7rem; color:var(--muted); l
           <div class="book-desc" id="booksBookDesc"></div>
         </div>
       </div>
-    </div>
 
-    <div class="section">
-      <span class="eyebrow">Discussion Questions</span>
-      <div id="questionsList"><p class="no-content">No questions yet — add the first one!</p></div>
-      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
-        <input class="field" id="newQuestion" placeholder="Your question..."/>
-        <input class="field" id="newQuestionName" placeholder="Your name"/>
-        <button class="btn btn-outline" id="addQuestionBtn">Add Question</button>
-        <div class="success" id="questionSuccess">Question added!</div>
+      <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+        <span class="eyebrow">Discussion Questions</span>
+        <div id="questionsList"><p class="no-content">No questions yet — add the first one!</p></div>
+        <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border);">
+          <input class="field" id="newQuestion" placeholder="Your question..."/>
+          <input class="field" id="newQuestionName" placeholder="Your name"/>
+          <button class="btn btn-outline" id="addQuestionBtn">Add Question</button>
+          <div class="success" id="questionSuccess">Question added!</div>
+        </div>
       </div>
     </div>
 
@@ -574,7 +602,9 @@ async function loadCurrentMeeting() {
     .sort((a,b) => new Date(b.meeting_date) - new Date(a.meeting_date));
 
   const current = undated[0] || upcoming[0] || past[0] || null;
-  const nextMeeting = upcoming[0] || current;
+  // for meeting details/date, use the soonest upcoming dated meeting
+  const nextDated = upcoming[0] || null;
+  const nextMeeting = nextDated || current;
 
   if (current && current.winning_book) {
     currentMeetingMonth = current.month;
@@ -587,20 +617,23 @@ async function loadCurrentMeeting() {
     window._rsvpMonth = nextMeeting.month;
     const hasDetails = nextMeeting.host || nextMeeting.meeting_date;
     const titleEl = document.getElementById('mcTitle');
-    if (nextMeeting.winning_book) titleEl.textContent = nextMeeting.winning_book;
+    // show current book title but next meeting month details
+    if (current && current.winning_book) titleEl.textContent = current.winning_book;
+    else if (nextMeeting.winning_book) titleEl.textContent = nextMeeting.winning_book;
 
     if (hasDetails) {
       const rows = [];
       if (nextMeeting.host) rows.push(['Host', nextMeeting.host]);
+      if (nextMeeting.winning_book) rows.push(['Book', nextMeeting.winning_book]);
       if (nextMeeting.meeting_date) {
         const d = new Date(nextMeeting.meeting_date+'T00:00:00');
         const dateStr = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
         rows.push(['Date', dateStr + (nextMeeting.meeting_time ? ' · ' + nextMeeting.meeting_time : '')]);
       }
       if (nextMeeting.food_theme) rows.push(['Food', nextMeeting.food_theme]);
-      document.getElementById('mcDetails').innerHTML = rows.map(([l,v]) =>
-        `<div class="mc-row"><span class="mc-label">${l}</span><span class="mc-value">${v}</span></div>`
-      ).join('');
+      document.getElementById('mcDetails').innerHTML = rows.length > 0
+        ? rows.map(([l,v]) => `<div class="mc-row"><span class="mc-label">${l}</span><span class="mc-value">${v}</span></div>`).join('')
+        : '<p class="mc-empty">Details coming soon — stay tuned!</p>';
       document.getElementById('mcNote').style.display = 'block';
     }
     loadRsvp(nextMeeting.month);
@@ -669,9 +702,10 @@ async function submitRsvp(status) {
 document.getElementById('rsvpYes').addEventListener('click', () => submitRsvp('yes'));
 document.getElementById('rsvpNo').addEventListener('click',  () => submitRsvp('no'));
 
-// BOOKS — discussion questions + past reads
+// BOOKS — reload when tab switched
 async function loadBooks() {
-  // questions already loaded by loadCurrentMeeting
+  await loadCurrentMeeting();
+  await loadPastReads();
 }
 
 async function loadDiscussionQuestions(month) {
@@ -757,7 +791,7 @@ async function openArchive(month, title) {
   document.getElementById('archiveContent').innerHTML = `
     <span class="eyebrow">${month}</span>
     <div class="book-title" style="margin-bottom:20px;">${title}</div>
-    ${avg ? `<div style="margin-bottom:20px;"><span style="font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--green);">${avg}</span><span style="font-size:.8rem;color:var(--muted);margin-left:6px;">/ 5 group rating</span></div>` : ''}
+    ${avg ? `<div style="margin-bottom:20px;"><span style="font-family:'Lexend',sans-serif;font-size:2.5rem;color:var(--green);">${avg}</span><span style="font-size:.8rem;color:var(--muted);margin-left:6px;">/ 5 group rating</span></div>` : ''}
     <div style="margin-bottom:8px;font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green2);">Discussion Questions</div>
     ${qs && qs.length > 0
       ? qs.map(q => `<div class="question-item"><div class="question-text">"${q.question}"</div>${q.asked_by?`<div class="question-by">— ${q.asked_by}</div>`:''}</div>`).join('')
@@ -786,11 +820,15 @@ async function loadCalendar() {
   // birthdays (always show)
   BIRTHDAYS.forEach(b => byMonth[b.month].push({ type:'birthday', day:b.day, name:`${b.name}'s Birthday`, note:'' }));
 
-  // US holidays (current year + next year for Dec→Jan wrap)
-  [currentYear, currentYear+1].forEach(yr => {
-    getHolidaysForYear(yr).forEach(h => {
-      if (byMonth[h.month]) byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
-    });
+  // US holidays — current year only, plus next year for already-passed months
+  getHolidaysForYear(currentYear).forEach(h => {
+    if (byMonth[h.month]) byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
+  });
+  // for months already past this year, also load next year's version
+  getHolidaysForYear(currentYear+1).forEach(h => {
+    if (h.month < currentMonth && byMonth[h.month]) {
+      byMonth[h.month].push({ type:'holiday', day:h.day, name:h.name, note:'' });
+    }
   });
 
   // book club meetings
@@ -872,6 +910,8 @@ document.getElementById('announceBtn').addEventListener('click', async function(
   if (!month || !winner) { alert('Fill in both fields!'); return; }
   const { error } = await sb.from('meetings').upsert({ month, winning_book:winner }, { onConflict:'month' });
   if (error) { alert('Oops! '+error.message); return; }
+  // clear old discussion questions for previous months (not this one)
+  await sb.from('discussions').delete().neq('month', month);
   document.getElementById('announceSuccess').style.display = 'block';
   setTimeout(() => document.getElementById('announceSuccess').style.display='none', 3000);
   loadCurrentMeeting();
@@ -912,11 +952,13 @@ async function loadComingUp() {
   });
 
   // US holidays
-  [year, year+1].forEach(yr => {
-    getHolidaysForYear(yr).forEach(h => {
-      const d = new Date(yr, h.month-1, h.day);
-      if (d >= now && d <= soon) items.push({ date:d, name:h.name, sub:'US Holiday' });
-    });
+  getHolidaysForYear(year).forEach(h => {
+    const d = new Date(year, h.month-1, h.day);
+    if (d >= now && d <= soon) items.push({ date:d, name:h.name, sub:'US Holiday' });
+  });
+  getHolidaysForYear(year+1).forEach(h => {
+    const d = new Date(year+1, h.month-1, h.day);
+    if (d >= now && d <= soon) items.push({ date:d, name:h.name, sub:'US Holiday' });
   });
 
   // custom events
